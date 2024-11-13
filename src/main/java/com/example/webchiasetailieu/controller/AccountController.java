@@ -1,0 +1,118 @@
+package com.example.webchiasetailieu.controller;
+
+import com.example.webchiasetailieu.dto.request.AccountCreationRequest;
+import com.example.webchiasetailieu.dto.request.AccountUpdateRequest;
+import com.example.webchiasetailieu.dto.request.UpdatePassword;
+import com.example.webchiasetailieu.dto.response.AccountResponse;
+import com.example.webchiasetailieu.dto.response.ApiResponse;
+import com.example.webchiasetailieu.entity.Account;
+import com.example.webchiasetailieu.service.AccountService;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import com.example.webchiasetailieu.service.AccountService.BanType;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/account")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class AccountController {
+    AccountService accountService;
+
+    @PostMapping
+    ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest account) {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setResult(accountService.createRequest(account));
+        return response;
+    }
+
+    @GetMapping()
+    ApiResponse<List<Account>> getAccounts() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("account: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+
+        ApiResponse<List<Account>> response = new ApiResponse<>();
+        response.setMessage("List of accounts");
+        response.setResult(accountService.getAllAccounts());
+        return response;
+    }
+
+    @GetMapping("/myInfo")
+    ApiResponse<AccountResponse> getInfo() {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setMessage("Get account info");
+        response.setResult(accountService.getMyInfo());
+        return response;
+    }
+
+    @GetMapping("{id}")
+    ApiResponse<AccountResponse> getAccount(@PathVariable String id) {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setMessage("Account with id " + id + " found");
+        response.setResult(accountService.getAccountById(id));
+        return response;
+    }
+
+    @PutMapping("/edit")
+    ApiResponse<AccountResponse> edit (@RequestBody @Valid AccountUpdateRequest request) {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setMessage("Account updated");
+        response.setResult(accountService.edit(request));
+        return response;
+    }
+
+    @PutMapping("/update/{id}")
+    ApiResponse<AccountResponse> updateAccount(@PathVariable String id,@RequestBody @Valid AccountUpdateRequest request) {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setMessage("Account updated");
+        response.setResult(accountService.updateAccount(id, request));
+        return response;
+    }
+
+    @PutMapping("/up-password")
+    ApiResponse<AccountResponse> updatePassword(@RequestBody @Valid UpdatePassword request) {
+        ApiResponse<AccountResponse> response = new ApiResponse<>();
+        response.setMessage("Update password: ");
+        response.setResult(accountService.updatePassword(request));
+        return response;
+    }
+
+    @DeleteMapping("{id}")
+    ApiResponse<String> deleteAccount(@PathVariable String id) {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage(accountService.deleteAccount(id));
+        return response;
+    }
+
+    @PutMapping("{id}/ban")
+    ApiResponse<String> banAccount(@PathVariable String id, @RequestParam BanType banType) {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Ban account: " + id);
+        response.setResult(accountService.banAccount(id, banType));
+        return response;
+    }
+
+    @PutMapping("{id}/unban")
+    ApiResponse<String> unbanAccount(@PathVariable String id) {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Unban account: " + id);
+        response.setResult(accountService.unbanAccount(id));
+        return response;
+    }
+
+    @PostMapping("/forgetPassword/{id}")
+    ApiResponse<String> sendEmail(@PathVariable String id) {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Forget password");
+        response.setResult(accountService.forgetPassword(id));
+        return response;
+    }
+}

@@ -1,0 +1,240 @@
+/* css chung của trang chủ, danh mục tìm kiếm, lọc */
+
+.main-content {
+    background: #F6F5F5;
+    padding: 5px;
+    padding-top: 70px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.register-button1 {
+    display: inline-block; /* Đảm bảo nút có thể điều chỉnh kích thước tự động */
+    background-color: rgba(255, 67, 170, 1);
+    color: white;
+    border-radius: 10px;
+    padding: 1vw 1.5vw;
+    font-size: 1.5vw;
+    font-weight: 500; /* Semi-bold */
+    text-align: center; /* Căn giữa nội dung trong nút */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+.thumnail {
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    background: url("../../static/images/thumnail.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover; /* Làm cho background bao phủ */
+    width: 100%;
+    min-height: 200px;
+    height: 30vw;
+    max-height: 400px/* Đặt chiều cao tùy chỉnh cho thumnail */
+}
+
+#thumnail2 {
+    background: url("../../static/images/thumnail2.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover; /* Làm cho background bao phủ */
+    height: 25vw;
+}
+
+.thumnail3 {
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    background: url("../../static/images/thumnail4.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover;
+    width: 100%;
+    aspect-ratio: 1400 / 120; /* Đặt tỉ lệ giữa chiều rộng và chiều cao */
+    max-height: 120px; /* Đảm bảo chiều cao tối đa là 120px */
+}
+
+#thumnail4 {
+    background: url("../../static/images/thumnail3.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover; /* Làm cho background bao phủ */
+}
+
+#thumnail5 {
+    background: url("../../static/images/thumnail6.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover; /* Làm cho background bao phủ */
+}
+
+.thumnail-cap{
+    white-space: nowrap;
+    display: flex;
+    gap: 0.5vw;
+    font-weight: bold;
+    font-size: 1.75vw;
+    align-items: center;
+}
+
+.thumnail-title{
+    font-weight: bolder;
+    color: #D82B8A;
+}
+
+h2{
+    margin: 0; /* Đảm bảo không có khoảng cách ngoài */
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 2.5vw;
+    font-family: Verdana, Tahoma, sans-serif;
+    
+}
+p{
+    font-size: 1.75vw;
+}
+.docCategories{
+    white-space: nowrap;
+    overflow-x: auto;
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trong IE và Edge */
+    scrollbar-width: none;      /* Ẩn thanh cuộn trong Firefox */
+    padding: 5px 20px 10px 20px;
+    display: flex;
+    gap: 10px;
+}
+.docCate{
+    background-color: #D0D0D0;
+    padding: 10px 15px;
+    border-radius: 20px;
+    color: #525252;
+}
+.active{
+    background-color: rgba(255, 67, 170, 1);
+    color: white;
+}
+.docCategories::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trong trình duyệt WebKit (Chrome, Safari) */
+}
+
+@media (max-width: 1500px) {
+    .Docs {
+        flex: 1 0 calc(20% - 10px);
+        max-width: calc(20% - 10px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .Docs {
+        flex: 1 0 calc(25% - 10px);
+        max-width: calc(25% - 10px);
+    }
+}
+
+@media (max-width: 950px) {
+    .Docs {
+        flex: 1 0 calc(33.333% - 10px);
+        max-width: calc(33.333% - 10px);
+    }
+    .docInfor {
+        font-size: 12px;
+    }
+    .docTitle{
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 800px) {
+    .Docs {
+        flex: 1 0 calc(50% - 10px);
+        max-width: calc(50% - 10px);
+    }
+    .docInfor {
+        font-size: 13px;
+    }
+    .docTitle{
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 550px) {
+    .Docs {
+        flex: 1 0 100%;
+        max-width: 100%;
+    }
+    .docInfor {
+        font-size: 15px;
+    }
+    .docTitle{
+        font-size: 18px;
+    }
+}
+
+.thumnail-cap img{
+    height: 3.7vw;
+    width: fit-content;
+    margin: 0px -0.2vw;
+}
+
+.bigTitle{
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: #D82B8A;
+    margin-top: 20px;
+    font-size: 20px;
+    font-family: Verdana, Tahoma, sans-serif;
+    margin-bottom: 10px;
+}
+
+.cate{
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+    margin: 0px 20px;
+    margin-bottom: 20px;
+}
+.cate-box{
+    border: 1px solid #D82B8A;
+    border-radius: 20px;
+    padding: 30px 30px 0px 30px;
+    width: calc(100% - 60px);
+}
+
+.oneCate {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Tạo lưới với cột có độ rộng tối thiểu 150px */
+    gap: 20px; /* Khoảng cách giữa các phần tử */
+    margin-bottom: 30px;
+}
+
+hr{
+    margin-bottom: 15px;
+}
+
+.oneType {
+    padding: 10px;
+    border-radius: 8px;
+    white-space: nowrap; /* Giữ văn bản trên một dòng */
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+}
+
+.cateTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#filter{
+    gap: 5vw;
+    flex-wrap: nowrap;
+}
+
+#filter1 select{
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+#filter1{
+    gap: 5px;
+    column-gap: 10px;
+    flex-wrap: wrap;
+}

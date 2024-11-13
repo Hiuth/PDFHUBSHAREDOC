@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang chính</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+
+    <script defer src="../../static/js/User/include.js"></script>
+
+    <link rel="icon" href="../../static/images/favicon.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="../../static/css/docs.css">
+    <link rel="stylesheet" href="../../static/css/home.css">
+<!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
+</head>
+<body>
+<!-- Include header -->
+<!--<div th:replace="header :: header"></div>-->
+<div id="header-placeholder"></div>
+
+<!-- Nội dung chính -->
+<div class="main-content">
+    <!-- <div th:if="${!isLoggedIn}" class="thumnail">
+        <h2>Tài liệu hay, ý tưởng hấp dẫn</h2>
+        <p>Nơi đồng hành cùng bạn tạo ra các sản phẩm xinh đẹp tuyệt vời!</p>
+        <a href='register.html' class="register-button1">Tham gia miễn phí ngay!</a>
+    </div> -->
+    <div th:if="${isLoggedIn}" class="docCategories">
+        <a class="docCate active" href="index.html">Đề xuất</a>
+        <a class="docCate" href="category.html?tab=Hóa học">Hóa học</a>
+        <a class="docCate" href="category.html?tab=Vật lí">Vật lí</a>
+        <a class="docCate" href="category.html?tab=Tiếng Anh">Tiếng Anh</a>
+        <a class="docCate" href="category.html?tab=Công nghệ thông tin">Công nghệ thông tin</a>
+        <a class="docCate" href="category.html?tab=Thương mại điện tử">Thương mại điện tử</a>
+    </div>
+    <div th:if="${isLoggedIn}" class="thumnail" id="thumnail2">
+        <h2>Cùng đóng góp cho cộng đồng!</h2>
+        <p>Chia sẻ các tài liệu của bạn, nhận xu thưởng và tải các tài liệu quý giá!</p>
+        <a href='upload.html' class="register-button1">Đăng tải tài liệu mới ngay!</a>
+    </div>
+
+    <div class="recommend">
+        <div class="Group-title">Truyện hay cho bé</div>
+        <div class="Docs-group">
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    fetchDocument("Lớp 3",0);
+                });
+            </script>
+        </div>
+
+        <div class="Group-title">Truyện hay cho bé</div>
+        <div class="Docs-group">
+            <script>
+                console.log("jellp");
+                document.addEventListener("DOMContentLoaded", function() {
+                    fetchDocument("Lớp 3",1);
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="\webchiasetailieu\src\main\resources\static\js\User\docs.js"></script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,338 @@
+.error{
+    color: rgb(200, 0, 0);
+    padding-top: 3px;
+}
+
+#uploadForm{
+    padding: 0px 50px;
+    padding-right: 80px;
+}
+
+.form-group1, .form-group2{
+    padding-top: 16px;
+}
+
+.form-group1{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group2{
+    display: flex;
+    gap: 10px;
+    row-gap: 5px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-group1 label, .form-group2 label{
+    padding-bottom: 2px;
+    font-weight: bold;
+    font-size: 18px;
+    white-space: nowrap;
+}
+
+.form-group1 label {
+    padding-bottom: 5px;
+}
+
+input[type='file']{
+    display: none;
+}
+
+#alter-file{
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: normal;
+}
+
+#alter-file2{
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    background-color: #D82B8A;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: normal;
+    color: white;
+    cursor: pointer;
+}
+
+#alter-file img{
+    border-left: 2px solid #A5A5A5;
+    padding-left: 10px;
+    margin: -8px 0px;
+    margin-left: 10px;
+    height: 35px;
+}
+
+.form-group1 select, .form-group2 select{
+    background-color: #D82B8A;
+    color: white;
+    padding: 8px 0px 8px 10px;
+    border-radius: 10px;
+    border: none;
+    min-width: 150px;
+    width: 15vw;
+    max-width: 200px;
+    font-size: 15px;
+}
+
+.group{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-group1 textarea{
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 40px;
+    width: calc(100% - 20px);
+    resize: none;
+}
+#describe {
+    min-height: 70px;
+}
+#price{
+    padding: 10px;
+    width: 90%;
+    border-radius: 10px;
+    padding-right: 22%;
+}
+.unit{
+    background-color: #dfdfdf;
+    border: 1px solid black;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    padding: 9px;
+    position: absolute;
+    right: 10%;
+    width: 10%;
+}
+.inputprice{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 15vw;
+    max-width: 220px;
+    min-width: 150px;
+}
+input[type='submit']{
+    background-color: #166FF4;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+}
+.submit{
+    text-align: center;
+}
+#problemDes {
+    height: 150px;
+}
+
+.changeAvatar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    justify-items: center;
+}
+
+#ava{
+    display: flex;
+    width: 100%;
+    justify-items: center;
+    justify-content: center;
+}
+
+#ava img{
+    height: 100px;
+    width: auto;
+}
+
+#read-class{
+    padding-bottom: 0px;
+    width: 100%;
+}
+
+.static {
+    white-space: nowrap;
+    min-width: 70px;
+}
+
+.read{
+    padding: 10px 15px;
+    background-color: #d9d9d9;
+    border-radius: 8px;
+    min-width: 100px;
+    border: 0px;
+    width: fit-content;
+    font-size: 17px;
+}
+
+.label {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.form-group2 a {
+    background-color: #D82B8A;
+    padding: 8px 12px;
+    border-radius: 10px;
+    color: white;
+}
+
+.accInfo1{
+    padding: 0px 50px;
+    padding-bottom: 20px;
+}
+
+#acc{
+    padding-right: 0px;
+    justify-content: space-between;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+#changeAvatarSubmit{
+    margin: 0px;
+}
+
+input[type="text"], input[type="password"]{
+    border-radius: 10px;
+    min-height: 40px;
+    height: 3vh;
+    font-size: 17px;
+    border: 1px solid black;
+    padding: 0px 10px;
+    box-sizing: border-box;
+}
+
+#pass{
+    border: 0px;
+    width: 50%;
+}
+
+input[type="number"] {
+    white-space: nowrap;       /* Không cho phép xuống dòng */
+    overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
+    text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
+    width: 200px;              /* Đặt chiều rộng cố định */
+    box-sizing: border-box;    /* Tính toán padding và border trong width */
+}
+
+#mail {
+    white-space: nowrap;       /* Không cho phép xuống dòng */
+    overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
+    text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
+    box-sizing: border-box;
+    width: 75%;
+}
+
+input[readonly] {
+    outline: none;
+    margin: 0px;            /* Không hiển thị outline khi focus */
+}
+
+.ChangeTitle{
+    margin: 5px 0px;
+    color: #D82B8A;
+}
+
+#mailAndPass{
+    float: left;
+    margin-right: 0px;
+    padding-right: 0px;
+    box-sizing: border-box;
+    max-width: 400px;
+    width: 25vw;
+}
+
+
+@media (max-width: 1400px) {
+    #pass{
+        flex-grow: 1;
+    }
+    #mail{
+        flex-grow: 1;
+    }
+}
+
+@media (max-width: 1280px) {
+    #pass{
+        width: 100%;
+    }
+    #mail{
+        flex-grow: 1;
+    }
+}
+
+@media (max-width: 1250px) {
+    #acc{
+        width: 100%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+    #mailAndPass{
+        width: 320px;
+    }
+    #mail {
+        white-space: nowrap;       /* Không cho phép xuống dòng */
+        overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
+        text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
+        box-sizing: border-box;
+        width: 75%;
+    }
+    #pass{
+        border: 0px;
+        width: 40%;
+    }
+}
+
+#OTP-title{
+    text-align: center;
+    font-weight: bold; 
+    font-size: 15px;
+}
+
+.name-title{
+    min-width: 90px;
+}
+
+#gr-items{
+    width: 25vw;
+}
+
+
+@media (max-width: 1000px) {
+    .group {
+        padding-right: 0px;
+        flex-wrap: wrap;
+    }
+    #gr-items{
+        width: 40vw;
+    }
+}
+
+@media (max-width: 900px) {
+    .group {
+        flex-wrap: nowrap;
+    }
+    #gr-items{
+        width: 100vw;
+    }
+}

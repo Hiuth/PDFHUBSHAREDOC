@@ -1,0 +1,140 @@
+.sidebar{
+    font-family: Inter;
+    padding: 10px;
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+    min-width: 350px;
+    padding-right: 20px;
+}
+.title{
+    font-size: x-large;
+    font-weight: 900;
+    margin-left: -5px;
+}
+a{
+    text-decoration: none;
+}
+.accInfo{
+    margin-top: 1.5vh;
+    display: flex;
+    justify-content: space-between;
+    width: 94%;
+}
+.accName, .coin{
+    display: flex;
+    align-items: center;
+}
+.accName>img, .coin>img{
+    width: 10vh;
+    max-width: 80px;
+    min-width: 40px;
+}
+.accName>div, .coin>div{
+    font-weight: bold;
+    color: #585858;
+    font-size: large;
+    white-space: nowrap;
+}
+.menu-row{
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+    color: #686868;
+    font-weight: bold;
+}
+.menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 55vh;
+}
+.menu-row img{
+    padding-right: 3%;
+    max-width: 70px;
+    width: 10%;
+    height: fit-content;
+}
+hr{
+    margin: 3vh 1vh;
+}
+.logout{
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+}
+.logout-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 15px;
+    white-space: nowrap;
+    width: fit-content;
+    float: center;
+}
+.logout-button>img{
+    padding-right: 5%;
+    width: 30px;
+    height: auto;
+}
+
+.oneNotiBox{
+    border: 1px solid black;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+}
+
+#pink{
+    color: #D82B8A;
+    padding-bottom: 8px;
+}
+
+.h-group{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.h-group img{
+    height: 30px;
+    margin-right: -3px;
+}
+
+.noti-title{
+    font-size: large;
+    font-weight: bold;
+}
+
+.noti-content{
+    padding: 5px 25px;
+    text-align: justify;
+}
+
+.d-group{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.i-group{
+    display: flex;
+    align-items: center;
+}
+
+.i-group img{
+    margin-right: 2px;
+}
+
+.noti-time{
+    font-size: 12px;
+}
+
+.d-group a{
+    color: #686868;
+    font-size: 12px;
+    font-weight: bold;
+}

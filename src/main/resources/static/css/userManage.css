@@ -1,0 +1,163 @@
+.contain{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 65px;
+    overflow: hidden;
+}
+#sidebar-placeholder{
+    float: left;
+    border-right: 1px solid black;
+    height: calc(100vh - 75px);
+    padding-left: 20px;
+    width: 25%;
+    min-width: 400px;
+    padding-top: 10px;
+    overflow: hidden;
+}
+.main-content{
+    background-color: rgb(245,245,245);
+    float: right;
+    width: 75%;
+    height: calc(100vh - 65px);
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+    #sidebar-placeholder{
+        display: none;
+    }
+    .main-content{
+        width: 100%;
+    }
+}
+
+.Group-title1{
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: #313131;
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: Verdana, Tahoma, sans-serif;
+}
+
+.Docs {
+    flex: 1 0 calc(20% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+    max-width: calc(20% - 10px); /* Cập nhật tương ứng */
+}
+.docTitle{
+    font-size: small;
+}
+.docInfor{
+    font-size: xx-small;
+}
+
+@media (max-width: 1460px) {
+    .Docs {
+        flex: 1 0 calc(25% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(25% - 10px); /* Cập nhật tương ứng */
+    }
+}
+
+@media (max-width: 1250px) {
+    .Docs {
+        flex: 1 0 calc(33.333% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(33.333% - 10px); /* Cập nhật tương ứng */
+    }
+}
+
+@media (max-width: 1100px) {
+    .Docs {
+        flex: 1 0 calc(50% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(50% - 10px); /* Cập nhật tương ứng */
+    }
+}
+
+@media (max-width: 900px) {
+    .Docs {
+        flex: 1 0 calc(25% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(25% - 10px); /* Cập nhật tương ứng */
+    }
+}
+
+@media (max-width: 850px) {
+    .Docs {
+        flex: 1 0 calc(33.333% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(33.333% - 10px); /* Cập nhật tương ứng */
+    }
+}
+
+@media (max-width: 650px) {
+    .Docs {
+        flex: 1 0 calc(50% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
+        max-width: calc(50% - 10px); /* Cập nhật tương ứng */
+    }
+    .docTitle{
+        font-size: 14px;
+    }
+    .docInfor{
+        font-size: 10px;
+    }
+}
+
+.thumnail3 {
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    background: url("../../static/images/thumnail5.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover;
+    width: 100%;
+    aspect-ratio: 1400 / 120; /* Đặt tỉ lệ giữa chiều rộng và chiều cao */
+    max-height: 120px; /* Đảm bảo chiều cao tối đa là 120px */
+}
+
+.thumnail-cap{
+    white-space: nowrap;
+    display: flex;
+    gap: 0.5vw;
+    font-weight: bolder;
+    font-size: 1.75vw;
+    color: #D82B8A;
+    text-transform: uppercase;
+}
+
+#otp-popup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid black;
+}
+
+.close-btn {
+    background-color: red;
+    border: none;
+    font-size: 20px;
+    color: white;
+    padding: 0px 5px 0px 5px;
+    border-radius: 8px;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+    flex-grow: 1;
+    text-align: center;
+    padding-left: 30px;
+}

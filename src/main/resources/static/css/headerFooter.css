@@ -1,0 +1,321 @@
+/* Reset và styles chung */
+body {
+    margin: 0;
+    font-size: 15px;
+    font-family: Inter, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Header styles */
+header {
+    border-bottom: 1px solid #a5a5a5;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 320px; /* Đảm bảo header không bị thu nhỏ quá mức */
+    position: fixed;
+    z-index: 1;
+    background-color: white;
+}
+
+.logo-contain>.logo {
+    height: 40px;
+    width: 100%;
+}
+.logo-contain {
+    padding: 10px 20px;
+    flex-shrink: 0; /* Ngăn logo bị co lại */
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 80px); /* Trừ đi chiều rộng của logo */
+    padding: 0 20px;
+}
+
+/* Group 1 styles */
+.group1 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 25%; /* Chiếm 20% chiều rộng của nav */
+    min-width: 150px;
+    padding-right: 20px;
+    gap: 10%;
+}
+
+.group1 > a {
+    color: #636262;
+    margin-right: 15px;
+    white-space: nowrap;
+}
+
+/* Group 2 styles */
+.group2 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 70%; /* Chiếm 70% chiều rộng của nav */
+    min-width: 230px;
+}
+
+/* Search bar styles */
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 60%; /* Chiếm 60% của group2 */
+    max-width: 500px;
+    margin-right: 10px;
+}
+
+.search-bar > input {
+    border-radius: 20px;
+    width: 100%;
+    height: 40px;
+    padding: 0 20px 0 20px;
+    border: 1px solid #636262;
+    font-family: Inter, sans-serif;
+}
+
+.search-bar > input::placeholder{
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    font-weight: lighter;
+}
+
+.search-bar > button {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    height: 30px;
+}
+
+button > img {
+    height: 25px;
+    width: 25px;
+}
+
+/* Button styles */
+.register-button, .login-button {
+    white-space: nowrap;
+    text-align: center;
+    padding: 8px 15px;
+    margin: 0 5px;
+    min-width: 60px;
+}
+
+.register-button {
+    background-color: rgba(255,67,170,1);
+    color: white;
+    border-radius: 10px;
+    font-weight: 200;
+    margin-left: 10px;
+}
+
+.login-button {
+    color: rgb(216,43,138);
+    font-weight: 600;
+}
+
+.noti-button {
+    background: none;
+    border: none;
+    color: rgb(216,43,138);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0 10px;
+    font-size: 15px;
+}
+
+.noti-button > img {
+    padding-right: 2px;
+    width: 30px;
+    height: 30px;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.menu-button > img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+    .group1 {
+        width: 30%;
+    }
+    .group2 {
+        width: 60%;
+    }
+}
+
+@media (max-width: 850px) {
+    nav {
+        flex-wrap: wrap;
+    }
+    
+    .group1 {
+        display: none;
+    }
+    
+    .group2 {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .search-bar {
+        width: 100%;
+        max-width: none;
+        margin: 10px 0;
+    }
+
+    .register-button {
+        display: none;
+    }
+}
+
+@media (max-width: 590px) {
+    .group1 {
+        display: none;
+    }
+    
+    .noti-button{
+        display: none;
+    }
+    
+    .login-button {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    .register-button {
+        display: none;
+    }
+}
+
+
+#overlay {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 65px);
+    background-color: rgba(0, 0, 0, 0.5); /* Độ trong suốt 50% */
+    z-index: 1;
+}
+
+#popup-menu {
+    position: fixed;
+    right: 0;
+    top: 62px;
+    width: 360px;
+    background-color: white;
+    z-index: 2;
+    padding: 20px;
+    padding-top: 10px;
+    height: 75vh;
+    display: flex;
+}
+
+#popup-noti {
+    position: fixed;
+    right: 0;
+    top: 62px;
+    width: 450px;
+    background-color: white;
+    z-index: 2;
+    padding: 20px;
+    padding-top: 10px;
+    padding-right: 0px;
+    height: calc(100vh - 65px);
+    overflow-y: auto;
+    display: flex;
+    box-sizing: border-box;
+}
+
+
+
+/* footer */
+.foot{
+    background: rgb(64,64,64);
+    padding: 0px 20px;
+    color: white;
+    padding-bottom: 10px;
+    box-sizing: border-box; /* Đảm bảo padding không vượt quá chiều rộng */
+    overflow: hidden;
+}
+.logogroup>img{
+    width: 60px;
+}
+.logogroup{
+    text-align: center;
+    padding: 10px;
+    padding-top: 20px;
+}
+.more-info{
+    display: flex;
+    justify-content: space-between;
+}
+.info, .user-help, .policy{
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    min-width: 180px;
+}
+.footer-title{
+    font-weight: bold;
+    color: #BFBFBF;
+    font-size: 16px;
+}
+.info{
+    text-align: left;
+}
+.user-help{
+    text-align: center;
+}
+.policy{
+    text-align: right;
+    min-width: 220px;
+}
+a>img{
+    width: 15px;
+    height: 15px;
+    padding-right: 5px;
+}
+.info>a{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.info>a, .user-help>a, .policy>a{
+    padding-top: 5px;
+    font-size: 12px ;
+}
+.copyright{
+    background: black;
+    color: #FC8BC9;
+    text-align: center;
+    padding: 8px;
+}
+@media (max-width: 600px) {
+    .user-help {
+        display: none;
+    }
+    .more-info{
+        display: flex;
+    }
+}

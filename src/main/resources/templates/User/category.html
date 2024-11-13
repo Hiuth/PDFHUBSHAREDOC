@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang chính</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+
+    <script defer src="../../static/js/User/include.js"></script>
+    <script src="../../static/js/User/docs.js"></script>
+    
+    <link rel="stylesheet" href="../../static/css/docs.css">
+    <link rel="stylesheet" href="../../static/css/home.css">
+    <link rel="stylesheet" href="../../static/css/form.css">
+
+<!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
+</head>
+<body>
+<!-- Include header -->
+<!--<div th:replace="header :: header"></div>-->
+<div id="header-placeholder"></div>
+
+<!-- Nội dung chính -->
+<div class="main-content">
+    <div class="docCategories">
+        <a class="docCate" href="index.html">Đề xuất</a>
+        <a class="docCate" href="category.html?tab=Hóa học">Hóa học</a>
+        <a class="docCate" href="category.html?tab=Vật lí">Vật lí</a>
+        <a class="docCate" href="category.html?tab=Tiếng Anh">Tiếng Anh</a>
+        <a class="docCate" href="category.html?tab=Công nghệ thông tin">Công nghệ thông tin</a>
+        <a class="docCate" href="category.html?tab=Thương mại điện tử">Thương mại điện tử</a>
+    </div>    
+
+    <div class="thumnail3">
+        <div class="thumnail-cap">Khám phá tài liệu <div class="thumnail-title">Đề xuất</div></div>
+    </div>
+
+    <div class="recommend">
+        <div class="form-group2" id="filter">
+            <div class="form-group2" id="filter1">
+                <label for="">Loại tài liệu</label>
+                <select name="fileType" id="fileType">
+                    <option value="Tất cả">Tất cả</option>
+                    <option value="pdf">.pdf</option>
+                    <option value="docx">.docx</option>
+                </select>
+            </div>
+            <div class="form-group2" id="filter1">
+                <label for="">Sắp xếp</label>
+                <select name="fileType" id="fileType">
+                    <option value="Ngày đăng tăng">Ngày đăng tăng</option>
+                    <option value="Lượt tải tăng">Lượt tải tăng</option>
+                    <option value="Ngày đăng tăng">Ngày đăng giảm</option>
+                    <option value="Lượt tải tăng">Lượt tải giảm</option>
+                </select>
+            </div>
+        </div>
+        <div class="Docs-group">
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+            <a href="docsDetail.html" class="Docs">
+                <img src="../../static/images/sachHoa.jpg" alt="">
+                <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                <div class="docInfor">
+                    <div class="uptime">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div id="time">9PM 22/12/2023</div>
+                    </div>
+                    <div class="downtime">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                        <div id="down">20K</div>
+                    </div>
+                    <div class="price">
+                        <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                        <div id="docPrice">30</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="footer-placeholder"></div>
+</body>
+</html>
+
+
+
+

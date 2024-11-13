@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo vấn đề</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+
+    <script defer src="../../static/js/User/include.js"></script>
+    <link rel="stylesheet" href="../../static/css/form.css">
+    <link rel="stylesheet" href="../../static/css/userManage.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="contain">
+        <div id="sidebar-placeholder">
+        </div>
+        <div class="main-content">
+            <div class="thumnail3">
+                <div class="thumnail-cap">Báo cáo vấn đề</div>
+            </div>
+
+            <form action="" name="problemReport" id="uploadForm">
+                <div class="form-group2">
+                    <label for="">Chọn loại vấn đề</label>
+                    <select name="problemType" id="">
+                        <option value="">Chọn vấn đề</option>
+                        <option value="Thay đổi mật khẩu">Thay đổi mật khẩu</option>
+                        <option value="Chỉnh sửa tài khoản">Chỉnh sửa tài khoản</option>
+                    </select>
+                </div>
+                <div class="form-group1">
+                    <label for="">Mô tả</label>
+                    <textarea name="problemDes" id="problemDes" placeholder="Viết mô tả cụ thể ở đây..."></textarea>
+                </div>
+            </form>
+
+            <div class="submit">
+                <input type="submit" value="Xác nhận gửi báo cáo">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

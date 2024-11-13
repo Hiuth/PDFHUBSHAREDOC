@@ -1,0 +1,113 @@
+.recommend {
+    padding: 0 2vw;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.Group-title {
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: #D82B8A;
+    margin-top: 40px;
+    font-size: 20px;
+    font-family: Verdana, Tahoma, sans-serif;
+}
+
+.Docs-group {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.Docs {
+    flex: 1 0 calc(16.666% - 10px);
+    max-width: calc(16.666% - 10px);
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 0px 3px 4px rgb(96,96,96);
+}
+
+.docs-content {
+    position: relative;
+    width: 100%;
+}
+
+.docs-content img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Thêm một container cho ảnh và buttons */
+.Docs > img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.docsbutton {
+    position: absolute;
+    top: -5px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 25%;
+    padding: 5px;
+}
+#edit {
+    right: 30px;
+    background-color: orange;
+}
+
+#delete {
+    right: -5px;
+    background-color: red;
+}
+
+.docsbutton img {
+    width: 100%;
+    height: 100%;
+}
+
+.docTitle {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+    color: black;
+    width: 100%;  /* Thêm width 100% */
+}
+
+.docInfor {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    font-size: 11px;
+    color: #D82B8A;
+    width: 100%;  /* Thêm width 100% */
+}
+
+.uptime, .downtime, .price {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.uptime > img, .downtime > img, .price > img {
+    width: 20px;
+    margin-right: 2px;
+}
+
+#manage{
+    margin-top: 20px;
+}

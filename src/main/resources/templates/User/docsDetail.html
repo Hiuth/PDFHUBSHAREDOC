@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang chính</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+
+    <script defer src="../../static/js/User/include.js"></script>
+    <script src="../../static/js/User/docs.js"></script>
+
+    <link rel="icon" href="../../static/images/favicon.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="../../static/css/docs.css">
+    <link rel="stylesheet" href="../../static/css/home.css">
+    <link rel="stylesheet" href="../../static/css/form.css">
+    <link rel="stylesheet" href="../../static/css/details.css">
+
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div class="main-content">
+    <div class="main-part">
+        <div class="docsInfo-part">
+            <div class="Info-part">
+                <div class="DocTitle">
+                    Toán rời rạc - ĐH Giao Thông vận tải TPHCM
+                </div>
+                <div class="UserAndCategory">
+                    <div class="form-group2 admin">
+                        <img src="../../static/images/icons/avatar.png" alt="">
+                        <div class="gray" id="userName">Nguyễn Văn Tèo</div>
+                        <div class="role">Tác giả</div>
+                    </div>
+                    <div class="form-group2 Category">
+                        <div class="gray">Thể loại</div>
+                        <a>Toán rời rạc</a>
+                    </div>
+                </div>
+                <div class="caption">
+                    Tài liệu Toán rời rạc của Đại học giao thông vận tải TPHCM K22, giảng viên: Đại ca Long. Tài liệu của khoa bla bla bla...
+                      My best friend, Linh, is a person who possesses many admirable qualities. She is not only kind and caring but also 
+                     incredibly intelligent. She has a radiant smile that can light up the darkest room and a sense of humor that never fails 
+                     to make me laugh. Linh is an avid reader and a talented writer. We share a love for books and often spend hours discussing 
+                     our favorite authors and stories. She is a loyal friend who always stands by my side, and I am grateful to have her in my 
+                     life.  (copy đại để minh họa)
+                </div>
+                <div class="moreInfo">
+                    <div class="form-group2">
+                        <img src="../../static/images/icons/Clock.png" alt="">
+                        <div class="pink" id="uptime">9PM 02/09/2024</div>
+                    </div>
+                    <div class="num">
+                        <div class="form-group2">
+                            <img src="../../static/images/icons/QuotePink.png" alt="">
+                            <div class="pink"><div id="numComment">3</div>bình luận</div>
+                        </div>
+                        <div class="form-group2">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div class="pink"><div id="numDownLoads">3000</div>lượt tải</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="download-part">
+                <div class="download-p">
+                    <div class="form-group2">
+                        <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
+                        <a onclick="" id="share">Chia sẻ</a>
+                    </div>
+                    <div class="form-group2">
+                        <input type="number" name="numPages" id="numPages" value="1">
+                        <div class="black"> / <div id="totalPages">50</div> trang</div>
+                    </div>
+                    <a class="download-button"><img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</a>
+                </div>
+            </div>
+            <iframe src="https://www.orimi.com/pdf-test.pdf" class="docs-part">
+            </iframe>
+        </div>
+        <div class="comment-part">
+            <div class="form-group1">
+                <div class="form-group1">
+                    <label for="">Bình luận</label>
+                    <textarea name="comment" id="upcomment" placeholder="Để lại bình luận của bạn..."></textarea>
+                </div>
+                <div class="form-group1" id="comment-class">
+                    <div class="form-group2">
+                        <img id="cmt-ava" src="../../static/images/icons/avatar.png" alt="">
+                        <div class="gray" id="nameUserComment">Bé Hươu Cô Đơn</div>
+                    </div>
+                    <div id="cmtAndTime">
+                        <div class="cmt-content">Ước mơ được làm siêu nhân, làm siêu nhân, làm siêu nhân</div>
+                        <div class="form-group2">
+                            <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">
+                            <div class="black" id="cmt-time">9PM 22/10/2024</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recommend-part">
+        <div class="recommend">
+            <div class="Group-title">Truyện hay cho bé</div>
+            <div class="Docs-group">
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="docsDetail.html" class="Docs">
+                    <img src="../../static/images/sachHoa.jpg" alt="">
+                    <div class="docTitle">Hóa học bổ túc đúc cấp 1</div>
+                    <div class="docInfor">
+                        <div class="uptime">
+                            <img src="../../static/images/icons/Clock.png" alt="">
+                            <div id="time">9PM 22/12/2023</div>
+                        </div>
+                        <div class="downtime">
+                            <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                            <div id="down">20K</div>
+                        </div>
+                        <div class="price">
+                            <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                            <div id="docPrice">30</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="overlay" style="display: none;"></div>
+<div id="report-popup" style="display: none;">
+    <div class="popup-header">
+        <h3>Mẫu báo cáo vi phạm</h3>
+        <button class="close-btn" onclick="closeReportPopup()">×</button>
+    </div>
+    <form action="" name="report" id="report" class="form-group1">
+        <div class="form-group2">
+            <label for="violation-type">Loại vi phạm</label>
+            <select id="violation-type">
+                <option value="">Chọn loại vi phạm</option>
+                <option value="Nội dung bị cấm">Nội dung bị cấm</option>
+                <option value="Spam">Spam</option>
+                <option value="Lừa đảo">Lừa đảo</option>
+            </select>
+        </div>
+        <div class="error"></div>
+
+        <div class="form-group1">
+            <label for="description">Mô tả cụ thể</label>
+            <textarea id="description" placeholder="Viết mô tả cụ thể ở đây..."></textarea>
+        </div>
+
+        <input type="submit" onclick="return submitReportPopup()" style="width: 100%;" value="Xác nhận gửi báo cáo"></input>
+    </form>
+</div>
+<div id="footer-placeholder"></div>
+</body>
+</html>

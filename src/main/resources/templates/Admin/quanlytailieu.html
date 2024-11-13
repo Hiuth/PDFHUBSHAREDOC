@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="\WebChiaSeTaiLieu\src\main\resources\static\css\quanlykhachhang.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+          <div
+            class="logo-section d-flex align-items-center justify-content-center"
+          >
+            <h3 class="logo">
+              <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\pdfhub 6.png" alt="Logo" style="width: 100px" />
+            </h3>
+          </div>
+          <div class="nav-section">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">
+                  <i class="fas fa-tachometer-alt me-2"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="user_profile.html">
+                  <i class="fas fa-user me-2"></i>
+                  User Profile
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="quanlytaikhoan.html">
+                  <i class="fas fa-users-cog me-2"></i>
+                  Quản lý tài khoản
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="quanlytailieu.html">
+                  <i class="fas fa-file-alt me-2"></i>
+                  Quản lý tài liệu
+                </a>
+                <ul class="nav flex-column ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link" href="quanlydanhmuc.html">
+                      <i class="fas fa-folder-open me-2"></i>
+                      Quản lý danh mục
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav flex-column ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link" href="dangtaitailieu.html">
+                      <i class="fas fa-folder-open me-2"></i>
+                      Đăng tải tài liệu
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="quanlyphanhoi.html">
+                  <i class="fas fa-comment-alt me-2"></i>
+                  Quản lý phản hồi
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+          <!-- Top Navbar -->
+          <nav class="navbar navbar-expand-lg navbar-light top-navbar">
+            <div class="container-fluid">
+              <a class="navbar-brand d-none d-md-block" href="#">
+                <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\pdfhub 6.png" alt="Logo" width="100" />
+              </a>
+              <div class="d-flex align-items-center">
+                <a class="nav-link me-3" href="#">
+                  <i class="fas fa-bell"></i>
+                  <span class="badge bg-danger"></span>
+                </a>
+                <div class="dropdown">
+                  <a
+                    class="nav-link dropdown-toggle d-flex align-items-center"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span class="user-profile me-2">
+                      <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\Ellipse 14.png" alt="User" />
+                    </span>
+                    Quân sói đơn độc
+                  </a>
+                  <ul
+                    class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <a class="dropdown-item" href="user_profile.html"
+                        >Profile</a
+                      >
+                    </li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li>
+                      <a class="dropdown-item" href="login.html">Log out</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Document Management Section -->
+          <div class="category-management-section mt-5">
+            <h2 class="title">Quản lý tài liệu</h2>
+
+            <!-- Search Bar for Documents -->
+            <div class="search-container">
+              <input
+                type="text"
+                id ="searchDoc"
+                class="search-input"
+                placeholder="Tìm kiếm theo tiêu đề hoặc người đăng"
+              />
+              <button class="search-button" id ="docButton">
+                <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\bx-search.svg" alt="Search" />
+              </button>
+            </div>
+
+            <!-- Document Table -->
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tiêu đề</th>
+                  <th>Danh mục</th>
+                  <th>Nhóm</th>
+                  <th>Loại</th>
+                  <th>Người đăng</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+<!--                <tr>-->
+<!--                  <td>1</td>-->
+<!--                  <td>Tài liệu 1</td>-->
+<!--                  <td>Giáo dục</td>-->
+<!--                  <td>Toán 12</td>-->
+<!--                  <td>PDF</td>-->
+<!--                  <td>User1</td>-->
+<!--                  <td>Hợp lệ</td>-->
+<!--                  <td>-->
+<!--                    <button class="edit-button2">-->
+<!--                      <i class="fas fa-edit"></i>-->
+<!--                    </button>-->
+<!--                    <button class="view-details-button">-->
+<!--                      <i class="fas fa-eye"></i>-->
+<!--                    </button>-->
+<!--                    <button class="download-button">-->
+<!--                      <i class="fas fa-download"></i>-->
+<!--                    </button>-->
+<!--                    <button class="delete-button">-->
+<!--                      <i class="fas fa-trash"></i>-->
+<!--                    </button>-->
+<!--                  </td>-->
+<!--                </tr>-->
+              </tbody>
+            </table>
+            <!-- Modal to Edit Document Details -->
+            <div class="modal" id="editDocumentModal">
+              <div class="modal-contenttl">
+                <h3>Chỉnh sửa tài liệu</h3>
+
+                <input
+                        type="hidden"
+                        id="documentId"
+                        class="input-field"
+                        placeholder="ID tài liệu"
+                />
+
+                <label>Tiêu đề</label>
+                <input
+                        type="text"
+                        id="documentTitle"
+                        class="input-field"
+                        placeholder="Tiêu đề tài liệu"
+                />
+
+                <label>Danh mục</label>
+                <input
+                        type="text"
+                        id="documentCategory"
+                        class="input-field"
+                        placeholder="Danh mục"
+                />
+
+                <label>Nhóm</label>
+                <input
+                        type="text"
+                        id="documentGroup"
+                        class="input-field"
+                        placeholder="Nhóm"
+                />
+
+                <label>Loại</label>
+                <input
+                        type="text"
+                        id="documentType"
+                        class="input-field"
+                        placeholder="Loại"
+                />
+
+                <label>Người đăng</label>
+                <input
+                        type="text"
+                        id="documentAuthor"
+                        class="input-field"
+                        placeholder="Người Đăng"
+                />
+
+                <label>Điểm bài đăng</label>
+                <input
+                        type="text"
+                        id="documentPoint"
+                        class="input-field"
+                        placeholder="Điểm bài đăng"
+                />
+
+                <label>Mô tả</label>
+                <textarea
+                        id="documentDescription"
+                        class="input-field"
+                        placeholder="Mô tả tài liệu"
+                ></textarea>
+
+                <div class="modal-actions">
+                  <button class="cancel-button" onclick="closeEditModal()">
+                    Hủy bỏ
+                  </button>
+                  <button
+                          class="save-button"
+                          onclick="saveDocumentChanges()"
+                  >
+                    Lưu thay đổi
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Document Details Modal -->
+            <div class="document-modal" id="documentDetailsModal">
+              <div class="document-modal-content">
+                    <span
+                            class="close-modal"
+                            onclick="closeDocumentDetailsModal()"
+                    >&times;</span
+                    >
+                <h3>Chi tiết tài liệu</h3>
+                <div class="document-details">
+<!--                  <p>-->
+<!--                    <strong>ID:</strong> <span id="detailDocumentId"></span>-->
+<!--                  </p>-->
+                  <p>
+                    <strong>Tiêu đề:</strong>
+                    <span id="detailDocumentTitle"></span>
+                  </p>
+                  <p>
+                    <strong>Danh mục:</strong>
+                    <span id="detailDocumentCategory"></span>
+                  </p>
+                  <p>
+                    <strong>Nhóm:</strong>
+                    <span id="detailDocumentGroup"></span>
+                  </p>
+                  <p>
+                    <strong>Loại:</strong>
+                    <span id="detailDocumentType"></span>
+                  </p>
+                  <p>
+                    <strong>Người đăng:</strong>
+                    <span id="detailDocumentAuthor"></span>
+                  </p>
+                  <p>
+                    <strong>Điểm của bài:</strong>
+                    <span id="detailDocumentStatus"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="document-modal" id="documentDetailsModal">
+              <div class="document-modal-content">
+                    <span
+                            class="close-modal"
+                            onclick="closeDocumentDetailsModal()"
+                    >&times;</span
+                    >
+                <h3>Chi tiết tài liệu</h3>
+                <div class="document-details">
+                  <!-- Các chi tiết tài liệu -->
+<!--                  <p>-->
+<!--                    <strong>ID:</strong> <span id="detailDocumentId"></span>-->
+<!--                  </p>-->
+                  <p>
+                    <strong>Tiêu đề:</strong>
+                    <span id="detailDocumentTitle"></span>
+                  </p>
+                  <p>
+                    <strong>Danh mục:</strong>
+                    <span id="detailDocumentCategory"></span>
+                  </p>
+                  <p>
+                    <strong>Nhóm:</strong>
+                    <span id="detailDocumentGroup"></span>
+                  </p>
+                  <p>
+                    <strong>Loại:</strong>
+                    <span id="detailDocumentType"></span>
+                  </p>
+                  <p>
+                    <strong>Người đăng:</strong>
+                    <span id="detailDocumentAuthor"></span>
+                  </p>
+                  <p>
+                    <strong>Trạng thái:</strong>
+                    <span id="detailDocumentStatus"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="confirmDeleteModal" class="confirm-modal">
+              <div class="confirm-modal-content">
+                <h3>Xác nhận xóa</h3>
+                <p>Bạn có chắc chắn muốn xóa tài liệu này không?</p>
+                <div class="confirm-modal-buttons">
+                  <button class="btn-confirm-delete">Xóa</button>
+                  <button class="btn-cancel-delete">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="\webchiasetailieu\src\main\resources\static\js\Admin\quanlytailieu.js"></script>
+    <script>fetchAllDocuments()</script>
+  </body>
+</html>

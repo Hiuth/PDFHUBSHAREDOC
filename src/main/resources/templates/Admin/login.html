@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="\WebChiaSeTaiLieu\src\main\resources\static\css\styles.css" />
+    <title>Login</title>
+</head>
+<body>
+<div class="login">
+    <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\background 1.png" alt="login image" class="login__img" />
+
+    <form action="" class="login__form">
+        <img src="\WebChiaSeTaiLieu\src\main\resources\static\images\pdfhub 6.png" alt="Logo" class="login__logo" />
+
+        <div class="login__content">
+            <div class="login__box">
+                <i class="ri-user-3-line login__icon"></i>
+
+                <div class="login__box-input">
+                    <input
+                            type="email"
+                            required
+                            class="login__input"
+                            id="login-email"
+                            placeholder=" "
+                    />
+                    <label for="login-email" class="login__label">Email</label>
+                </div>
+            </div>
+
+            <div class="login__box">
+                <i class="ri-lock-2-line login__icon"></i>
+
+                <div class="login__box-input">
+                    <input
+                            type="password"
+                            required
+                            class="login__input"
+                            id="login-pass"
+                            placeholder=" "
+                    />
+                    <label for="login-pass" class="login__label">Password</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="login__check">
+            <div class="login__check-group">
+                <input
+                        type="checkbox"
+                        class="login__check-input"
+                        id="login-check"
+                />
+                <label for="login-check" class="login__check-label"
+                >Luôn nhớ tôi</label
+                >
+            </div>
+        </div>
+
+        <button type="button" class="login__button" onclick="login()">Đăng Nhập</button>
+    </form>
+</div>
+    <script type="module" src="\webchiasetailieu\src\main\resources\static\js\Admin\login.js"></script>
+</body>
+</html>

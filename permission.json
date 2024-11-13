@@ -1,0 +1,58 @@
+[
+  {
+    "name":"UP_FILE",
+    "description":"Upload a document"
+  },
+  {
+    "name":"DOWNLOAD",
+    "description":"Download a document"
+  },
+  {
+    "name":"DELETE_DOC",
+    "description":"Delete a document"
+  },
+  {
+    "name":"UPDATE_DOC",
+    "description":"Update a document"
+  },
+  {
+  "name": "VIEW_ACCOUNT",
+  "description": "View my account"
+  },
+  {
+    "name":"EDIT_ACCOUNT",
+    "description":"Edit an existing account"
+  },
+  {
+    "name":"CHANGE_PASSWORD",
+    "description":"Change password"
+  },
+  {
+    "name":"COMMENT",
+    "description":"Create a comment"
+  },
+  {
+    "name":"EDIT_COMMENT",
+    "description":"Edit a comment"
+  },
+  {
+    "name":"DELETE_COMMENT",
+    "description":"Delete a comment"
+  },
+  {
+    "name":"DELETE_FEEDBACK",
+    "description":"Delete a feedback"
+  },
+  {
+    "name":"EDIT_PER_INFO",
+    "description":"Update personal information"
+  },
+  {
+    "name": "VIEW_PERINFO",
+    "description": "View my personal information"
+  },
+  {
+    "name": "UP_AVATAR",
+    "description": "up my avatar"
+  }
+]
