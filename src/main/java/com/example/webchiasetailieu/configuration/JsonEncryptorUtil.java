@@ -1,8 +1,6 @@
 package com.example.webchiasetailieu.configuration;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +10,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Slf4j
+@Setter
 @Component
+@Slf4j
 public class JsonEncryptorUtil {
 
-    //    @NonFinal
-//    @Value("${json-encrypt-password}")
-    protected String password = "qUIO01I4tQtECy3nFMP4kI1RK27VqetVfCMf+SQJpnL+xVN9Cv1w7HCkvEPsGTVW";
+    @Value("${json-encrypt.password}")
+    private String password;
 
     public void encryptJsonFile(String filePath, String encryptedFilePath) {
         try {
@@ -61,5 +58,6 @@ public class JsonEncryptorUtil {
             return null;
         }
     }
+
 }
 

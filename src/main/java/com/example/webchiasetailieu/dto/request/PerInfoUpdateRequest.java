@@ -22,7 +22,5 @@ public class PerInfoUpdateRequest {
 
     @Pattern(regexp = "Male|Female", message = "GENDER_INVALID")
     String gender;
-
-    String avatar;
 }
 

@@ -2,10 +2,12 @@ package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.AccountCreationRequest;
 import com.example.webchiasetailieu.dto.request.AccountUpdateRequest;
+import com.example.webchiasetailieu.dto.request.SendEmailRequest;
 import com.example.webchiasetailieu.dto.request.UpdatePassword;
 import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.RoleResponse;
 import com.example.webchiasetailieu.entity.Account;
+import com.example.webchiasetailieu.enums.EmailType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
@@ -16,7 +18,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,11 +50,14 @@ public class AccountService {
         if(accountRepository.existsByName(accountRequest.getName()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
 
-//        mailService.sendOTPMail(accountRequest.getEmail());
+        if(!mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
+                        .email(accountRequest.getEmail())
+                        .emailType(EmailType.REGISTER)
+                .build()))
+            throw new AppException(ErrorCode.FAILED_TO_SENT_EMAIL);
         if(Integer.parseInt(accountRequest.getOtp()) != 123456)
             throw new AppException(ErrorCode.OTP_INCORRECT);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Account account = Account.builder()
                 .email(accountRequest.getEmail())
                 .password(passwordEncoder.encode(accountRequest.getPassword()))
@@ -92,11 +96,17 @@ public class AccountService {
     }
 
     @PreAuthorize("hasRole('USER')")
-    public String forgetPassword(String id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        boolean check = mailService.sendOTPMail(account.getEmail());
+    public String forgetPassword(String newPass) {
+        boolean check = mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
+                        .email(getAccountFromContext().getEmail())
+                        .emailType(EmailType.FORGOT_PASSWORD)
+                .build());
         if(!check) throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
-        return "Email sent successfully!";
+
+        Account account = getAccountFromContext();
+        account.setPassword(passwordEncoder.encode(newPass));
+
+        return "Reset password successfully!";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -194,7 +204,7 @@ public class AccountService {
 
     private AccountResponse convertToResponse(Account account) {
         Set<RoleResponse> roleResponses = account.getRoles().stream()
-                .map(role -> roleService.convertToResponse(role))
+                .map(roleService::convertToResponse)
                 .collect(Collectors.toSet());
 
         return AccountResponse.builder()

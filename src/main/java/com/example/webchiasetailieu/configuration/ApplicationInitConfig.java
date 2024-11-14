@@ -39,21 +39,28 @@ public class ApplicationInitConfig {
     RoleLoader roleLoader;
 
     @NonFinal
-    @Value("${jwt.admin-password}")
-    static String adminPassword;
+    @Value("${admin-password}")
+    protected String adminPassword;
+
+    @NonFinal
+    @Value("${json-encrypt.password}")
+    private String password;
 
     @Bean
     @Transactional
     ApplicationRunner applicationRunner(AccountRepository accountRepository) {
         return args -> {
+
+            JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
+            jsonEncryptorUtil.setPassword(password);
+
             String currentDirectory = System.getProperty("user.dir");
             Path permissionsFilePath = Paths.get(currentDirectory, "permission.json");
             Path rolesFilePath = Paths.get(currentDirectory, "roles.json");
-            Path driveFilePath = Paths.get(currentDirectory, "pdfhub-438314-2ecea7d9fee0.json");
+            Path driveFilePath = Paths.get(currentDirectory, "");
 
             Path encryptedDriveFilePath = Paths.get(currentDirectory, "drive.json.enc");
             if (!Files.exists(encryptedDriveFilePath)) {
-                JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
                 jsonEncryptorUtil.encryptJsonFile(driveFilePath.toString(), encryptedDriveFilePath.toString());
             }
 

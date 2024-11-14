@@ -32,17 +32,13 @@ public class PersonalInformationService {
     DriveService driveService;
 
     @PreAuthorize("hasAuthority('EDIT_PER_INFO')")
-    public PerInfoResponse addPersonalInformation(PerInfoCreationRequest request) {
+    public PerInfoResponse addPersonalInformation(PerInfoUpdateRequest request) {
         PersonalInformation personalInformation = getPerInfoFromContext();
-
         if(request.getFullName() != null)
             personalInformation.setFullName(request.getFullName());
 
         if(request.getGender() != null)
             personalInformation.setGender(request.getGender());
-
-        if(request.getAvatar() != null)
-            personalInformation.setAvatar(request.getAvatar());
 
         if(request.getBirthday() != null)
             personalInformation.setBirthday(request.getBirthday());
@@ -78,14 +74,14 @@ public class PersonalInformationService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public PerInfoResponse getPersonalInformationByAccountId(String AccountId) {
-        if(!accountRepository.existsById(AccountId))
+    public PerInfoResponse getPersonalInformationByAccountId(String accountId) {
+        if(!accountRepository.existsById(accountId))
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
 
-        if(perRepository.findByAccountId(AccountId) == null)
+        if(perRepository.findByAccountId(accountId) == null)
             throw new AppException(ErrorCode.PERINFO_EMPTY);
 
-        return convertToResponse(perRepository.findByAccountId(AccountId));
+        return convertToResponse(perRepository.findByAccountId(accountId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -99,15 +95,11 @@ public class PersonalInformationService {
     public PerInfoResponse updatePersonalInformation(String id, PerInfoUpdateRequest request) {
         PersonalInformation personalInformation = perRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         if(request.getFullName() != null)
             personalInformation.setFullName(request.getFullName());
 
         if(request.getGender() != null)
             personalInformation.setGender(request.getGender());
-
-        if(request.getAvatar() != null)
-            personalInformation.setAvatar(request.getAvatar());
 
         if(request.getBirthday() != null)
             personalInformation.setBirthday(request.getBirthday());
@@ -131,9 +123,12 @@ public class PersonalInformationService {
     public PerInfoResponse saveMyAvatar(MultipartFile file) throws IOException, GeneralSecurityException {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
+
         Account account = accountRepository.findByEmail(email).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+
         PersonalInformation personalInformation = perRepository.findByAccountId(account.getId());
         personalInformation.setAvatar(upImage(file).getUrl());
+
         return convertToResponse(perRepository.save(personalInformation));
     }
 
@@ -142,19 +137,19 @@ public class PersonalInformationService {
         String email = context.getAuthentication().getName();
         Account account = accountRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
-//        PersonalInformation personalInfo = perRepository.findByAccountId(account.getId());
-//        System.out.println("Personal info: " + personalInfo);
         return perRepository.findByAccountId(account.getId());
     }
 
     private DriveResponse upImage(MultipartFile file) throws IOException, GeneralSecurityException {
         String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null || !originalFileName.contains(".")) {
+            throw new IllegalArgumentException("File must have a valid name with an extension.");
+        }
         String fileNameWithoutExtension = originalFileName.substring(0, originalFileName.lastIndexOf("."));
         String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         File tempFile = File.createTempFile(fileNameWithoutExtension, fileExtension);
         file.transferTo(tempFile);
-        DriveResponse res = driveService.uploadImagesToDrive(tempFile);
-        return res;
+        return driveService.uploadImagesToDrive(tempFile);
     }
 
     private PerInfoResponse convertToResponse(PersonalInformation perInfo) {
@@ -167,7 +162,6 @@ public class PersonalInformationService {
                 .username(perInfo.getAccount().getName())
                 .points(perInfo.getAccount().getPoints())
                 .accountId(perInfo.getAccount().getId())
-//                .account(perInfo.getAccount())
                 .build();
     }
 }

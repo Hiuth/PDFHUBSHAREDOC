@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +23,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PersonalInformationController {
 
-    @Autowired
     private PersonalInformationService perInfoService;
 
     @GetMapping
@@ -51,6 +49,13 @@ public class PersonalInformationController {
         return response;
     }
 
+    @PostMapping("/add-my-info")
+    ApiResponse<PerInfoResponse> addPersonalInformation(@RequestBody @Valid PerInfoUpdateRequest request) {
+        ApiResponse<PerInfoResponse> response = new ApiResponse<>();
+        response.setResult(perInfoService.addPersonalInformation(request));
+        return response;
+    }
+
     @GetMapping("/account/{id}")
     ApiResponse<PerInfoResponse> getPersonalInformationByAccountId(@PathVariable String id) {
         ApiResponse<PerInfoResponse> response = new ApiResponse<>();
@@ -61,14 +66,14 @@ public class PersonalInformationController {
 
     @PostMapping
     ApiResponse<PerInfoResponse> createPersonalInformation(@RequestBody @Valid PerInfoCreationRequest request) {
-        ApiResponse<PerInfoResponse> response = new ApiResponse<PerInfoResponse>();
+        ApiResponse<PerInfoResponse> response = new ApiResponse<>();
         response.setResult(perInfoService.createPersonalInformation(request));
         return response;
     }
 
     @PutMapping("{id}")
     ApiResponse<PerInfoResponse> updatePersonalInformation(@PathVariable String id, @RequestBody @Valid PerInfoUpdateRequest request) {
-        ApiResponse<PerInfoResponse> response = new ApiResponse<PerInfoResponse>();
+        ApiResponse<PerInfoResponse> response = new ApiResponse<>();
         response.setMessage("Update personal information");
         response.setResult(perInfoService.updatePersonalInformation(id, request));
         return response;
@@ -82,8 +87,8 @@ public class PersonalInformationController {
         return response;
     }
 
-    @PostMapping("/upAvatar/{accountId}")
-    ApiResponse<PerInfoResponse> AddMyAvatar(@RequestParam("file") MultipartFile file, @PathVariable String accountId)  throws GeneralSecurityException, IOException {
+    @PostMapping("/upMyAvatar")
+    ApiResponse<PerInfoResponse> addMyAvatar(@RequestParam("file") MultipartFile file)  throws GeneralSecurityException, IOException {
         return ApiResponse.<PerInfoResponse>builder()
                 .result(perInfoService.saveMyAvatar(file))
                 .build();

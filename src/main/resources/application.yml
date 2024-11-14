@@ -6,13 +6,16 @@ jwt:
   token-valid-duration: 86400  #seconds
   token-refreshable-duration: 864000  #seconds 10 days
 
-json-encrypt-password: "qUIO01I4tQtECy3nFMP4kI1RK27VqetVfCMf+SQJpnL+xVN9Cv1w7HCkvEPsGTVW"
+json-encrypt:
+  password: "qUIO01I4tQtECy3nFMP4kI1RK27VqetVfCMf+SQJpnL+xVN9Cv1w7HCkvEPsGTVW"
+
+admin-password: "admin"
 
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/webchiasetailieu"
     username: root
-    password: vuhoangquan2004
+    password: 251204
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

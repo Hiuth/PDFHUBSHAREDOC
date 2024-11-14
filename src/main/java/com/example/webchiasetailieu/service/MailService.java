@@ -1,8 +1,14 @@
 package com.example.webchiasetailieu.service;
 
+import com.example.webchiasetailieu.dto.request.SendEmailRequest;
+import com.example.webchiasetailieu.dto.response.SendEmailResponse;
+import com.example.webchiasetailieu.enums.EmailType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,58 +16,62 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MailService {
-    @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
 
-//    @Autowired
-//    private OTPService otpService;
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
+        return !pattern.matcher(email).matches();
     }
 
-    public boolean sendMail(String to, String subject, String content) {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(content);
-        message.setFrom("pdfHub5shareDoc@gmail.com");  // Đảm bảo email gửi là từ tài khoản đã cấu hình
-
-        System.out.println("Sending email to: " + to);
-        try {
-            mailSender.send(message);
-            System.out.println("Email sent successfully!");
+    public boolean classifyBeforeSendEmail(SendEmailRequest request) {
+        if(request.getEmailType() == EmailType.DOWNLOAD) {
+            SendEmailResponse response = SendEmailResponse.builder()
+                    .subject("Tài liệu của bạn có một lượt tải")
+                    .body("Tài liệu của bạn có một lượt tải")
+                    .build();
+            sendEmail(response, request);
             return true;
-        } catch (MailException e) {
-            e.printStackTrace();
-            System.out.println("Failed to send email: " + e.getMessage());
-            return false;
-        }  // Thêm dòng này để thực sự gửi email
+        }
+        else if(request.getEmailType() == EmailType.REGISTER){
+            SendEmailResponse response = SendEmailResponse.builder()
+                    .subject("Mã đăng ký tài khoản")
+                    .body("Mã đăng ký tài khoản của bạn là: 123456")
+                    .build();
+            sendEmail(response, request);
+            return true;
+        }
+        else if(request.getEmailType() == EmailType.FORGOT_PASSWORD){
+            SendEmailResponse response = SendEmailResponse.builder()
+                    .subject("Mã reset password")
+                    .body("Mã reset password của bạn là: 123456")
+                    .build();
+            sendEmail(response, request);
+            return true;
+        }
+        else return false;
     }
 
-    public boolean sendOTPMail(String email){
-        if (!isValidEmail(email)) {
-            System.out.println("Email không hợp lệ: " + email);
+    private void sendEmail(SendEmailResponse response, SendEmailRequest request) {
+        if (isValidEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_INVALID);
         }
-
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
+        message.setTo(request.getEmail());
         message.setFrom("pdfHub5shareDoc@gmail.com");
-        message.setSubject("Ma OTP");
-        message.setText("Ma dang ky tai khoan pdfHub: 123456" /*+ otpService.generateOTP()*/);
+        message.setSubject(response.getSubject());
+        message.setText(response.getBody());
 
         try {
             mailSender.send(message);
-            System.out.println("Email sent successfully!");
-            return true;
+            log.info("Email sent successfully to '{}', subject: '{}'", request.getEmail(), response.getSubject());
         } catch (MailException e) {
-            e.printStackTrace();
-            System.out.println("Failed to send email: " + e.getMessage());
-            return false;
+            log.error("An error occurred while doing something", e);
+            log.error("Failed to sent email: {}", e.getMessage(), e);
         }
     }
 }

@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.example.webchiasetailieu.service.AccountService.BanType;
 
@@ -113,11 +112,11 @@ public class AccountController {
         return response;
     }
 
-    @PostMapping("/forgetPassword/{id}")
-    ApiResponse<String> sendEmail(@PathVariable String id) {
+    @PostMapping("/forgetPassword")
+    ApiResponse<String> resetPassword(String newPass) {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Forget password");
-        response.setResult(accountService.forgetPassword(id));
+        response.setResult(accountService.forgetPassword(newPass));
         return response;
     }
 }

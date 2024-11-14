@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
@@ -33,27 +30,28 @@ import java.util.Collections;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class DriveService {
-    static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    static String SERVICE_ACCOUNT_KEY_PATH = getPathToGoogleCredentials();
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-    private static String getPathToGoogleCredentials() {
+    private String getPathToGoogleCredentials() {
         String currentDirectory = System.getProperty("user.dir");
         Path encryptedFilePath = Paths.get(currentDirectory, "drive.json.enc");
         Path tempDecryptedFilePath = Paths.get(currentDirectory, "decrypted_drive.json");
+        String decryptedContent = null;
 
         if (!Files.exists(encryptedFilePath)) {
             log.error("File không tồn tại: " + encryptedFilePath);
             return null;
         }
 
-        JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
-        String decryptedContent = jsonEncryptorUtil.decryptJsonFile(encryptedFilePath.toString());
+        if(!Files.exists(tempDecryptedFilePath)) {
+            JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
+            decryptedContent = jsonEncryptorUtil.decryptJsonFile(encryptedFilePath.toString());
+        }
 
         if (decryptedContent != null) {
             log.info("Giải mã thành công");
 
             try {
-                // Lưu nội dung đã giải mã vào file .json tạm thời
                 Files.write(tempDecryptedFilePath, decryptedContent.getBytes());
                 log.info("File giải mã đã được lưu tạm tại: " + tempDecryptedFilePath);
                 return tempDecryptedFilePath.toString();
@@ -70,35 +68,29 @@ public class DriveService {
 
     public boolean downloadFile(String url, String fileType, String name) {
         try {
-            // Lấy đường dẫn đến thư mục Downloads của người dùng\
             String userHome = System.getProperty("user.home");
             String fileName = name + ".";
             Path downloadPath = Paths.get(userHome, "Downloads", fileName + fileType);
 
-            // Tạo kết nối tới URL
             URL downloadUrl = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) downloadUrl.openConnection();
             connection.setRequestMethod("GET");
 
-            // Kiểm tra phản hồi từ server
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                // Đọc dữ liệu từ kết nối
                 InputStream inputStream = connection.getInputStream();
 
-                // Ghi dữ liệu vào file
                 Files.copy(inputStream, downloadPath, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("File saved to: " + downloadPath.toString());
+                log.info("File saved to: " + downloadPath);
 
-                // Đóng các stream
                 inputStream.close();
                 return true;
             } else {
-                System.out.println("Failed to download file. Server returned code: " + connection.getResponseCode());
+                log.warn("Failed to download file. Server returned code: " + connection.getResponseCode());
                 return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("An error occurred during download: " + e.getMessage());
+            log.warn("An error occurred during download: " + e.getMessage());
             return false;
         }
     }
@@ -115,16 +107,14 @@ public class DriveService {
             FileContent mediaContent = new FileContent("image/jpeg", file);
             com.google.api.services.drive.model.File uploadedFile = drive.files().create(fileMetadata, mediaContent)
                     .setFields("id").execute();
-            //String url = "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
             String url = "https://drive.google.com/file/d/"+uploadedFile.getId()+"/view";
-            System.out.println("FILE URL : " + url);
-            file.delete();
+            cleanUp(file.toPath());
             res.setStatus(200);
             res.setMessage("File uploaded successfully");
             res.setUrl(url);
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            log.warn(e.getMessage());
             res.setStatus(500);
             res.setMessage(e.getMessage());
         }
@@ -132,7 +122,7 @@ public class DriveService {
         return res;
     }
 
-    public DriveResponse uploadFileToDrive(File file) throws GeneralSecurityException, IOException {
+    public DriveResponse uploadFileToDrive(File file) {
         DriveResponse res = new DriveResponse();
 
         try{
@@ -147,14 +137,14 @@ public class DriveService {
                     .setFields("id").execute();
 
             String url = "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
-            file.delete();
+            cleanUp(file.toPath());
 
             res.setStatus(200);
             res.setMessage("File uploaded successfully");
             res.setUrl(url);
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            log.warn(e.getMessage());
             res.setStatus(500);
             res.setMessage(e.getMessage());
         }
@@ -162,7 +152,11 @@ public class DriveService {
         return res;
     }
 
-    public DriveResponse deleteFileFromDrive(String fileId) throws GeneralSecurityException, IOException {
+    public void cleanUp(Path path) throws IOException {
+        Files.delete(path);
+    }
+
+    public DriveResponse deleteFileFromDrive(String fileId) {
         DriveResponse res = new DriveResponse();
 
         try {
@@ -172,7 +166,7 @@ public class DriveService {
             res.setStatus(200);
             res.setMessage("File deleted successfully");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.warn(e.getMessage());
             res.setStatus(500);
             res.setMessage("Failed to delete file: " + e.getMessage());
         }
@@ -186,7 +180,7 @@ public class DriveService {
             throw new IOException("Không thể giải mã file thông tin đăng nhập Google.");
         }
 
-        GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream(decryptedFilePath))
+        GoogleCredential credentials = GoogleCredential.fromStream(new FileInputStream(decryptedFilePath))
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));
 
         // Xóa file .json tạm thời sau khi sử dụng
@@ -200,6 +194,6 @@ public class DriveService {
         return new Drive.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
                 JSON_FACTORY,
-                credential).build();
+                credentials).build();
     }
 }

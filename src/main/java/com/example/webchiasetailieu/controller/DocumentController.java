@@ -4,6 +4,7 @@ import com.example.webchiasetailieu.dto.request.UpdateDocumentRequest;
 import com.example.webchiasetailieu.dto.response.*;
 import com.example.webchiasetailieu.entity.DocCategory;
 import com.example.webchiasetailieu.entity.Documents;
+import com.example.webchiasetailieu.entity.DownloadHistory;
 import com.example.webchiasetailieu.service.DocumentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,20 +31,36 @@ public class DocumentController {
             @RequestParam("description") String description,
             @RequestParam("docCategoryId") String docCategoryId,
             @RequestParam("point") int point,
-//            @RequestParam("accountId") String accountId,
             @RequestParam("avatar") String avatar)
-            throws IOException, GeneralSecurityException {
+            throws IOException {
         return ApiResponse.<DriveResponse>builder()
                 .result(documentService.uploadFile(file,docName,docType,description,
                          docCategoryId,point,avatar))
                 .build();
     }
 
-    @GetMapping("/download/{docId}/{accountId}")
-    public ApiResponse<String> handleFileDownload(@PathVariable String docId, @PathVariable String accountId){
+    @GetMapping("/get-my-doc")
+    public ApiResponse<List<Documents>> getMyDoc(){
+        return ApiResponse.<List<Documents>>builder()
+                .code(1000)
+                .message("Get my documents:")
+                .result(documentService.getMyDocuments())
+                .build();
+    }
+
+    @GetMapping("/download/{docId}")
+    public ApiResponse<String> handleFileDownload(@PathVariable String docId){
         return ApiResponse.<String>builder()
                 .message("Download file:")
-                .result(documentService.download(docId, accountId))
+                .result(documentService.download(docId))
+                .build();
+    }
+
+    @GetMapping("/my-download-history")
+    public ApiResponse<List<DownloadHistory>> getMyDownloadHistory(){
+        return ApiResponse.<List<DownloadHistory>>builder()
+                .message("My download history:")
+                .result(documentService.getMyDownloadHistory())
                 .build();
     }
 
@@ -73,13 +90,14 @@ public class DocumentController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<DocumentResponse> updateDocument(@PathVariable String id,
-                                                 @RequestParam("file") MultipartFile file,
-                                                 @RequestParam("docName") String docName,
-                                                 @RequestParam("docType") String docType,
-                                                 @RequestParam("description") String description,
-                                                 @RequestParam("docCategoryId") String docCategoryId,
-                                                 @RequestParam("avatar") String avatar)
+    ApiResponse<DocumentResponse> updateDocument(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("docName") String docName,
+            @RequestParam("docType") String docType,
+            @RequestParam("description") String description,
+            @RequestParam("docCategoryId") String docCategoryId,
+            @RequestParam("avatar") String avatar)
             throws IOException, GeneralSecurityException {
         return ApiResponse.<DocumentResponse>builder()
                 .code(1000)
