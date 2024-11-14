@@ -1,5 +1,6 @@
 package com.example.webchiasetailieu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -25,6 +26,7 @@ public class Account {
     boolean isBanned;
     LocalDateTime banUntil;
 
+    @JsonIgnore
     @ManyToMany
     Set<Role> roles;
 }

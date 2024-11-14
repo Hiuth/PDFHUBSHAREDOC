@@ -1,106 +1,126 @@
-
-// function fetchAllAccounts() {
-//     const socket = new SockJS("http://localhost:8088/ws");
-//     const client = Stomp.over(socket);
-//     client.connect({}, function (frame) {
-//         client.debug = function (str) {};
-//         //console.log("Connected: " + frame);
-//         client.send("/app/allAccounts");  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
-//
-//         // Nhận danh sách tài khoản từ server và hiển thị trong bảng
-//         client.subscribe('/topic/accounts', function (data) {
-//             const response = JSON.parse(data.body);
-//             const accounts = response.result
-//             if(Array.isArray(accounts)) {
-//                 var i = 1;
-//                 const tbody = document.querySelector('.user-table tbody');
-//                 tbody.innerHTML = ''; // Xóa nội dung cũ trong bảng
-//                 accounts.forEach(account => {
-//                     const row = document.createElement('tr');
-//                     row.innerHTML = `
-//                 <td>${i}</td>
-//                 <td>${account.name}</td>
-//                 <td>${account.email}</td>
-//                 <td class="password-cell">
-//                     <span class="password-text">${account.points}</span>
-//                 </td>
-//                 <td>Active</td>
-//                 <td>
-//                     <button class="edit-button" onclick = "openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-//                         <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
-//                     </button>
-//                     <button class="status-button unlocked" onclick= "toggleLockStatus('${account.id}')">
-//                         <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
-//                     </button>
-//                 </td>
-//                 `;
-//                     tbody.appendChild(row);
-//                     i++;
-//                 });
-//             }else {
-//                 console.error("Expected an array but received:", accounts);
-//             }
-//         });
-//     });
-// }
 import {getToken} from "../Share/localStorageService.js";
 
 export function fetchAllAccounts() {
     const token = getToken();
     if (!token) {
-        // Handle the case where the token is not available
-        console.error('No token found. Please log in again.');
+        console.error("Token không hợp lệ hoặc không tồn tại");
         return;
     }
-    fetch("http://localhost:8088/account", {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+
+    client.connect(
+        {Authorization: `Bearer ${token}`}, function (frame) {
+            console.log('Connected:', frame);
+            client.send("/app/allAccounts", {}, JSON.stringify({}));
+            client.subscribe('/topic/accounts', function (data) {
+                try {
+                    const response = JSON.parse(data.body);
+                    const accounts = response.result;
+
+                    if (Array.isArray(accounts)) {
+                        let i = 1;
+                        const tbody = document.querySelector('.user-table tbody');
+                        if (!tbody) {
+                            console.error("Table body element not found");
+                            return;
+                        }
+
+                        tbody.innerHTML = '';
+
+                        accounts.forEach(account => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                            <td>${i}</td>
+                            <td>${account.name}</td>
+                            <td>${account.email}</td>
+                            <td class="password-cell">
+                                <span class="password-text">${account.points}</span>
+                            </td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-button" onclick="openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
+                                    <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
+                                </button>
+                                <button class="status-button unlocked" onclick="toggleLockStatus('${account.id}')">
+                                    <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
+                                </button>
+                            </td>
+                        `;
+                            tbody.appendChild(row);
+                            i++;
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error processing response:", error);
+                }
+            });
         },
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const accounts = data.result;
-            if (Array.isArray(accounts)) {
-                let i = 1;
-                const tbody = document.querySelector('.user-table tbody');
-                tbody.innerHTML = ''; // Xóa nội dung cũ trong bảng
-                accounts.forEach(account => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td>${i}</td>
-                    <td>${account.name}</td>
-                    <td>${account.email}</td>
-                    <td class="password-cell">
-                        <span class="password-text">${account.points}</span>
-                    </td>
-                    <td>Active</td>
-                    <td>
-                        <button class="edit-button" onclick="openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-                            <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
-                        </button>
-                        <button class="status-button unlocked" onclick="toggleLockStatus('${account.id}')">
-                            <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
-                        </button>
-                    </td>
-                `;
-                    tbody.appendChild(row);
-                    i++;
-                });
-            } else {
-                console.error("Expected an array but received:", accounts);
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching accounts:", error);
-        });
+        function (error) {
+            console.error("STOMP connection error:", error);
+        }
+    );
+
 }
+
+
+// export function fetchAllAccounts() {
+//     const token = getToken();
+//     if (!token) {
+//         // Handle the case where the token is not available
+//         console.error('No token found. Please log in again.');
+//         return;
+//     }
+//     fetch("http://localhost:8088/account", {
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//         },
+//     })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error("Network response was not ok");
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             const accounts = data.result;
+//             if (Array.isArray(accounts)) {
+//                 let i = 1;
+//                 const tbody = document.querySelector('.user-table tbody');
+//                 tbody.innerHTML = ''; // Xóa nội dung cũ trong bảng
+//                 accounts.forEach(account => {
+//                     const row = document.createElement('tr');
+//                     row.innerHTML = `
+//                     <td>${i}</td>
+//                     <td>${account.name}</td>
+//                     <td>${account.email}</td>
+//                     <td class="password-cell">
+//                         <span class="password-text">${account.points}</span>
+//                     </td>
+//                     <td>Active</td>
+//                     <td>
+//                         <button class="edit-button" onclick="openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
+//                             <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
+//                         </button>
+//                         <button class="status-button unlocked" onclick="toggleLockStatus('${account.id}')">
+//                             <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
+//                         </button>
+//                     </td>
+//                 `;
+//                     tbody.appendChild(row);
+//                     i++;
+//                 });
+//             } else {
+//                 console.error("Expected an array but received:", accounts);
+//             }
+//         })
+//         .catch(error => {
+//             console.error("Error fetching accounts:", error);
+//         });
+// }
 
 
 

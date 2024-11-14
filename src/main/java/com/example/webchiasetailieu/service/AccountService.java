@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -120,6 +121,9 @@ public class AccountService {
         return convertToResponse(accountRepository.save(account));
     }
 
+
+
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public List<Account> getAllAccounts() {
         log.info("Get all accounts");

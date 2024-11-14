@@ -12,7 +12,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.example.webchiasetailieu.service.AccountService.BanType;
 
@@ -34,6 +37,8 @@ public class AccountController {
     }
 
     @GetMapping()
+    @MessageMapping("/allAccounts")
+    @SendTo("/topic/accounts")
     ApiResponse<List<Account>> getAccounts() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("account: {}", authentication.getName());
