@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {"/account", "/auth/token", "/auth/introspect", "/auth/logout",
-            "/auth/refresh"};
+            "/auth/refresh","/ws/**","/app/**","/topic/**"};
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {"/comment/doc/*", "/docCategory/get-all", "/doc/get-all",
             "doc/get-id/*"};
@@ -40,7 +40,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        requests .requestMatchers("/ws/**", "/topic/**", "/app/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 ->
@@ -48,18 +49,48 @@ public class SecurityConfig {
                                 .jwtAuthenticationConverter(jwtConverter())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
+                //.csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/topic/**", "/app/**"))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return httpSecurity.build();
     }
+
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token", "upgrade","connection", "sec-websocket-key", "sec-websocket-version"));
+//        configuration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "authorization",
+                "content-type",
+                "x-auth-token",
+                "upgrade",
+                "connection",
+                "sec-websocket-key",
+                "sec-websocket-version"
+        ));
+        configuration.setExposedHeaders(Arrays.asList(
+                "upgrade",
+                "connection",
+                "sec-websocket-key",
+                "sec-websocket-version"
+        ));
+        configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/ws/**", configuration);
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
