@@ -52,6 +52,8 @@ public class DocumentController {
     }
 
     @GetMapping("/download/{docId}")
+    @MessageMapping("/downloadFile/{docId}")
+    @SendTo("/topic/downFile")
     public ApiResponse<String> handleFileDownload(@PathVariable String docId){
         return ApiResponse.<String>builder()
                 .message("Download file:")
@@ -132,7 +134,9 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{id}")
-    ApiResponse<String> deleteDocument(@PathVariable String id) throws GeneralSecurityException, IOException {
+    @MessageMapping("/deleteDoc/{id}")
+    @SendTo("/topic/deleteDocument")
+    ApiResponse<String> deleteDocument(@DestinationVariable String id) throws GeneralSecurityException, IOException {
         return ApiResponse.<String>builder()
                 .message("Delete document")
                 .result(documentService.delete(id))

@@ -119,9 +119,17 @@ document.querySelectorAll(".edit-button2").forEach((button) => {
 
 // Hàm tải xuống tài liệu
 function downloadDocument(documentId) {
-  // Giả lập việc tải xuống tài liệu
-    client.send("");
-
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({Authorization: `Bearer ${token}`},function(frame){
+        client.subscribe('/topic/downFile', function (message) {
+            const result = JSON.parse(message.body);
+            alert(result.message);
+        })
+        client.send(`/app/downloadFile/${documentId}`,{},JSON.stringify(documentId));
+    })
 }
 
 // Hàm hiển thị xác nhận xóa
@@ -144,17 +152,18 @@ function showDeleteConfirmation(documentId) {
 
 // Hàm xóa tài liệu
 function deleteDocument(documentId) {
+    const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
   // Giả lập việc xóa tài liệu
-    client.connect({},function(frame){
-        client.debug = function (str) {};
-        console.log(frame);
+    client.debug = function (str) {};
+    client.connect({Authorization: `Bearer ${token}`},function(frame){
         client.subscribe('/topic/deleteDocument', function (message) {
             const result = JSON.parse(message.body);
-            alert(result.message);
+            //alert(result.message);
         })
         client.send(`/app/deleteDoc/${documentId}`,{},JSON.stringify(documentId));
+        window.location.reload();
     })
 }
 
@@ -240,9 +249,6 @@ export function fetchAllDocuments() {
                     </button>
                     <button class="download-button">
                       <i class="fas fa-download"></i>
-<!--                     <button class="view-details-button">-->
-<!--                      <i class="fas fa-edit"></i>-->
-<!--                    </button>-->
                     </button>
                     <button class="delete-button">
                       <i class="fas fa-trash"></i>
@@ -257,9 +263,6 @@ export function fetchAllDocuments() {
                     row.querySelector(".download-button").onclick = function () {
                         downloadDocument(doc.id);
                     };
-                    // row.querySelector(".view-details-button").onclick = function () {
-                    //     openEditModal(doc.id, doc.name, doc.category.mainCategory, doc.category.subCategory, doc.type, doc.createdBy.name, doc.point,doc.description);
-                    // };
                     row.querySelector(".delete-button").onclick = function () {
                         showDeleteConfirmation(doc.id);
                     };

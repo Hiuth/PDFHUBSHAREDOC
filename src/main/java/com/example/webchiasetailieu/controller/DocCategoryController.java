@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,8 @@ public class DocCategoryController {
     }
 
     @GetMapping("/get-all")
+    @MessageMapping("allCategories")
+    @SendTo("/topic/getAllCategory")
     public ApiResponse<List<DocCategory>> getAllCategory(){
         ApiResponse<List<DocCategory>> apiResponse = new ApiResponse<>();
         apiResponse.setMessage("Get all category");

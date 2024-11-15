@@ -1,6 +1,3 @@
-// Data structure
-let folders = [];
-let categories = [];
 
 // Initialize when page loads
 document.addEventListener("DOMContentLoaded", function () {
@@ -78,23 +75,6 @@ function handleFolderSubmit(event) {
 function handleGroupSubmit(event) {
   event.preventDefault();
 
-  // const groupId = document.getElementById("groupId").value;
-  // const formData = {
-  //   folderId: document.getElementById("folderSelect").value,
-  //   groupName: document.getElementById("groupName").value,
-  //   documentCount: 0,
-  //   createdAt: new Date().toISOString().split("T")[0],
-  // };
-  //
-  // if (groupId) {
-  //   // Update existing group
-  //   const index = categories.findIndex((c) => c.id === parseInt(groupId));
-  //   categories[index] = { ...categories[index], ...formData };
-  // } else {
-  //   // Add new group
-  //   formData.id = categories.length + 1;
-  //   categories.push(formData);
-  // }
   const message = "/app/createMain&SubCategory";
   const server = "/topic/createCategory";
   const docCategoryRequest = {
@@ -128,8 +108,8 @@ function updateFolderSelect() {
   client.connect({}, function (frame) {
     client.debug = function (str) {};
     //console.log("Connected: " + frame);
-    client.send("/app/allCategory");
-    client.subscribe('/topic/getAll', function (data) {
+    client.send("/app/allCategories");
+    client.subscribe('/topic/getAllCategory', function (data) {
       const response = JSON.parse(data.body);
       const mainCategory = response.result;
 
@@ -149,8 +129,8 @@ function updateFolderSelect() {
 
             // Tạo tùy chọn cho select thứ hai
             const option2 = document.createElement("option");
-            option2.value = main.id; // Nếu cần, có thể thay đổi giá trị tùy theo logic
-            option2.textContent = main.mainCategory; // Nếu cần, có thể thay đổi văn bản tùy theo logic
+            option2.value = main.id;
+            option2.textContent = main.mainCategory;
             select2.appendChild(option2);
           }
         });
@@ -163,33 +143,15 @@ function updateFolderSelect() {
   });
 }
 
-// function CountDocument(cateId,client){
-//   client.send(`/app/DocumentsByCategoryId/${cateId}`, {}, JSON.stringify({cateId}));
-//   client.subscribe('/topic/getDocumentsByCategoryId', function (data) {
-//     const response = JSON.parse(data.body);
-//     const documents = response.result;
-//     const numberDoc = 0;
-//     if (Array.isArray(documents)) {
-//       documents.forEach((doc) => {
-//         console.log("tentailieu: ",doc.name);
-//         console.log(doc);
-//         console.log("số lượng tài liệu",numberDoc);
-//         //console.log("so luong tai lieu",numberDoc);
-//       })
-//     }else {
-//       console.error("Expected an array but received:", documents);
-//     }
-//   })
-// }
-
 
 // Render categories
 function renderCategories() {
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
+  client.debug = function (str) {};
   client.connect({}, function (frame) {
-    client.debug = function (str) {};
-    client.subscribe('/topic/getAll', function (data) {
+    client.send("/app/allCategories");
+    client.subscribe('/topic/getAllCategory', function (data) {
       const response = JSON.parse(data.body);
       const Categories = response.result;
       if (Array.isArray(Categories)) {
@@ -226,11 +188,21 @@ function renderCategories() {
 }
 
 // Edit category
-function openEditCategory(id,main,sub) {
-  //const category = categories.find((c) => c.id === id);
+function openEditCategory(id, main, sub) {
   const modal = document.getElementById("groupModal-2");
   document.getElementById("groupId-2").value = id;
-  document.getElementById("folderSelect-2").options = main;
+
+  let selectElement = document.getElementById("folderSelect-2");
+  console.log(selectElement.options.length);
+
+  for (let i = 0; i < selectElement.options.length; i++) {
+    if (selectElement.options[i].value === main) {
+      console.log(main);
+      selectElement.options[i].selected = true;
+      break;
+    }
+  }
+
   document.getElementById("groupName-2").value = sub;
   modal.style.display = "block";
 }
