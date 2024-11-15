@@ -1,26 +1,112 @@
-
+import {getToken} from "../Share/localStorageService.js";
 // Hiển thị modal chỉnh sửa tài liệu
-function openEditModal(docId,docName,mainCategory,subCategory,type,account,point,description) {
-  document.getElementById("editDocumentModal").style.display = "flex";
-  // Gán giá trị cho các trường modal dựa trên documentId
-  document.getElementById("documentId").value = docId;
-  document.getElementById("documentTitle").value = docName;
-  document.getElementById("documentCategory").value = mainCategory;
-  document.getElementById("documentGroup").value = subCategory;
-  document.getElementById("documentType").value = type;
-  document.getElementById("documentAuthor").value = account;
-  document.getElementById("documentPoint").value = point;
-  document.getElementById("documentDescription").value = description;
+async function fetchCategories(selectedMainCategory, selectedSubCategory) {
+    try {
+        const response = await fetch('http://localhost:8088/docCategory/get-all'); // Đảm bảo URL chính xác
+        const data = await response.json();
+
+        if (data.result) {
+            populateCategoryOptions(data.result, selectedMainCategory, selectedSubCategory);
+        }
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+    }
 }
 
+// Hàm để thêm danh mục vào documentCategory
+function populateCategoryOptions(categories, selectedMainCategory, selectedSubCategory) {
+    const categorySelect = document.getElementById("documentCategory");
+
+    // Tạo một tập hợp để loại bỏ các danh mục trùng lặp
+    const uniqueMainCategories = [...new Set(categories.map(category => category.mainCategory))];
+
+    // Xóa các tùy chọn cũ, trừ "Chọn danh mục"
+    categorySelect.innerHTML = '<option value="" >Chọn danh mục</option>';
+
+    uniqueMainCategories.forEach(mainCategory => {
+        const option = document.createElement("option");
+        option.value = mainCategory;
+        option.textContent = mainCategory;
+
+        // Gán giá trị selected nếu trùng với selectedMainCategory
+        if (mainCategory === selectedMainCategory) {
+            option.selected = true;
+        }
+
+        categorySelect.appendChild(option);
+    });
+
+    // Cập nhật nhóm con dựa trên danh mục được chọn
+    const subCategories = categories
+        .filter(category => category.mainCategory === selectedMainCategory)
+        .map(category => category.subCategory);
+
+    populateGroupOptions(subCategories, selectedSubCategory);
+
+    // Thêm sự kiện khi thay đổi danh mục
+    categorySelect.addEventListener("change", function () {
+        const selectedCategory = this.value;
+        const subCategories = categories
+            .filter(category => category.mainCategory === selectedCategory)
+            .map(category => category.subCategory);
+        populateGroupOptions(subCategories);
+    });
+}
+
+// Hàm để thêm nhóm vào documentGroup
+function populateGroupOptions(subCategories, selectedSubCategory = null) {
+    const groupSelect = document.getElementById("documentGroup");
+
+    // Xóa các tùy chọn cũ, trừ "Chọn nhóm"
+    groupSelect.innerHTML = '<option value="" disabled>Chọn nhóm</option>';
+
+    subCategories.forEach(subCategory => {
+        // Kiểm tra subCategory có rỗng hoặc không hợp lệ
+        if (subCategory && subCategory.trim() !== "") {
+            const option = document.createElement("option");
+            option.value = subCategory;
+            option.textContent = subCategory;
+
+            // Gán giá trị selected nếu trùng với selectedSubCategory
+            if (subCategory === selectedSubCategory) {
+                option.selected = true;
+            }
+
+            groupSelect.appendChild(option);
+        }
+    });
+}
+
+
+
+
+// function openEditModal(docId,docName,mainCategory,subCategory,type,account,point,description) {
+//   document.getElementById("editDocumentModal").style.display = "flex";
+//   // Gán giá trị cho các trường modal dựa trên documentId
+//   document.getElementById("documentId").value = docId;
+//   document.getElementById("documentTitle").value = docName;
+//   // document.getElementById("documentCategory").value = mainCategory;
+//   // document.getElementById("documentGroup").value = subCategory;
+//     fetchCategories(mainCategory,subCategory)
+//   document.getElementById("documentType").value = type;
+//   document.getElementById("documentAuthor").value = account;
+//   document.getElementById("documentPoint").value = point;
+//   document.getElementById("documentDescription").value = description;
+// }
+
 // Đóng modal chỉnh sửa
-function closeEditModal() {
+export function closeEditModal() {
   document.getElementById("editDocumentModal").style.display = "none";
 }
 
+// document.getElementById("close-modal").addEventListener("click", closeEditModal);
 // Lưu thay đổi tài liệu
-function saveDocumentChanges() {
-  alert("Đã lưu thay đổi tài liệu!");
+export function saveDocumentChanges() {
+    // const id  = document.getElementById("documentId").value;
+    // const docName = document.getElementById("documentTitle").value;
+    // const docType = document.getElementById("documentType").value;
+    // const docAuthor = document.getElementById("documentAuthor").value;
+
   closeEditModal();
 }
 
@@ -72,33 +158,6 @@ function deleteDocument(documentId) {
     })
 }
 
-// Thiết lập các sự kiện cho các nút hành động
-// document.addEventListener("DOMContentLoaded", function () {
-//   // Thêm xử lý sự kiện cho nút xem chi tiết
-//   document.querySelectorAll(".edit-button2").forEach((button) => {
-//     button.onclick = function () {
-//       const documentId = this.closest("tr").getAttribute("data-document-id");
-//       showDocumentDetails(documentId);
-//     };
-//   });
-//
-//   // Thêm xử lý sự kiện cho nút tải xuống
-//   document.querySelectorAll(".download-button").forEach((button) => {
-//     button.onclick = function () {
-//       const documentId = this.closest("tr").getAttribute("data-document-id");
-//       downloadDocument(documentId);
-//     };
-//   });
-//
-//   // Thêm xử lý sự kiện cho nút xóa
-//   document.querySelectorAll(".delete-button").forEach((button) => {
-//     button.onclick = function () {
-//       const documentId = this.closest("tr").getAttribute("data-document-id");
-//       showDeleteConfirmation(documentId);
-//     };
-//   });
-// });
-
 // Hiển thị modal Chi tiết tài liệu
 function openDocumentDetails(documentId, title, category, group, type, point, status) {
     //console.log(documentId);
@@ -130,7 +189,7 @@ document.querySelectorAll(".view-details-button").forEach((button) => {
 });
 
 // Đóng modal Chi tiết tài liệu
-function closeDocumentDetailsModal() {
+export function closeDocumentDetailsModal() {
   const documentModal = document.getElementById("documentDetailsModal");
   documentModal.style.display = "none";
 }
@@ -149,7 +208,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function fetchAllDocuments() {
+export function fetchAllDocuments() {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
     client.connect({}, function (frame) {
@@ -181,13 +240,14 @@ function fetchAllDocuments() {
                     </button>
                     <button class="download-button">
                       <i class="fas fa-download"></i>
-                     <button class="view-details-button">
-                      <i class="fas fa-edit"></i>
-                    </button>
+<!--                     <button class="view-details-button">-->
+<!--                      <i class="fas fa-edit"></i>-->
+<!--                    </button>-->
                     </button>
                     <button class="delete-button">
                       <i class="fas fa-trash"></i>
                     </button>
+             
                   </td>
                 </tr>
                 `;
@@ -197,9 +257,9 @@ function fetchAllDocuments() {
                     row.querySelector(".download-button").onclick = function () {
                         downloadDocument(doc.id);
                     };
-                    row.querySelector(".view-details-button").onclick = function () {
-                        openEditModal(doc.id, doc.name, doc.category.mainCategory, doc.category.subCategory, doc.type, doc.createdBy.name, doc.point,doc.description);
-                    };
+                    // row.querySelector(".view-details-button").onclick = function () {
+                    //     openEditModal(doc.id, doc.name, doc.category.mainCategory, doc.category.subCategory, doc.type, doc.createdBy.name, doc.point,doc.description);
+                    // };
                     row.querySelector(".delete-button").onclick = function () {
                         showDeleteConfirmation(doc.id);
                     };
@@ -266,8 +326,6 @@ function searchDocument(docName){
                     </button>
                     <button class="download-button">
                       <i class="fas fa-download"></i>
-                     <button class="view-details-button">
-                      <i class="fas fa-edit"></i>
                     </button>
                     </button>
                     <button class="delete-button">
@@ -280,9 +338,6 @@ function searchDocument(docName){
                     };
                     row.querySelector(".download-button").onclick = function () {
                         downloadDocument(doc.id);
-                    };
-                    row.querySelector(".view-details-button").onclick = function () {
-                        openEditModal(doc.id, doc.name, doc.category.mainCategory, doc.category.subCategory, doc.type, doc.createdBy.name, doc.point,doc.description);
                     };
                     row.querySelector(".delete-button").onclick = function () {
                         showDeleteConfirmation(doc.id);

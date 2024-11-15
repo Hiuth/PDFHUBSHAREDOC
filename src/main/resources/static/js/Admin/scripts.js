@@ -2,17 +2,14 @@
 
 
 // Hàm mở modal chỉnh sửa thông tin khách hàng
-function handleButtonClick(button) {
-  const accountId = button.getAttribute('data-account-id');
-  const accountName = button.getAttribute('data-account-name');
-  const accountEmail = button.getAttribute('data-account-email');
-  const accountPassword = button.getAttribute('data-account-password');
-  // console.log("ID: ", accountId);
-  // console.log("Name: ", accountName);
-  // console.log("Email: ", accountEmail);
-  // console.log("Password: ", accountPassword);
-  openModal(accountId, accountName, accountEmail, accountPassword);
-}
+
+// function handleButtonClick(button) {
+//   const accountId = button.getAttribute('data-account-id');
+//   const accountName = button.getAttribute('data-account-name');
+//   const accountEmail = button.getAttribute('data-account-email');
+//   const accountPassword = button.getAttribute('data-account-password');
+//   openModal(accountId, accountName, accountEmail, accountPassword);
+// }
 
 function openModal(id, name, email, password) {
   const modal = document.getElementById("editModal");
@@ -20,50 +17,12 @@ function openModal(id, name, email, password) {
   document.getElementById("customerName").value = name;
   document.getElementById("customerEmail").value = email;
   document.getElementById("customerPassword").value = password;
-  console.log(id);
   modal.style.display = "block";
 }
 
-// Hàm đóng modal chỉnh sửa
 function closeModal() {
   const modal = document.getElementById("editModal");
   modal.style.display = "none";
-}
-
-function SendData(id,data){
-  const socket = new SockJS("http://localhost:8088/ws");
-  const client = Stomp.over(socket);
-  client.connect({}, function (frame) {
-    client.debug = function (str) {};
-    client.subscribe('/topic/accountUpdate', function (message) {
-      const result = JSON.parse(message.body);
-      alert(result.message);
-    })
-    client.send(`/app/updateAcc/${id}`,{},JSON.stringify(data));
-  })
-}
-
-
-
-// Hàm lưu thay đổi thông tin khách hàng
-function saveChanges() {
-  const customerId = document.getElementById("accId").value;
-  const customerName = document.getElementById("customerName").value;
-  const customerEmail = document.getElementById("customerEmail").value;
-  const customerPoint = document.getElementById("customerPassword").value;
- console.log("ID: ", customerId);
-  // Logic để lưu thay đổi (ví dụ: gọi API hoặc cập nhật trực tiếp bảng)
-  // console.log("Tên khách hàng đã chỉnh sửa:", customerName);
-  // console.log("Email khách hàng:", customerEmail);
-  // console.log("Mật khẩu mới:", customerPassword);
-  var customerData = {
-    name: customerName,
-    //email: customerEmail,
-    points: customerPoint
-  }
-  SendData(customerId,customerData);
-  // Đóng modal sau khi lưu thay đổi
-  closeModal();
 }
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -54,6 +54,13 @@ public class DocumentService {
     }
 
     //public
+    public List<Documents> findDocumentByKeyword(String keyword){
+        if(documentRepository.findDocumentsByKeyWord(keyword).isEmpty())
+            throw new AppException(ErrorCode.LIST_EMPTY);
+        return documentRepository.findDocumentsByKeyWord(keyword);
+    }
+
+    //public
     public List<Documents> getAllByCategory(DocCategory docCategory){
         return documentRepository.findByCategoryId(docCategory.getId());
     }

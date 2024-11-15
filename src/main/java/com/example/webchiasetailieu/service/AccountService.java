@@ -133,7 +133,7 @@ public class AccountService {
 
 
 
-    @Transactional
+   // @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public List<Account> getAllAccounts() {
         log.info("Get all accounts");
@@ -141,6 +141,15 @@ public class AccountService {
             throw new AppException(ErrorCode.ACCOUNT_EMPTY);
         else return accountRepository.findAll();
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Account> findAccountsByKeyword(String keyword) {
+        log.info("Get all accounts by keyword");
+        if(accountRepository.findAccountByKeyWord(keyword).isEmpty())
+            throw new AppException(ErrorCode.ACCOUNT_EMPTY);
+        else return accountRepository.findAccountByKeyWord(keyword);
+    }
+
 
     //@PostAuthorize("returnObject.email == authentication.name")
     @PreAuthorize("hasRole('ADMIN')")

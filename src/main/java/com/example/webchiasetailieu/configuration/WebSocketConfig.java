@@ -66,25 +66,17 @@ public void configureClientInboundChannel(ChannelRegistration registration) {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
                 String authHeader = accessor.getFirstNativeHeader("Authorization");
-
-                System.out.println("Received Authorization header: " + authHeader);
-
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     String token = authHeader.substring(7);
                     try {
                         Jwt jwt = jwtDecoder.decode(token);
                         Authentication authentication = jwtConverter.convert(jwt);
-                        System.out.println("Authentication: " + authentication);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("Current Authentication in SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication());
                         accessor.setUser(authentication);
                     } catch (Exception e) {
                         throw new IllegalArgumentException("Invalid JWT token", e);
                     }
-                } else {
-                    System.out.println("Auth header is missing or invalid: " + authHeader);
                 }
-
                 return message;
             }
         };

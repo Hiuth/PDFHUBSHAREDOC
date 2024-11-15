@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,6 +50,20 @@ public class AccountController {
         return response;
     }
 
+    @GetMapping("/find/{key}")
+    @MessageMapping("/findAcc/{key}")
+    @SendTo("/topic/accounts")
+    ApiResponse<List<Account>> findAccountsByKeyWord(@PathVariable String key) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("find accounts: {}", authentication.getName());
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+        ApiResponse<List<Account>> response = new ApiResponse<>();
+        response.setMessage("List of accounts");
+        response.setResult(accountService.findAccountsByKeyword(key));
+        return response;
+    }
+
+
     @GetMapping("/myInfo")
     ApiResponse<AccountResponse> getInfo() {
         ApiResponse<AccountResponse> response = new ApiResponse<>();
@@ -74,7 +89,9 @@ public class AccountController {
     }
 
     @PutMapping("/update/{id}")
-    ApiResponse<AccountResponse> updateAccount(@PathVariable String id,@RequestBody @Valid AccountUpdateRequest request) {
+    @MessageMapping("/updateAcc/{id}")
+    @SendTo("/topic/accountUpdate")
+    ApiResponse<AccountResponse> updateAccount(@DestinationVariable String id,@RequestBody @Valid AccountUpdateRequest request) {
         ApiResponse<AccountResponse> response = new ApiResponse<>();
         response.setMessage("Account updated");
         response.setResult(accountService.updateAccount(id, request));

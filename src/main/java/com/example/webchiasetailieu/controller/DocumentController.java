@@ -9,6 +9,9 @@ import com.example.webchiasetailieu.service.DocumentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,10 +68,23 @@ public class DocumentController {
     }
 
     @GetMapping("/get-all")
+    @MessageMapping("allDocuments")
+    @SendTo("/topic/Documents")
     ApiResponse<List<Documents>> getAllDocuments(){
         return ApiResponse.<List<Documents>>builder()
                 .message("List of documents:")
                 .result(documentService.getAll())
+                .build();
+    }
+
+
+    @GetMapping("/find/{keyword}")
+    @MessageMapping("/findDoc/{keyword}")
+    @SendTo("/topic/findDocument")
+    ApiResponse<List<Documents>> findDocumentsByKeyWord(@DestinationVariable String keyword){ //chuyển về @PathVariable nếu muốn xài trên post man
+        return ApiResponse.<List<Documents>>builder()
+                .message("List of documents:")
+                .result(documentService.findDocumentByKeyword(keyword))
                 .build();
     }
 
@@ -90,6 +106,8 @@ public class DocumentController {
     }
 
     @PutMapping("{id}")
+    @MessageMapping("/updateDocument/{id}")
+    @SendTo("/topic/updateDoc")
     ApiResponse<DocumentResponse> updateDocument(
             @PathVariable String id,
             @RequestParam("file") MultipartFile file,
