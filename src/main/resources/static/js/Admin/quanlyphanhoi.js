@@ -1,4 +1,11 @@
+import {getToken} from "../Share/localStorageService.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchAllFeedBack();
+})
+
 function fetchAllFeedBack() {
+    const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
     client.connect({}, function (frame) {

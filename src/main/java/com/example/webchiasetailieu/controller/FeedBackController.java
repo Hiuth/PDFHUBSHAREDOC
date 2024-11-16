@@ -8,6 +8,8 @@ import com.example.webchiasetailieu.service.FeedBackService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +29,9 @@ public class FeedBackController {
         return response;
     }
 
-    @GetMapping
+    @GetMapping("/all")
+    @MessageMapping("/allFeed")
+    @SendTo("/topic/allFeedBack")
     public ApiResponse<List<Feedbacks>> getAllFeedbacks() {
         ApiResponse<List<Feedbacks>> response = new ApiResponse<>();
         response.setMessage("Get all feedbacks: ");
