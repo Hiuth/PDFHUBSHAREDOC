@@ -167,11 +167,12 @@ function renderCategories() {
             //var docNum = CountDocument(category.id,client);
             tr.innerHTML = `
       <td>${i}</td>
-      <td>${category.mainCategory}</td>
-      <td>${category.subCategory}</td>
+      <td id="mainCategory">${category.mainCategory}</td>
+      <td id="subCategory">${category.subCategory}</td>
+      <input type="hidden" id="categoryId" value="'${category.id}'"/>
       <td>
         <div class="action-buttons">
-          <button class="btn btn-edit" onclick="openEditCategory('${category.id}','${category.mainCategory}','${category.subCategory}')">
+          <button class="btn btn-edit" id="editCategory">
             <i class="fas fa-edit"></i> Sửa
           </button>
           <button class="btn btn-delete" onclick="deleteCategory('${category.id}')">
@@ -189,6 +190,19 @@ function renderCategories() {
   })
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.getElementById("categoryTableBody");
+  tbody.addEventListener("click", (event) => {
+    if (event.target.closest(".btn-edit")) {
+      const row = event.target.closest("tr"); // Lấy hàng cha của nút được nhấn
+      const id = row.querySelector("#categoryId").value.replace(/'/g, ""); // Lấy ID, bỏ dấu '
+      const main = row.querySelector("#mainCategory").textContent;
+      const sub = row.querySelector("#subCategory").textContent;
+
+      openEditCategory(id, main, sub);
+    }
+  });
+});
 // Edit category
 function openEditCategory(id, main, sub) {
   const modal = document.getElementById("groupModal-2");
