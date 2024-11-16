@@ -16,13 +16,15 @@
     </div>
     <form action="" id="login" class="login">
         <div class="form-group2">
-            <label for="" class="static">Email</label>
-            <input type="text">
+            <label for="login-email" class="static">Email</label>
+            <input type="email" id="login-email" name="email" required
+                   placeholder="Nhập địa chỉ email">
         </div>
         <div class="error"></div>
         <div class="form-group2">
-            <label for="" class="static">Mật khẩu</label>
-            <input type="password">
+            <label for="login-pass" class="static">Mật khẩu</label>
+            <input type="password" id="login-pass" name="password" required
+                   placeholder="Nhập mật khẩu">
         </div>
         <div class="group1">
             <label for="rememberme"> <input type="checkbox" name="" id="rememberme">Ghi nhớ đăng nhập</label>
@@ -33,6 +35,9 @@
         <a href="register.html" class="redirect" id="redirect-register">Chưa có tài khoản? Đăng ký</a>
     </form>
 </div>
-
+<!-- Required Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="module" src="../../static/js/User/login.js"></script>
 </body>
 </html>
