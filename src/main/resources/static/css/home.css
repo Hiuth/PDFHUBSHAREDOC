@@ -51,7 +51,7 @@
     background: url("../../static/images/thumnail4.png") no-repeat center center; /* Đặt hình nền vào giữa */
     background-size: cover;
     width: 100%;
-    aspect-ratio: 1400 / 120; /* Đặt tỉ lệ giữa chiều rộng và chiều cao */
+    aspect-ratio: 1440 / 120; /* Đặt tỉ lệ giữa chiều rộng và chiều cao *!*/
     max-height: 120px; /* Đảm bảo chiều cao tối đa là 120px */
 }
 
@@ -61,6 +61,11 @@
 }
 
 #thumnail5 {
+    background: url("../../static/images/thumnail5.png") no-repeat center center; /* Đặt hình nền vào giữa */
+    background-size: cover; /* Làm cho background bao phủ */
+}
+
+#thumnail6 {
     background: url("../../static/images/thumnail6.png") no-repeat center center; /* Đặt hình nền vào giữa */
     background-size: cover; /* Làm cho background bao phủ */
 }
@@ -85,7 +90,7 @@ h2{
     font-weight: 900;
     font-size: 2.5vw;
     font-family: Verdana, Tahoma, sans-serif;
-    
+
 }
 p{
     font-size: 1.75vw;
@@ -192,13 +197,13 @@ p{
 .cate-box{
     border: 1px solid #D82B8A;
     border-radius: 20px;
-    padding: 30px 30px 0px 30px;
-    width: calc(100% - 60px);
+    padding: 30px 40px 0px 40px;
+    width: calc(100% - 80px);
 }
 
 .oneCate {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Tạo lưới với cột có độ rộng tối thiểu 150px */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Tạo lưới với cột có độ rộng tối thiểu 150px */
     gap: 20px; /* Khoảng cách giữa các phần tử */
     margin-bottom: 30px;
 }
@@ -212,10 +217,12 @@ hr{
     border-radius: 8px;
     white-space: nowrap; /* Giữ văn bản trên một dòng */
     box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+    font-size: 18px;
+    color: #565656;
 }
 
 .cateTitle {
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
     margin-bottom: 10px;
 }

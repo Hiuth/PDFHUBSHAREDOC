@@ -57,7 +57,7 @@ public class ApplicationInitConfig {
             String currentDirectory = System.getProperty("user.dir");
             Path permissionsFilePath = Paths.get(currentDirectory, "permission.json");
             Path rolesFilePath = Paths.get(currentDirectory, "roles.json");
-            Path driveFilePath = Paths.get(currentDirectory, "");
+            Path driveFilePath = Paths.get(currentDirectory, "pdfhub-438314-2ecea7d9fee0.json");
 
             Path encryptedDriveFilePath = Paths.get(currentDirectory, "drive.json.enc");
             if (!Files.exists(encryptedDriveFilePath)) {

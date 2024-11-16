@@ -1,5 +1,6 @@
 package com.example.webchiasetailieu.configuration;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.util.text.AES256TextEncryptor;
@@ -15,8 +16,8 @@ import java.nio.file.Paths;
 @Slf4j
 public class JsonEncryptorUtil {
 
-    @Value("${json-encrypt.password}")
-    private String password;
+//    @Value("${json-encrypt.password}")
+    private String password = "qUIO01I4tQtECy3nFMP4kI1RK27VqetVfCMf+SQJpnL+xVN9Cv1w7HCkvEPsGTVW";
 
     public void encryptJsonFile(String filePath, String encryptedFilePath) {
         try {

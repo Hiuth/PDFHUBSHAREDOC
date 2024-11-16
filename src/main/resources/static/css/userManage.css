@@ -6,7 +6,7 @@
 }
 #sidebar-placeholder{
     float: left;
-    border-right: 1px solid black;
+    border-right: 1px solid #a5a5a5;
     height: calc(100vh - 75px);
     padding-left: 20px;
     width: 25%;
@@ -45,6 +45,19 @@
     flex: 1 0 calc(20% - 10px); /* Thay đổi để có 6 phần tử trên mỗi hàng */
     max-width: calc(20% - 10px); /* Cập nhật tương ứng */
 }
+
+.docs-content img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.Docs > img {
+    width: 100%;
+    object-fit: contain;
+    height: 10vw;
+}
+
 .docTitle{
     font-size: small;
 }

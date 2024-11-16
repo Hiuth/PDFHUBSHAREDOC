@@ -4,12 +4,15 @@
     <title>Trang chính</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="\webchiasetailieu\src\main\resources\static\js\User\docs.js"></script>
 
     <script defer src="../../static/js/User/include.js"></script>
-    
+
     <link rel="stylesheet" href="../../static/css/docs.css">
     <link rel="stylesheet" href="../../static/css/home.css">
-<!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
 </head>
 <body>
 <!-- Include header -->
@@ -21,11 +24,9 @@
     <div th:if="${isLoggedIn}" class="docCategories">
         <a class="docCate" href="index.html">Đề xuất</a>
         <a class="docCate active" href="allCategories.html">Tất cả</a>
-        <a class="docCate" href="category.html?tab=Hóa học">Hóa học</a>
-        <a class="docCate" href="category.html?tab=Vật lí">Vật lí</a>
-        <a class="docCate" href="category.html?tab=Tiếng Anh">Tiếng Anh</a>
-        <a class="docCate" href="category.html?tab=Công nghệ thông tin">Công nghệ thông tin</a>
-        <a class="docCate" href="category.html?tab=Thương mại điện tử">Thương mại điện tử</a>
+        <script>
+            fetchAllSubCategories();
+        </script>
     </div>
 
     <div class="thumnail3" id="thumnail4">
@@ -35,46 +36,10 @@
     <div class="cate">
         <div class="bigTitle">Tất cả danh mục</div>
         <div class="cate-box">
-            <div class="cateTitle">Tiểu học - Trung học cơ sở - Trung học phổ thông</div>
-            <hr>
-            <div class="oneCate">
-                <a class="oneType">Lớp 1</a>
-                <a class="oneType">Lớp 2</a>
-                <a class="oneType">Lớp 3</a>
-                <a class="oneType">Lớp 4</a>
-                <a class="oneType">Lớp 5</a>
-                <a class="oneType">Lớp 6</a>
-                <a class="oneType">Lớp 7</a>
-                <a class="oneType">Lớp 8</a>
-                <a class="oneType">Lớp 9</a>
-                <a class="oneType">Lớp 10</a>
-                <a class="oneType">Lớp 11</a>
-                <a class="oneType">Lớp 12</a>
-            </div>
-
-            <div class="cateTitle">Tiểu học - Trung học cơ sở - Trung học phổ thông</div>
-            <hr>
-            <div class="oneCate">
-                <a class="oneType">Công nghệ thông tin</a>
-                <a class="oneType">Thương mại điện tử</a>
-                <a class="oneType">Triết học</a>
-                <a class="oneType">Điện -  Cơ khí</a>
-                <a class="oneType">Tiếng Anh</a>
-                <a class="oneType">Tài chính - kinh tế</a>
-                <a class="oneType">Lớp 7</a>
-                <a class="oneType">Lớp 8</a>
-                <a class="oneType">Lớp 9</a>
-                <a class="oneType">Lớp 10</a>
-                <a class="oneType">Lớp 11</a>
-                <a class="oneType">Lớp 12</a>
-                <a class="oneType">Lớp 7</a>
-                <a class="oneType">Lớp 8</a>
-                <a class="oneType">Lớp 9</a>
-                <a class="oneType">Lớp 10</a>
-                <a class="oneType">Lớp 11</a>
-                <a class="oneType">Lớp 12</a>
-            </div>
-        </div>    
+            <script>
+                fetchAllCategory();
+            </script>
+        </div>
     </div>
 </div>
 

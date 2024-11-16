@@ -12,6 +12,7 @@ import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.RoleRepository;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -44,7 +45,7 @@ public class AccountService {
     }
 
     //public
-    public AccountResponse createRequest(AccountCreationRequest accountRequest) {
+    public AccountResponse createRequest(AccountCreationRequest accountRequest) throws MessagingException {
         if(accountRepository.existsByEmail(accountRequest.getEmail()))
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         if(accountRepository.existsByName(accountRequest.getName()))
@@ -96,7 +97,7 @@ public class AccountService {
     }
 
     @PreAuthorize("hasRole('USER')")
-    public String forgetPassword(String newPass) {
+    public String forgetPassword(String newPass) throws MessagingException{
         boolean check = mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
                         .email(getAccountFromContext().getEmail())
                         .emailType(EmailType.FORGOT_PASSWORD)
@@ -131,9 +132,6 @@ public class AccountService {
         return convertToResponse(accountRepository.save(account));
     }
 
-
-
-   // @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public List<Account> getAllAccounts() {
         log.info("Get all accounts");
@@ -149,7 +147,6 @@ public class AccountService {
             throw new AppException(ErrorCode.ACCOUNT_EMPTY);
         else return accountRepository.findAccountByKeyWord(keyword);
     }
-
 
     //@PostAuthorize("returnObject.email == authentication.name")
     @PreAuthorize("hasRole('ADMIN')")

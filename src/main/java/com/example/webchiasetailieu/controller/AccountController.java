@@ -7,6 +7,7 @@ import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.service.AccountService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class AccountController {
     AccountService accountService;
 
     @PostMapping
-    ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest account) {
+    ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest account) throws MessagingException {
         ApiResponse<AccountResponse> response = new ApiResponse<>();
         response.setResult(accountService.createRequest(account));
         return response;
@@ -130,7 +131,7 @@ public class AccountController {
     }
 
     @PostMapping("/forgetPassword")
-    ApiResponse<String> resetPassword(String newPass) {
+    ApiResponse<String> resetPassword(String newPass) throws MessagingException {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Forget password");
         response.setResult(accountService.forgetPassword(newPass));

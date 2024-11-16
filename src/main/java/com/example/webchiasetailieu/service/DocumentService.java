@@ -16,6 +16,7 @@ import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.DocCategoryRepository;
 import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.DownloadHistoryRepository;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -125,7 +126,7 @@ public class DocumentService {
         File tempFile = File.createTempFile(fileNameWithoutExtension, fileExtension);
         file.transferTo(tempFile);
         DriveResponse res = driveService.uploadFileToDrive(tempFile);
-        if(res != null){
+        if(!res.getUrl().isBlank()){
             DocCategory docCategory = docCategoryRepository.findById(docCategoryId)
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
             DocumentCreationRequest request = DocumentCreationRequest.builder()
@@ -144,7 +145,7 @@ public class DocumentService {
     }
 
     @PreAuthorize("hasAuthority('DOWNLOAD')")
-    public String download(String docId){
+    public String download(String docId) throws MessagingException {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
         Account account = accountRepository.findByEmail(email).orElseThrow(
@@ -245,6 +246,7 @@ public class DocumentService {
         documents.setCreatedAt(LocalDateTime.now());
         documents.setAvatar(request.getAvatar());
         documents.setDownloadTimes(0);
+        documentRepository.save(documents);
     }
 
     private String updateFile(MultipartFile file, Documents document) throws IOException {

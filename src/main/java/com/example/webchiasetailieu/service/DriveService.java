@@ -148,7 +148,6 @@ public class DriveService {
             res.setStatus(500);
             res.setMessage(e.getMessage());
         }
-
         return res;
     }
 
@@ -183,7 +182,6 @@ public class DriveService {
         GoogleCredential credentials = GoogleCredential.fromStream(new FileInputStream(decryptedFilePath))
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));
 
-        // Xóa file .json tạm thời sau khi sử dụng
         try {
             Files.delete(Paths.get(decryptedFilePath));
             log.info("File giải mã tạm thời đã bị xóa: " + decryptedFilePath);

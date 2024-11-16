@@ -168,16 +168,16 @@ button > img {
     nav {
         flex-wrap: wrap;
     }
-    
+
     .group1 {
         display: none;
     }
-    
+
     .group2 {
         width: 100%;
         justify-content: flex-end;
     }
-    
+
     .search-bar {
         width: 100%;
         max-width: none;
@@ -193,11 +193,11 @@ button > img {
     .group1 {
         display: none;
     }
-    
+
     .noti-button{
         display: none;
     }
-    
+
     .login-button {
         padding: 8px 10px;
         font-size: 14px;
@@ -243,6 +243,8 @@ button > img {
     padding-right: 0px;
     height: calc(100vh - 65px);
     overflow-y: auto;
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trong IE và Edge */
+    scrollbar-width: none;
     display: flex;
     box-sizing: border-box;
 }
