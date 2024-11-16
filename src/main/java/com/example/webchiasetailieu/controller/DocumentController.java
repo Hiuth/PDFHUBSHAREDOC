@@ -128,7 +128,7 @@ public class DocumentController {
             @RequestParam("description") String description,
             @RequestParam("docCategoryId") String docCategoryId,
             @RequestParam("avatar") String avatar)
-            throws IOException, GeneralSecurityException {
+            throws IOException {
         return ApiResponse.<DocumentResponse>builder()
                 .code(1000)
                 .message("Update document:")
@@ -146,7 +146,7 @@ public class DocumentController {
     @DeleteMapping("/{id}")
     @MessageMapping("/deleteDoc/{id}")
     @SendTo("/topic/deleteDocument")
-    ApiResponse<String> deleteDocument(@DestinationVariable String id) throws GeneralSecurityException, IOException {
+    ApiResponse<String> deleteDocument(@DestinationVariable String id) {
         return ApiResponse.<String>builder()
                 .message("Delete document")
                 .result(documentService.delete(id))
@@ -158,6 +158,15 @@ public class DocumentController {
         return ApiResponse.<String>builder()
                 .message("Delete all documents:")
                 .result(documentService.deleteAll())
+                .build();
+    }
+
+    @GetMapping("/number-of-documents")
+    ApiResponse<Long> getNumberOfDocuments(){
+        return ApiResponse.<Long>builder()
+                .code(1000)
+                .message("Number of documents:")
+                .result(documentService.numberOfDocuments())
                 .build();
     }
 }

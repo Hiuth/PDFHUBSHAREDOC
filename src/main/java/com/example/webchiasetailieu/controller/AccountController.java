@@ -137,4 +137,13 @@ public class AccountController {
         response.setResult(accountService.forgetPassword(newPass));
         return response;
     }
+
+    @GetMapping("/number-of-accounts")
+    ApiResponse<Long> getAccountsNumber() {
+        return ApiResponse.<Long>builder()
+                .message("Number of accounts")
+                .code(1000)
+                .result(accountService.numberOfAccounts())
+                .build();
+    }
 }

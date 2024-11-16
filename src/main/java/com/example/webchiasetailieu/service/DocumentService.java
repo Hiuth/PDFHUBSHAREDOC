@@ -45,7 +45,7 @@ public class DocumentService {
     AccountService accountService;
     DocumentRepository documentRepository;
     MailService mailService;
-    private final DownloadHistoryRepository downloadHistoryRepository;
+    DownloadHistoryRepository downloadHistoryRepository;
 
     //public
     public List<Documents> getAll(){
@@ -68,13 +68,10 @@ public class DocumentService {
         return documentRepository.findDocumentsBySubCategory(keyword);
     }
 
-
     //public
     public List<Documents> getAllByCategory(DocCategory docCategory){
         return documentRepository.findByCategoryId(docCategory.getId());
     }
-
-
 
     //public
     public DocumentResponse getById(String id){
@@ -179,6 +176,12 @@ public class DocumentService {
                             .docName(documents.getName())
                     .build()))
                 throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
+            DownloadHistory downloadHistory = DownloadHistory.builder()
+                    .document(documents)
+                    .account(account)
+                    .point(documents.getPoint())
+                    .build();
+            downloadHistoryRepository.save(downloadHistory);
             return "Successfully downloaded file";
         }
         return "Failed to download file";
@@ -215,6 +218,11 @@ public class DocumentService {
     @PreAuthorize("hasAuthority('VIEW_DOWN_HISTORY')")
     public List<DownloadHistory> getMyDownloadHistory(){
         return downloadHistoryRepository.findByAccount_Id(getAccountIdFromContext());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public long numberOfDocuments(){
+        return documentRepository.count();
     }
 
     private DocumentResponse convertToResponse(Documents documents) {

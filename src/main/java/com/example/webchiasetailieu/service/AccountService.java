@@ -206,6 +206,11 @@ public class AccountService {
         return "Account has been unbanned.";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public long numberOfAccounts() {
+        return accountRepository.count();
+    }
+
     public void rewardPoint(String id, int point){
         Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         account.setPoints(account.getPoints() + point);

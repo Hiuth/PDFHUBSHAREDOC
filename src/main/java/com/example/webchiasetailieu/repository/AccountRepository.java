@@ -11,10 +11,11 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, String> {
     boolean existsByEmail(String email);
-//    boolean existsByUsername(String username);
     boolean existsByName(String name);
     Optional<Account> findByEmail(String email);
 
-    @Query("select c from Account c where c.name Like %:KeyWord% or c.email Like %:KeyWord%")
-    List<Account> findAccountByKeyWord(String KeyWord);
+    @Query("select c from Account c where c.name Like %:keyWord% or c.email Like %:keyWord%")
+    List<Account> findAccountByKeyWord(String keyWord);
+
+    long count();
 }

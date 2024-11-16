@@ -69,40 +69,6 @@ public class SecurityConfig {
     }
 
 
-//    @Bean
-//    public ChannelInterceptor webSocketInterceptor() {
-//        return new ChannelInterceptor() {
-//            @Override
-//            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-//                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-//                String authHeader = accessor.getFirstNativeHeader("Authorization");
-//
-//                System.out.println("Received Authorization header: " + authHeader);
-//
-//                if (authHeader != null && authHeader.startsWith("Bearer ")) {
-//                    String token = authHeader.substring(7);
-//                    try {
-//                        Jwt jwt = jwtDecoder.decode(token);
-//                        Authentication authentication = jwtConverter().convert(jwt);
-//                        if (authentication != null) {
-//                            SecurityContextHolder.getContext().setAuthentication(authentication);
-//                            accessor.setUser(authentication);
-//                        } else {
-//                            System.out.println("Authentication is null");
-//                        }
-//                    } catch (Exception e) {
-//                        System.out.println("Invalid JWT token: " + e.getMessage());
-//                    }
-//                } else {
-//                    System.out.println("Auth header is missing or invalid: " + authHeader);
-//                }
-//
-//                return message;
-//            }
-//        };
-//    }
-
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
