@@ -97,16 +97,6 @@ export function closeEditModal() {
   document.getElementById("editDocumentModal").style.display = "none";
 }
 
-// document.getElementById("close-modal").addEventListener("click", closeEditModal);
-// Lưu thay đổi tài liệu
-export function saveDocumentChanges() {
-    // const id  = document.getElementById("documentId").value;
-    // const docName = document.getElementById("documentTitle").value;
-    // const docType = document.getElementById("documentType").value;
-    // const docAuthor = document.getElementById("documentAuthor").value;
-
-  closeEditModal();
-}
 
 // Thêm sự kiện cho nút chỉnh sửa
 document.querySelectorAll(".edit-button2").forEach((button) => {

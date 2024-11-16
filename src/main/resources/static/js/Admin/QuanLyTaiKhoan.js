@@ -31,10 +31,10 @@ export function fetchAllAccounts() {
                             <td>Active</td>
                             <td>
                                 <button class="edit-button" onclick="openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-                                    <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
+                                    <img src="../../static/images/bxs-edit.svg" alt="Edit" />
                                 </button>
                                 <button class="status-button unlocked" onclick="toggleLockStatus('${account.id}')">
-                                    <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
+                                    <img src="../../static/images/lock-open-alt-solid-24.png" alt="Lock" />
                                 </button>
                             </td>
                         `;
@@ -102,10 +102,10 @@ function searchAccount(keyWord) {
                 <td>Active</td>
                 <td>
                     <button class="edit-button" onclick = "openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-                        <img src="/WebChiaSeTaiLieu/src/main/resources/static/images/bxs-edit.svg" alt="Edit" />
+                        <img src="../../static/images/bxs-edit.svg" alt="Edit" />
                     </button>
                     <button class="status-button unlocked" onclick= "toggleLockStatus('${account.id}')">
-                        <img src="/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png" alt="Lock" />
+                        <img src="../../static/images/lock-open-alt-solid-24.png" alt="Lock" />
                     </button>
                 </td>
                 `;
@@ -129,14 +129,14 @@ function toggleLockStatus(id) {
     if (button.classList.contains("locked")) {
         button.classList.remove("locked");
         button.classList.add("unlocked");
-        img.src = "/webchiasetailieu/src/main/resources/static/images/lock-open-alt-solid-24.png"; // Thay đổi biểu tượng thành mở khóa
+        img.src = "../../static/images/lock-open-alt-solid-24.png"; // Thay đổi biểu tượng thành mở khóa
         const message =`/unbanAcc/${id}`;
         const server = "/topic/unbanAccount";
         SendData(id,message,server);
     } else {
         button.classList.remove("unlocked");
         button.classList.add("locked");
-        img.src = "/webchiasetailieu/src/main/resources/static/images/lock-alt-solid-24.png"; // Thay đổi biểu tượng thành khóa
+        img.src = "../../static/images/lock-alt-solid-24.png"; // Thay đổi biểu tượng thành khóa
         const message =`/banAcc/${id}`;
         const server = "/topic/banAccount";
         SendData(id,message,server);
