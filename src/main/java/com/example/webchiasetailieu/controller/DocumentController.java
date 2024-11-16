@@ -6,6 +6,7 @@ import com.example.webchiasetailieu.entity.DocCategory;
 import com.example.webchiasetailieu.entity.Documents;
 import com.example.webchiasetailieu.entity.DownloadHistory;
 import com.example.webchiasetailieu.service.DocumentService;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,7 +55,7 @@ public class DocumentController {
     @GetMapping("/download/{docId}")
     @MessageMapping("/downloadFile/{docId}")
     @SendTo("/topic/downFile")
-    public ApiResponse<String> handleFileDownload(@PathVariable String docId){
+    public ApiResponse<String> handleFileDownload(@PathVariable String docId) throws MessagingException {
         return ApiResponse.<String>builder()
                 .message("Download file:")
                 .result(documentService.download(docId))
