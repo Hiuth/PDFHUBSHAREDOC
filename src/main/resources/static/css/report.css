@@ -1,0 +1,91 @@
+table {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+    position: relative;
+}
+
+thead {
+    background-color: rgb(221, 73, 110);
+    color: white;
+}
+
+#BigHeader{
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 0px;
+    z-index: 1;
+    color: #D82B8A;
+    width: calc(100vw - 40px);
+    background-color: none;
+    margin-left: 0px;
+    background: url('../../static/images/thumnail3.png') center center;
+    background-size: cover;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    
+}
+
+table, th{
+    border: 1px solid gainsboro;
+    border-collapse: collapse;
+}
+
+table{
+    border-left: none;
+    border-right: none;
+}
+
+.container{
+    box-sizing: border-box;
+}
+
+th{
+    padding: 15px 15px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+td{
+    padding: 14px 14px;
+    background-color: #f1f1f1;
+    background-color: white;
+    border-bottom: 1px solid gainsboro;
+    max-height: 50px;
+}
+
+td a{
+    color: white;
+    background-color: #166FF4;
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin-right: 0px;
+}
+
+/* Màu sắc cho các trạng thái phản hồi */
+.status-responded {
+    color: green;
+    font-weight: bold;
+}
+
+.status-not-responded {
+    color: blue;
+    font-weight: bold;
+}
+
+/* Cố định cột Chi tiết */
+th:nth-child(7),
+td:nth-child(7) {
+    position: sticky;
+    right: 0;
+    z-index: 5; /* Đảm bảo nó nằm trên các phần tử khác khi cuộn ngang */
+    background-color: white;
+    border-left: 1px solid gainsboro;
+}
+
+th:nth-child(7) {
+   background-color: rgb(221, 73, 110);
+}

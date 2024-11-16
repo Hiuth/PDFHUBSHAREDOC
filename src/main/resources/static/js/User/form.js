@@ -1,5 +1,4 @@
 //format form và check lỗi form
-
 function updateFileName2() {
     const fileInput = document.getElementById('changeAvatar');
     var fileNameDisplay = document.getElementById('fileName');

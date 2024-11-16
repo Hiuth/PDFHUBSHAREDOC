@@ -15,9 +15,9 @@ body{
 .center-box{
     background-color: rgb(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    max-width: 500px;
+    max-width: 400px;
     width: 50vw;
-    min-width: 400px;
+    min-width: 500px;
     /* Căn giữa */
     position: absolute;
     top: 50%;
@@ -42,7 +42,7 @@ body{
 .logoContain img{
     height: 60px;
     width: auto;
-    margin: 0px 0px; 
+    margin: 0px 0px;
     margin-bottom: -10px;
 }
 
@@ -58,11 +58,12 @@ body{
 
 #register .form-group2 .static{
     min-width: 80px;
-    width: 14%;
+    width: 35%;
+    font-weight: normal;
 }
 
 #register .form-group2 input[type="text"]{
-    width: 55%;
+    width: 65%;
 }
 
 #register .form-group2{
