@@ -32,7 +32,6 @@ function populateCategoryOptions(categories, selectedMainCategory, selectedSubCa
         if (mainCategory === selectedMainCategory) {
             option.selected = true;
         }
-
         categorySelect.appendChild(option);
     });
 
@@ -61,7 +60,6 @@ function populateGroupOptions(subCategories, selectedSubCategory = null) {
     groupSelect.innerHTML = '<option value="" disabled>Chọn nhóm</option>';
 
     subCategories.forEach(subCategory => {
-        // Kiểm tra subCategory có rỗng hoặc không hợp lệ
         if (subCategory && subCategory.trim() !== "") {
             const option = document.createElement("option");
             option.value = subCategory;
