@@ -313,26 +313,15 @@ input[readonly] {
     min-width: 90px;
 }
 
-#gr-items{
-    width: 25vw;
-}
-
-
 @media (max-width: 1000px) {
     .group {
         padding-right: 0px;
         flex-wrap: wrap;
-    }
-    #gr-items{
-        width: 40vw;
     }
 }
 
 @media (max-width: 900px) {
     .group {
         flex-wrap: nowrap;
-    }
-    #gr-items{
-        width: 100vw;
     }
 }
