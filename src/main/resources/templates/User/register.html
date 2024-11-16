@@ -9,31 +9,32 @@
     <link rel="stylesheet" href="../../static/css/form.css">
 </head>
 <body>
-    <div class="center-box">
-        <div class="logoContain">
-            <img src="../../static/images/pdfhub.png" alt="">
-            <div class="formname">register</div>
-        </div>
-        <form action="" id="register">
-            <div class="form-group2"> 
-                <label for="" class="static">Email</label>
-                <input type="text">
-                <button class="getOTP">Lấy mã</button>
-            </div>
-            <div class="error"></div>
-            <div class="form-group2">
-                <label for="" class="static">Mã OTP</label>
-                <input type="text">
-            </div>
-            <div class="group1">
-                <label for="rememberme"> <input type="checkbox" name="" id="rememberme">Ghi nhớ đăng nhập</label>
-                <a href="forgotPassword.html">Quên mật khẩu?</a>
-            </div>
-
-            <input type="submit" name="" id="" value="Tiếp theo">
-            <a href="register.html" class="redirect">Chưa có tài khoản? Đăng ký</a>
-        </form>
+<div class="center-box">
+    <div class="logoContain">
+        <img src="../../static/images/pdfhub.png" alt="">
+        <div class="formname">register</div>
     </div>
-    
+    <form action="" id="register">
+        <div class="form-group2">
+            <label for="" class="static">Email xác nhận</label>
+            <input type="text" id="mail">
+        </div>
+        <div class="error"></div>
+        <div class="form-group2">
+            <label for="" class="static">Họ và tên</label>
+            <input type="text" id="name">
+        </div>
+        <div class="error"></div>
+        <div class="form-group2">
+            <label for="" class="static">Mật khẩu</label>
+            <input type="text" id="npass">
+        </div>
+        <a href="login.html" class="redirect" id="redirect-login">Đã có tài khoản? Đăng nhập</a>
+
+        <input type="submit" name="" id="" value="Tiếp theo">
+
+    </form>
+</div>
+
 </body>
 </html>

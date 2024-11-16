@@ -197,7 +197,7 @@ function fetchAllCategory() {
         client.subscribe('/topic/getAllCategory', function (data) {
             const response = JSON.parse(data.body);
             const categories = response.result; // Danh sách các `DocCategory`
-
+            console.log(categories);
             if (Array.isArray(categories)) {
                 const cateContainer = document.querySelector('.cate-box');
                 cateContainer.innerHTML = ''; // Xóa nội dung cũ nếu có

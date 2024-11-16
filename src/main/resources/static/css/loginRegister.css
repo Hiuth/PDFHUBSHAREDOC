@@ -76,8 +76,15 @@ body{
 }
 
 .redirect{
-    margin-top: 8px;
     text-align: center;
+}
+
+#redirect-login{
+    margin-top: 30px;
+}
+
+#redirect-register{
+    margin-top: 10px;
 }
 
 a{
@@ -107,5 +114,9 @@ label[for="rememberme"]{
     color: white;
     font-weight: bold;
     white-space: nowrap;
+    flex-grow: 1;
+}
+
+.login .form-group2 input{
     flex-grow: 1;
 }

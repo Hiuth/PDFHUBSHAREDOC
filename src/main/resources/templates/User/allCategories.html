@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vn">
 <head>
     <title>Trang chính</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="\webchiasetailieu\src\main\resources\static\js\User\docs.js"></script>
+    <script src="../../static/js/User/docs.js"></script>
 
     <script defer src="../../static/js/User/include.js"></script>
 
@@ -21,7 +21,7 @@
 
 <!-- Nội dung chính -->
 <div class="main-content">
-    <div th:if="${isLoggedIn}" class="docCategories">
+    <div class="docCategories">
         <a class="docCate" href="index.html">Đề xuất</a>
         <a class="docCate active" href="allCategories.html">Tất cả</a>
         <script>
