@@ -39,7 +39,7 @@ public class SecurityConfig {
             "/auth/refresh"};
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {"/comment/doc/*", "/docCategory/get-all", "/doc/get-all",
-            "doc/get-id/*","doc/find/*"};
+            "/doc/get-id/*","/doc/find/*","/doc/findBySubCategory/*"};
 
     private final CustomJwtDecoder jwtDecoder;
 

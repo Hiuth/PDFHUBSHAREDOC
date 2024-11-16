@@ -16,4 +16,8 @@ public interface DocumentRepository extends JpaRepository<Documents, String> {
 
     @Query("select c from Documents c where c.name Like %:KeyWord% OR c.createdBy.name Like %:KeyWord%")
     List<Documents> findDocumentsByKeyWord(String KeyWord);
+
+
+    @Query("select c from Documents c where c.category.subCategory Like %:KeyWord%")
+    List<Documents> findDocumentsBySubCategory(String KeyWord);
 }

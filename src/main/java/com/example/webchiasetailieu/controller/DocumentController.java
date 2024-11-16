@@ -71,7 +71,7 @@ public class DocumentController {
     }
 
     @GetMapping("/get-all")
-    @MessageMapping("allDocuments")
+    @MessageMapping("/allDocuments")
     @SendTo("/topic/Documents")
     ApiResponse<List<Documents>> getAllDocuments(){
         return ApiResponse.<List<Documents>>builder()
@@ -80,6 +80,15 @@ public class DocumentController {
                 .build();
     }
 
+    @GetMapping("/findBySubCategory/{key}")
+    @MessageMapping("/DocumentsBySubCategory/{key}")
+    @SendTo("/topic/getDocumentsBySubCategory")
+    ApiResponse<List<Documents>> findDocumentsBySubCategory(@DestinationVariable String key){
+        return ApiResponse.<List<Documents>>builder()
+                .message("List of documents:")
+                .result(documentService.findDocumentBySubCategory(key))
+                .build();
+    }
 
     @GetMapping("/find/{keyword}")
     @MessageMapping("/findDoc/{keyword}")

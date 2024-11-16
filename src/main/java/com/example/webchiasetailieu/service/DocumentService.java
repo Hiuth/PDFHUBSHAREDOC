@@ -62,9 +62,19 @@ public class DocumentService {
     }
 
     //public
+    public List<Documents> findDocumentBySubCategory(String keyword){
+        if(documentRepository.findDocumentsBySubCategory(keyword).isEmpty())
+            throw new AppException(ErrorCode.LIST_EMPTY);
+        return documentRepository.findDocumentsBySubCategory(keyword);
+    }
+
+
+    //public
     public List<Documents> getAllByCategory(DocCategory docCategory){
         return documentRepository.findByCategoryId(docCategory.getId());
     }
+
+
 
     //public
     public DocumentResponse getById(String id){

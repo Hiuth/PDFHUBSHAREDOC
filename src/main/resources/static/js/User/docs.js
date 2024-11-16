@@ -71,10 +71,9 @@ function fetchDocument(subCategory, i = 0) {
 
         client.send(`/app/DocumentsBySubCategory/${subCategory}`, {}, JSON.stringify({ subCategory }));
 
-        client.subscribe('/topic/getDocumentsByCategory', function (data) {
+        client.subscribe('/topic/getDocumentsBySubCategory', function (data) {
             const response = JSON.parse(data.body);
             const documents = response.result;
-
             const docsGroup = document.querySelectorAll('.Docs-group')[i];
             if (!docsGroup) {
                 console.error("Docs-group element not found");
