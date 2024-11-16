@@ -175,6 +175,8 @@ public class DocumentService {
             if(!mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
                             .email(documents.getCreatedBy().getEmail())
                             .emailType(EmailType.DOWNLOAD)
+                            .createBy(documents.getCreatedBy().getName())
+                            .docName(documents.getName())
                     .build()))
                 throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
             return "Successfully downloaded file";

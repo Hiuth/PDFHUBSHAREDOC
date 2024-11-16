@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -101,11 +102,14 @@ public class AccountService {
         boolean check = mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
                         .email(getAccountFromContext().getEmail())
                         .emailType(EmailType.FORGOT_PASSWORD)
+                        .accountName(getAccountFromContext().getName())
+                        .otp("123456")
                 .build());
         if(!check) throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
 
         Account account = getAccountFromContext();
         account.setPassword(passwordEncoder.encode(newPass));
+        accountRepository.save(account);
 
         return "Reset password successfully!";
     }

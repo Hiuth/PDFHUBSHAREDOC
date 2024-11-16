@@ -12,4 +12,15 @@ import lombok.experimental.FieldDefaults;
 public class SendEmailRequest {
     String email;
     EmailType emailType;
+    String subject;
+    String body;
+
+
+    //Download
+    String createBy;
+    String docName;
+
+    //forgetPassword
+    String accountName;
+    String otp;
 }

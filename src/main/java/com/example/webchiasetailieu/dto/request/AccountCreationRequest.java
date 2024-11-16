@@ -27,7 +27,7 @@ public class AccountCreationRequest {
     @Email(message = "EMAIL_INVALID")
     String email;
 
-    @NotBlank(message = "NOT_NULL")
-    @Size(min = 6, max = 6, message = "INCORRECT_OTP")
+//    @NotBlank(message = "NOT_NULL")
+//    @Size(min = 6, max = 6, message = "INCORRECT_OTP")
     String otp;
 }

@@ -131,7 +131,7 @@ public class AccountController {
     }
 
     @PostMapping("/forgetPassword")
-    ApiResponse<String> resetPassword(String newPass) throws MessagingException {
+    ApiResponse<String> resetPassword(@RequestBody String newPass) throws MessagingException {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Forget password");
         response.setResult(accountService.forgetPassword(newPass));

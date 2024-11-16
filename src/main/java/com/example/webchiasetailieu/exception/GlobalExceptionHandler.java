@@ -17,7 +17,6 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
-        //return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(AppException.class)
@@ -56,6 +55,5 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(code.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
-        //return ResponseEntity.badRequest().body(e.getFieldError().getDefaultMessage());
     }
 }

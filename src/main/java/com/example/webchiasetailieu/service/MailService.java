@@ -1,7 +1,6 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
-import com.example.webchiasetailieu.dto.response.SendEmailResponse;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import jakarta.mail.MessagingException;
@@ -36,8 +35,7 @@ public class MailService {
         switch (request.getEmailType()) {
             case DOWNLOAD:
                 subject = "Tài liệu của bạn có một lượt tải";
-                body = """
-                        <html>
+                body = String.format("""
                         <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333;">
                             <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; margin: 20px auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                                 <tr>
@@ -49,38 +47,36 @@ public class MailService {
                                 <tr>
                                     <td style="padding: 20px;">
                                         <p>Xin chào <strong style="color: #4CAF50;">%s</strong>,</p>
-                                        <p>Tài liệu của bạn với tiêu đề  vừa nhận được một lượt tải xuống mới!</p>
+                                        <p>Tài liệu của bạn với tiêu đề <strong>%s</strong> vừa nhận được một lượt tải xuống mới!</p>
                                         <p>Cảm ơn bạn đã đóng góp tài liệu cho cộng đồng. Tiếp tục chia sẻ thêm nhiều tài liệu hữu ích nhé!</p>
-                                        <a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: #ffffff; text-decoration: none; border-radius: 5px;">Xem tài liệu</a>
                                     </td>
                                 </tr>
                             </table>
                         </body>
-                        </html>
-                        """;
+            """, request.getCreateBy(), request.getDocName());
                 break;
 
             case REGISTER:
+                String otp = "123456";
                 subject = "Mã đăng ký tài khoản";
-                body = """
-                            <html>
-                            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                                <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-                                    <h1 style="color: #4CAF50; text-align: center;">Account Verification</h1>
-                                    <p>Dear Customer,</p>
-                                    <p>Thank you for registering for an account with us. To complete your registration, please use the following OTP:</p>
-                                    <p style="font-size: 24px; font-weight: bold; text-align: center; color: #4CAF50;">123456</p>
-                                    <p>This OTP is valid for the next 10 minutes. Please do not share it with anyone.</p>
-                                </div>
-                            </body>
-                            </html>
-                        """;
+                body = String.format("""
+                        <html>
+                        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+                            <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+                                <h1 style="color: #4CAF50; text-align: center;">Account Verification</h1>
+                                <p>Dear Customer,</p>
+                                <p>Thank you for registering for an account with us. To complete your registration, please use the following OTP:</p>
+                                <p style="font-size: 24px; font-weight: bold; text-align: center; color: #4CAF50;">%s</p>
+                                <p>This OTP is valid for the next 10 minutes. Please do not share it with anyone.</p>
+                            </div>
+                        </body>
+                        </html>
+                    """, otp);
                 break;
 
             case FORGOT_PASSWORD:
                 subject = "Mã reset password";
-                body = """
-                        <html>
+                body = String.format("""
                         <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0;">
                             <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                                 <div style="text-align: center; background-color: #4CAF50; color: #ffffff; padding: 20px; border-radius: 10px 10px 0 0;">
@@ -111,46 +107,44 @@ public class MailService {
                                 </div>
                             </div>
                         </body>
-                        </html>
-                        """;
-                            break;
+                        """, request.getAccountName(), request.getOtp());
+                break;
 
-                        default:
-                            return false;
-                    }
+            default:
+                return false;
+        }
 
-                    SendEmailResponse response = SendEmailResponse.builder()
-                            .subject(subject)
-                            .body(body)
-                            .build();
+        request.setSubject(subject);
+        request.setBody(body);
 
-                    sendEmail(response, request);
-                    return true;
-                }
+        sendEmail(request);
+        return true;
+    }
 
-                private void sendEmail(SendEmailResponse response, SendEmailRequest request) throws MessagingException {
-                    validateEmail(request.getEmail()); // Kiểm tra email trước
+    private void sendEmail(SendEmailRequest request) throws MessagingException {
+        validateEmail(request.getEmail());
 
-                    try {
-                        MimeMessage message = mailSender.createMimeMessage();
-                        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-                        helper.setTo(request.getEmail());
-                        helper.setFrom("pdfHub5shareDoc@gmail.com");
-                        helper.setSubject(response.getSubject());
-                        helper.setText(response.getBody(), true);
+            helper.setTo(request.getEmail());
+            helper.setFrom("pdfHub5shareDoc@gmail.com");
+            helper.setSubject(request.getSubject());
+            helper.setText(request.getBody(), true);
 
-                        mailSender.send(message);
-                        log.info("Email sent successfully to '{}', subject: '{}'", request.getEmail(), response.getSubject());
-                    } catch (MailException e) {
-                        log.error("Failed to send email to '{}': {}", request.getEmail(), e.getMessage(), e);
-                        throw new AppException(ErrorCode.FAILED_TO_SENT_EMAIL);
-                    }
-                }
+            mailSender.send(message);
+            log.info("Email sent successfully to '{}', subject: '{}'", request.getEmail(), request.getSubject());
+        } catch (MailException e) {
+            log.error("Failed to send email to '{}': {}", request.getEmail(), e.getMessage(), e);
+            throw new AppException(ErrorCode.FAILED_TO_SENT_EMAIL);
+        }
+    }
 
-                private void validateEmail(String email) {
-                    if (email == null || !isValidEmail(email)) {
-                        throw new AppException(ErrorCode.EMAIL_INVALID);
-                    }
-                }
-            }
+    private void validateEmail(String email) {
+        if (email == null || !isValidEmail(email)) {
+            throw new AppException(ErrorCode.EMAIL_INVALID);
+        }
+    }
+
+}
