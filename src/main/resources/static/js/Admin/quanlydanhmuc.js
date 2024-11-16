@@ -221,11 +221,9 @@ function openEditCategory(id, main, sub) {
   document.getElementById("groupId-2").value = id;
 
   let selectElement = document.getElementById("folderSelect-2");
-  console.log(selectElement.options.length);
-
   for (let i = 0; i < selectElement.options.length; i++) {
-    if (selectElement.options[i].value === main) {
-      console.log(main);
+    if (selectElement.options[i].textContent === main) {
+
       selectElement.options[i].selected = true;
       break;
     }
@@ -273,7 +271,6 @@ function deleteCategory(id) {
     modal.style.display = "none";
   };
 }
-// Delete category
 
 
 // Helper function to format date
