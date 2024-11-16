@@ -7,6 +7,9 @@ import com.example.webchiasetailieu.service.CommentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,8 +45,9 @@ public class CommentController {
 //                .build();
 //    }
 
-    @GetMapping("/doc/{docId}")
-    ApiResponse<List<Comment>> getAllCommentsByDocId(@PathVariable String docId) {
+    @MessageMapping("/comments/{docId}")
+    @SendTo("/topic/getComments")
+    ApiResponse<List<Comment>> getAllCommentsByDocId(@DestinationVariable String docId) {
         return ApiResponse.<List<Comment>>builder()
                 .message("Comment created")
                 .result(service.getAllCommentsOfDocument(docId))
