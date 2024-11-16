@@ -1,5 +1,6 @@
-
 // Initialize when page loads
+import {getToken} from "../Share/localStorageService.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   renderCategories();
   updateFolderSelect();
@@ -40,9 +41,10 @@ function closeGroupModal(i) {
 
 
 function SendData(data,message,server) {
+  const token = getToken();
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
-  client.connect({}, function (frame) {
+  client.connect({Authorization: `Bearer ${token}`}, function (frame) {
     client.debug = function (str) {};
     client.subscribe(server, function (message) {
       const result = JSON.parse(message.body);

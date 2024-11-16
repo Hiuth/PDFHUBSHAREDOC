@@ -78,20 +78,6 @@ function populateGroupOptions(subCategories, selectedSubCategory = null) {
 
 
 
-// function openEditModal(docId,docName,mainCategory,subCategory,type,account,point,description) {
-//   document.getElementById("editDocumentModal").style.display = "flex";
-//   // Gán giá trị cho các trường modal dựa trên documentId
-//   document.getElementById("documentId").value = docId;
-//   document.getElementById("documentTitle").value = docName;
-//   // document.getElementById("documentCategory").value = mainCategory;
-//   // document.getElementById("documentGroup").value = subCategory;
-//     fetchCategories(mainCategory,subCategory)
-//   document.getElementById("documentType").value = type;
-//   document.getElementById("documentAuthor").value = account;
-//   document.getElementById("documentPoint").value = point;
-//   document.getElementById("documentDescription").value = description;
-// }
-
 // Đóng modal chỉnh sửa
 export function closeEditModal() {
   document.getElementById("editDocumentModal").style.display = "none";
