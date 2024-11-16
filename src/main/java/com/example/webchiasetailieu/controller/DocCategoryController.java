@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ public class DocCategoryController {
     DocCategoryService service;
 
     @PostMapping("/main")
+    @MessageMapping("/createMainCategory")
+    @SendTo("/topic/createMain")
     ApiResponse<DocCategoryResponse> createMainCategory(@RequestBody @Valid DocCategoryCreationRequest request){
         ApiResponse<DocCategoryResponse> apiResponse = new ApiResponse<>();
         apiResponse.setMessage("Creat main category: " + request.getMain());
@@ -39,6 +42,8 @@ public class DocCategoryController {
     }
 
     @PostMapping
+    @MessageMapping("/createMain&SubCategory")
+    @SendTo("/topic/createCategory")
     ApiResponse<DocCategoryResponse> createCategory(@RequestBody @Valid DocCategoryCreationRequest request){
         return ApiResponse.<DocCategoryResponse>builder()
                 .message("Creat category: " + request.getMain() + " : " + request.getSub())
@@ -65,7 +70,9 @@ public class DocCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<DocCategoryResponse> updateCategory(@PathVariable String id,
+    @MessageMapping("/updateCategory/{id}")
+    @SendTo("/topic/updateCate")
+    public ApiResponse<DocCategoryResponse> updateCategory(@DestinationVariable String id,
                                             @RequestBody @Valid DocCategoryCreationRequest request){
         ApiResponse<DocCategoryResponse> apiResponse = new ApiResponse<>();
         apiResponse.setMessage("Update category: " + request.getMain() + " or " + request.getSub());
@@ -74,7 +81,9 @@ public class DocCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteCategory(@PathVariable String id){
+    @MessageMapping("deleteCategory/{id}")
+    @SendTo("/topic/deleteCate")
+    public ApiResponse<String> deleteCategory(@DestinationVariable String id){
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setMessage("Delete category: ");
         apiResponse.setResult(service.delete(id));

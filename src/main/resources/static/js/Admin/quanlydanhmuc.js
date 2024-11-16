@@ -7,16 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Show folder modal
-function showAddFolderModal() {
+export function showAddFolderModal() {
   const modal = document.getElementById("folderModal");
   const form = document.getElementById("folderForm");
   form.reset();
   document.getElementById("folderId").value = "";
   modal.style.display = "block";
 }
+window.showAddFolderModal = showAddFolderModal;
 
 // Show group modal
-function showAddGroupModal() {
+export function showAddGroupModal() {
   const modal = document.getElementById("groupModal");
   const form = document.getElementById("groupForm");
   form.reset();
@@ -24,13 +25,17 @@ function showAddGroupModal() {
   updateFolderSelect();
   modal.style.display = "block";
 }
+window.showAddGroupModal = showAddGroupModal;
+
+
 
 // Close modals
 function closeFolderModal() {
   document.getElementById("folderModal").style.display = "none";
 }
+window.closeFolderModal=closeFolderModal;
 
-function closeGroupModal(i) {
+export function closeGroupModal(i) {
   if(i == 1){
     document.getElementById("groupModal").style.display = "none";
   }else{
@@ -38,27 +43,27 @@ function closeGroupModal(i) {
   }
 
 }
-
+window.closeGroupModal = closeGroupModal;
 
 function SendData(data,message,server) {
   const token = getToken();
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
+  client.debug = function (str) {};
   client.connect({Authorization: `Bearer ${token}`}, function (frame) {
-    client.debug = function (str) {};
+    client.send(message,{},JSON.stringify(data));
     client.subscribe(server, function (message) {
       const result = JSON.parse(message.body);
-      alert(result.message);
+      //alert(result.message);
+      window.location.reload();
     })
-    //console.log(message,server);
-    client.send(message,{},JSON.stringify(data));
   })
 }
 
 
 
 // Handle folder submission
-function handleFolderSubmit(event) {
+export function handleFolderSubmit(event) {
   event.preventDefault();
 
   const message = "/app/createMainCategory";
@@ -72,9 +77,10 @@ function handleFolderSubmit(event) {
   renderCategories();
   closeFolderModal();
 }
+window.handleFolderSubmit = handleFolderSubmit;
 
 // Handle group submission
-function handleGroupSubmit(event) {
+export function handleGroupSubmit(event) {
   event.preventDefault();
 
   const message = "/app/createMain&SubCategory";
@@ -88,8 +94,11 @@ function handleGroupSubmit(event) {
   renderCategories();
   closeGroupModal();
 }
+window.handleGroupSubmit = handleGroupSubmit;
 
-function handleGroupUpdateSubmit(event) {
+
+
+export function handleGroupUpdateSubmit(event) {
   event.preventDefault();
   const id = document.getElementById("groupId-2").value;
   const message = `/app/updateCategory/${id}`;
@@ -102,6 +111,9 @@ function handleGroupUpdateSubmit(event) {
   renderCategories();
   closeGroupModal();
 }
+window.handleGroupUpdateSubmit = handleGroupUpdateSubmit;
+
+
 // Update folder select options
 function updateFolderSelect() {
   // Khởi tạo kết nối WebSocket
@@ -175,7 +187,7 @@ function renderCategories() {
           <button class="btn btn-edit" id="editCategory">
             <i class="fas fa-edit"></i> Sửa
           </button>
-          <button class="btn btn-delete" onclick="deleteCategory('${category.id}')">
+          <button class="btn btn-delete">
             <i class="fas fa-trash"></i> Xóa
           </button>
         </div>
@@ -223,6 +235,19 @@ function openEditCategory(id, main, sub) {
   modal.style.display = "block";
 }
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.getElementById("categoryTableBody");
+  tbody.addEventListener("click", (event) => {
+    if (event.target.closest(".btn-delete")) {
+      const row = event.target.closest("tr"); // Lấy hàng cha của nút được nhấn
+      const id = row.querySelector("#categoryId").value.replace(/'/g, "");
+     deleteCategory(id);
+    }
+  });
+});
+
+
 function deleteCategory(id) {
   const modal = document.getElementById("confirmDeleteModal");
   modal.style.display = "block";
@@ -240,6 +265,7 @@ function deleteCategory(id) {
     SendData(docCategoryRequest,message,server);
     modal.style.display = "none";
   };
+
 
   // Thiết lập nút hủy
   const cancelButton = modal.querySelector(".btn-cancel-delete");
