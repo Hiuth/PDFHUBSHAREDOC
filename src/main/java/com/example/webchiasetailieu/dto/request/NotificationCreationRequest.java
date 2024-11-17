@@ -21,7 +21,5 @@ public class NotificationCreationRequest {
 
     @NotBlank
     String type;
-
-    @NotBlank
     String account;
 }

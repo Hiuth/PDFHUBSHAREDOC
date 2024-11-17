@@ -21,8 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -73,12 +71,12 @@ public class AccountService {
 
     @PreAuthorize("hasAuthority('VIEW_ACCOUNT')")
     public AccountResponse getMyInfo(){
-        return convertToResponse(getAccountFromContext());
+        return convertToResponse(getAccountFromAuthentication());
     }
 
     @PreAuthorize("hasAuthority('EDIT_ACCOUNT')")
     public AccountResponse edit(AccountUpdateRequest accountUpdateRequest) {
-        Account account = getAccountFromContext();
+        Account account = getAccountFromAuthentication();
 
         if(accountUpdateRequest.getName() != null)
             account.setName(accountUpdateRequest.getName());
@@ -88,7 +86,7 @@ public class AccountService {
 
     @PreAuthorize("hasAuthority('CHANGE_PASSWORD')")
     public AccountResponse updatePassword(UpdatePassword request) {
-        Account account = getAccountFromContext();
+        Account account = getAccountFromAuthentication();
 
         if(!passwordEncoder.matches(request.getOldPassword(), account.getPassword()))
             throw new AppException(ErrorCode.PASSWORD_NOT_CORRECT);
@@ -100,14 +98,14 @@ public class AccountService {
     @PreAuthorize("hasRole('USER')")
     public String forgetPassword(String newPass) throws MessagingException{
         boolean check = mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
-                        .email(getAccountFromContext().getEmail())
+                        .email(getAccountFromAuthentication().getEmail())
                         .emailType(EmailType.FORGOT_PASSWORD)
-                        .accountName(getAccountFromContext().getName())
+                        .accountName(getAccountFromAuthentication().getName())
                         .otp("123456")
                 .build());
         if(!check) throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
 
-        Account account = getAccountFromContext();
+        Account account = getAccountFromAuthentication();
         account.setPassword(passwordEncoder.encode(newPass));
         accountRepository.save(account);
 
@@ -230,7 +228,7 @@ public class AccountService {
                 .build();
     }
 
-    private Account getAccountFromContext(){
+    public Account getAccountFromAuthentication(){
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
         return accountRepository.findByEmail(email).orElseThrow(
