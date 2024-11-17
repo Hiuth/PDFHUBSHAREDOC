@@ -261,6 +261,13 @@
 </div>
 <div id="footer-placeholder"></div>
 <script src="../../static/js/User/comments.js"></script>
-<script> fetchCommentsForDocument();</script>
+<script type="module">
+    import { sendComment } from '../../static/js/User/comments.js';
+    sendComment();
+</script>
+<script type="module">
+    import {fetchCommentsForDocument} from "../../static/js/User/comments.js";
+    fetchCommentsForDocument();
+</script>
 </body>
 </html>

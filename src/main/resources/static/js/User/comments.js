@@ -1,24 +1,68 @@
-// Khởi tạo kết nối với SockJS và Stomp
-const socket = new SockJS("http://localhost:8088/ws");
-const client = Stomp.over(socket);
-// Hàm gửi bình luận mới
-function sendComment(documentId, commentText) {
-    const comment = {
-        document: documentId,
-        comText: commentText,
-        account: "user_account_id", // Cần thay thế bằng account ID thực tế
-        createdAt: new Date().toISOString()
-    };
+import { getToken } from "../Share/localStorageService.js";
 
-    // Gửi bình luận qua WebSocket
-    client.send(`/app/createComment/${documentId}`, {}, JSON.stringify(comment));
+// Hàm gửi bình luận mới
+export function sendComment(documentId, commentText) {
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    const token = getToken();
+    client.debug = function (str) {}; // Tắt log debug
+    client.connect(
+        { Authorization: `Bearer ${token}` }, function (frame) {
+
+            const comment = {
+                document: documentId,
+                comText: commentText
+            };
+            console.log(comment);
+
+            // // Gửi bình luận qua WebSocket đến endpoint cụ thể
+            client.send(`/app/createComment`, {}, JSON.stringify(comment));
+            client.subscribe('/topic/comments', function (data){
+                window.location.reload();
+            });
+        },
+
+    );
 }
 
+// Lắng nghe sự kiện DOMContentLoaded để khởi tạo
+document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get('docId'); // Lấy documentId từ URL
+    if (documentId) {
+        // Nếu có documentId, lấy bình luận cho tài liệu
+        fetchCommentsForDocument(documentId);
+    } else {
+        console.error("Document ID not found in URL");
+    }
+
+    // Lắng nghe sự kiện khi người dùng nhấn nút gửi bình luận
+    document.getElementById("submitComment").addEventListener("click", function (event) {
+        event.preventDefault(); // Ngừng hành động mặc định của nút (nếu có)
+
+        const commentText = document.getElementById("upcomment").value.trim(); // Lấy giá trị từ textarea
+        // Kiểm tra nếu dữ liệu hợp lệ
+        if (!documentId || !commentText) {
+            console.error("documentId hoặc commentText không hợp lệ:", documentId, commentText);
+            alert("Vui lòng nhập đầy đủ thông tin bình luận!");
+            return; // Dừng lại nếu dữ liệu không hợp lệ
+        }
+
+        // Gọi hàm gửi bình luận
+        sendComment(documentId, commentText);
+
+        // Clear input sau khi gửi
+        document.getElementById("upcomment").value = '';
+
+    });
+});
+
 // Hàm lấy danh sách bình luận cho tài liệu
-function fetchCommentsForDocument(documentId) {
-    // Kết nối đến WebSocket
+export function fetchCommentsForDocument(documentId) {
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {}; // Tắt log debug
     client.connect({}, function (frame) {
-        client.debug = function (str) {}; // Tắt log debug
 
         // Gửi yêu cầu lấy danh sách bình luận từ server
         client.send(`/app/comments/${documentId}`, {}, JSON.stringify({ documentId }));
@@ -72,15 +116,3 @@ function fetchCommentsForDocument(documentId) {
         console.error("Connection error: ", error);
     });
 }
-
-// Lắng nghe sự kiện DOMContentLoaded để khởi tạo
-document.addEventListener('DOMContentLoaded', function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const documentId = urlParams.get('docId'); // Lấy documentId từ URL
-    if (documentId) {
-        fetchCommentsForDocument(documentId); // Gọi hàm với documentId
-    } else {
-        console.error("Document ID not found in URL");
-    }
-
-});
