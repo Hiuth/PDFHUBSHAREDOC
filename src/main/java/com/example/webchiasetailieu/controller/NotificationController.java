@@ -27,15 +27,16 @@ public class NotificationController {
         return response;
     }
 
-//    @GetMapping
-//    public ApiResponse<List<Notifications>> getAllNotification() {
-//        ApiResponse<List<Notifications>> response = new ApiResponse<>();
-//        response.setMessage("Get all notification: ");
-//        response.setResult(service.getAll());
-//        return response;
-//    }
-
     @GetMapping
+    public ApiResponse<List<Notifications>> getAllNotifications() {
+        return ApiResponse.<List<Notifications>>builder()
+                .code(1000)
+                .message("Get all notifications")
+                .result(service.getAll())
+                .build();
+    }
+
+    @GetMapping("/get/my-notification")
     public ApiResponse<List<Notifications>> getMyNotification() {
         ApiResponse<List<Notifications>> response = new ApiResponse<>();
         response.setMessage("Get all notification: ");

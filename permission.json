@@ -48,8 +48,12 @@
     "description":"Update personal information"
   },
   {
-    "name": "VIEW_PERINFO",
+    "name": "VIEW_PER_INFO",
     "description": "View my personal information"
+  },
+  {
+    "name": "ADD_PER_INFO",
+    "description": "Add my personal information"
   },
   {
     "name": "UP_AVATAR",

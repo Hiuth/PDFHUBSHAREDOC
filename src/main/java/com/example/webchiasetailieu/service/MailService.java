@@ -22,12 +22,6 @@ import java.util.regex.Pattern;
 public class MailService {
     JavaMailSender mailSender;
 
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
-    }
-
     public boolean classifyBeforeSendEmail(SendEmailRequest request) throws MessagingException {
         String subject;
         String body;
@@ -139,6 +133,12 @@ public class MailService {
             log.error("Failed to send email to '{}': {}", request.getEmail(), e.getMessage(), e);
             throw new AppException(ErrorCode.FAILED_TO_SENT_EMAIL);
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
     }
 
     private void validateEmail(String email) {

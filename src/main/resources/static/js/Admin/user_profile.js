@@ -1,12 +1,35 @@
-function saveUserInfo() {
+import {getToken} from "../Share/localStorageService.js";
+
+function sendData(perInfo){
+  const token = getToken();
+  const socket = new SockJS("http://localhost:8088/ws");
+  const client = Stomp.over(socket);
+  client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+    client.debug = function (str) {}; // Tắt debug nếu không cần thiết
+    client.send(`/app/addInfo}`, {}, JSON.stringify(perInfo));
+
+    client.subscribe("/topic/addInformation", function (data) {
+
+    });
+  });
+}
+
+
+
+export function saveUserInfo() {
   // Lấy dữ liệu từ các trường trong modal
+  const id=document.getElementById("accId").value;
   const name = document.getElementById("modalName").value;
   const gender = document.getElementById("modalGender").value;
   const birthday = document.getElementById("modalBirthday").value;
-
+  const perInfo ={
+    id:id,
+    fullName:name,
+    birthday:birthday,
+    gender:gender,
+  }
   if (name && gender && birthday) {
-    alert("Thông tin của bạn đã được cập nhật!");
-    // Đóng modal sau khi lưu
+    sendData(perInfo);
     let modal = bootstrap.Modal.getInstance(
       document.getElementById("editInfoModal")
     );
@@ -15,6 +38,7 @@ function saveUserInfo() {
     alert("Vui lòng điền đầy đủ thông tin.");
   }
 }
+window.saveUserInfo = saveUserInfo;
 
 function savePassword() {
   const newPassword = document.getElementById("modalNewPassword").value;
@@ -65,14 +89,13 @@ function convertISOToDateInput(isoString) {
   return `${year}-${month}-${day}`;
 }
 
-function fetchPersonalInformation() {
+export function fetchPersonalInformation() {
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
-  const accountId = "99549716-a124-4b79-abb5-3483e05d31ae";
-
-  client.connect({}, function (frame) {
+  const token = getToken();
+  client.connect({Authorization: `Bearer ${token}`}, function (frame) {
     client.debug = function (str) {}; // Tắt debug nếu không cần thiết
-    client.send(`/app/getInfo/${accountId}`, {}, JSON.stringify(accountId));
+    client.send(`/app/getInfo`, {}, JSON.stringify());
 
     client.subscribe("/topic/getInformation", function (data) {
       const response = JSON.parse(data.body);
@@ -86,18 +109,19 @@ function fetchPersonalInformation() {
           <form>
             <div class="row mb-3">
               <div class="col-md-6">
+              
                 <label class="form-label">Họ và Tên</label>
-                <input type="text" class="form-control" placeholder="Họ và Tên" value="${perInfo.fullName}" />
+                <input type="text" class="form-control" placeholder="Họ và Tên" value="${perInfo.fullName}" readonly />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Giới tính</label>
-                <input type="text" class="form-control" placeholder="Giới Tính" value="${perInfo.gender}" />
+                <input type="text" class="form-control" placeholder="Giới Tính" value="${perInfo.gender}" readonly/>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
                 <label class="form-label">Sinh nhật</label>
-                <input type="date" id="dateInput1" class="form-control" value="${birthday}" />
+                <input type="date" id="dateInput1" class="form-control" value="${birthday}" readonly />
               </div>
             </div>
             <div class="mb-3">
@@ -110,17 +134,14 @@ function fetchPersonalInformation() {
             <div class="row mb-3">
               <div class="col-md-6">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-control" placeholder="Email"  />
+                <input type="email" class="form-control" placeholder="Email" value="${perInfo.email}" readonly/>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Mật khẩu</label>
-                <input type="password" class="form-control" placeholder="Mật khẩu" />
+                <label class="form-label">Điểm của tài khoản</label>
+                <input type="text" class="form-control" placeholder="Điểm" value="${perInfo.points}" readonly/>
               </div>
             </div>
             <div class="mb-3">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                Đổi mật khẩu
-              </button>
             </div>
           </form>
         </div>
@@ -133,17 +154,18 @@ function fetchPersonalInformation() {
                     </div>
                     <div class="modal-body">
                       <form>
+                        <input type="hidden" id="accId" value="${perInfo.accountId}"/>
                         <div class="mb-3">
                           <label class="form-label">Họ và Tên</label>
-                          <input type="text" class="form-control" id="modalName" placeholder="Họ và Tên" />
+                          <input type="text" class="form-control" id="modalName" placeholder="Họ và Tên" value="${perInfo.fullName}"/>
                         </div>
                         <div class="mb-3">
                           <label class="form-label">Giới tính</label>
-                          <input type="text" class="form-control" id="modalGender" placeholder="Giới Tính" />
+                          <input type="text" class="form-control" id="modalGender" placeholder="Giới Tính" value="${perInfo.gender}"/>
                         </div>
                         <div class="mb-3">
                           <label class="form-label">Sinh nhật</label>
-                          <input type="date" class="form-control" id="modalBirthday" />
+                          <input type="date" class="form-control" id="modalBirthday" value="${birthday}"/>
                         </div>
                       </form>
                     </div>
@@ -156,40 +178,14 @@ function fetchPersonalInformation() {
               </div>
 
               <!-- Modal Đổi Mật Khẩu -->
-              <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="changePasswordModalLabel">Đổi Mật Khẩu</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form>
-                        <div class="mb-3">
-                          <label class="form-label">Mật khẩu mới</label>
-                          <input type="password" class="form-control" id="modalNewPassword" placeholder="Mật khẩu mới" />
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label">Xác nhận mật khẩu mới</label>
-                          <input type="password" class="form-control" id="modalConfirmPassword" placeholder="Xác nhận mật khẩu mới" />
-                        </div>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                      <button type="button" class="btn btn-primary" onclick="savePassword()">Lưu Thay Đổi</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              
                 <!-- Profile Card Section -->
                 <div class="col-md-4">
                   <div class="card card-profile text-center">
                     <div class="card-body">
-                      <img src="\\WebChiaSeTaiLieu\\src\\main\\resources\\static\\images\\Ellipse 14.png" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
-                      <h5 class="card-title">Quân sói đơn độc</h5>
-                      <p class="card-text">Tôi là 1 con sói thích trẻ em à hú</p>
+                      <img src="${perInfo.avatar}" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
+                      <h5 class="card-title">Ạt Văn Min</h5>
+                      <p class="card-text">Tôi là người quản lý web</p>
                       <button type="button" class="btn btn-secondary mt-3" onclick="changeAvatar()">Đổi ảnh đại diện</button>
                     </div>
                   </div>
@@ -201,7 +197,5 @@ function fetchPersonalInformation() {
     });
   });
 }
-
-
 
 

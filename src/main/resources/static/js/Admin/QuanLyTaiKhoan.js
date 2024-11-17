@@ -1,5 +1,39 @@
 import {getToken} from "../Share/localStorageService.js";
 
+function checkStatus(isBanned, banUntil){
+    var status;
+    var styleBan ="display: none";
+    var styleUnBan ="display: inline-block";
+    if (isBanned) {
+        if (banUntil) {
+            const banUntilDate = new Date(banUntil);
+            const today = new Date();
+            const timeDiff = banUntilDate - today; // Tính khoảng cách thời gian
+            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Chuyển đổi thành số ngày
+
+            if (daysRemaining > 0) {
+                status = `${daysRemaining} days banned`; // Hiển thị số ngày bị cấm
+            }
+        } else {
+            status = "PERMANENT"; // Nếu `banUntil` là null
+        }
+        styleBan = "display: none";
+        styleUnBan = "display: inline-block";
+    } else {
+        status = "Active";
+        styleBan = "display: inline-block";
+        styleUnBan = "display: none";
+    }
+
+    const data = {
+        status: status,
+        styleBan: styleBan,
+        styleUnBan: styleUnBan,
+    }
+    return data;
+}
+
+
 export function fetchAllAccounts() {
     const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
@@ -21,6 +55,7 @@ export function fetchAllAccounts() {
                         tbody.innerHTML = '';
                         accounts.forEach(account => {
                             const row = document.createElement('tr');
+                           const status = checkStatus(account.banned,account.banUntil);
                             row.innerHTML = `
                             <td>${i}</td>
                             <td>${account.name}</td>
@@ -28,13 +63,25 @@ export function fetchAllAccounts() {
                             <td class="password-cell">
                                 <span class="password-text">${account.points}</span>
                             </td>
-                            <td>Active</td>
+                            <td id="userStatus${account.id}">${status.status}</td>
                             <td>
-                                <button class="edit-button" onclick="openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-                                    <img src="../../static/images/bxs-edit.svg" alt="Edit" />
+                                <button class="edit-button" onclick = "openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
+                                <img src="../../static/images/bxs-edit.svg" alt="Edit" />
                                 </button>
-                                <button class="status-button unlocked" onclick="toggleLockStatus('${account.id}')">
-                                    <img src="../../static/images/lock-open-alt-solid-24.png" alt="Lock" />
+                                <button class="status-button unlocked" 
+                                onclick= "openBanModal('${account.id}','${account.name}', '${account.email}')" 
+                                id="banButton${account.id}"
+                                style="${status.styleBan}"
+                                >
+                                    <img src="../../static/images/lock-alt-solid-24.png" alt="Lock" />
+                                </button>
+                                <button
+                                  class="status-button unlocked"
+                                  onclick="openUnbanModal('${account.id}')"
+                                  id="unbanButton${account.id}"
+                                  style="${status.styleUnBan}"
+                                >
+                                  <img src="../../static/images/lock-open-alt-solid-24.png" alt="Unlock" />
                                 </button>
                             </td>
                         `;
@@ -53,6 +100,23 @@ export function fetchAllAccounts() {
     );
 
 }
+
+export function openModal(id, name, email, password) {
+    const modal = document.getElementById("editModal");
+    document.getElementById("accId").value = id;
+    document.getElementById("customerName").value = name;
+    document.getElementById("customerEmail").value = email;
+    document.getElementById("customerPassword").value = password;
+    modal.style.display = "block";
+}
+window.openModal = openModal;
+
+export function closeModal() {
+    const modal = document.getElementById("editModal");
+    modal.style.display = "none";
+}
+window.closeModal=closeModal;
+
 
 document.addEventListener("DOMContentLoaded", function () {
     // Thêm xử lý sự kiện cho nút search
@@ -92,23 +156,36 @@ function searchAccount(keyWord) {
                 tbody.innerHTML = ''; // Xóa nội dung cũ trong bảng
                 accounts.forEach(account => {
                     const row = document.createElement('tr');
+                    const status = checkStatus(account.banned,account.banUntil);
                     row.innerHTML = `
-                <td>${i}</td>
-                <td>${account.name}</td>
-                <td>${account.email}</td>
-                <td class="password-cell">
-                    <span class="password-text">${account.points}</span>
-                </td>
-                <td>Active</td>
-                <td>
-                    <button class="edit-button" onclick = "openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
-                        <img src="../../static/images/bxs-edit.svg" alt="Edit" />
-                    </button>
-                    <button class="status-button unlocked" onclick= "toggleLockStatus('${account.id}')">
-                        <img src="../../static/images/lock-open-alt-solid-24.png" alt="Lock" />
-                    </button>
-                </td>
-                `;
+                            <td>${i}</td>
+                            <td>${account.name}</td>
+                            <td>${account.email}</td>
+                            <td class="password-cell">
+                                <span class="password-text">${account.points}</span>
+                            </td>
+                            <td id="userStatus${account.id}">${status.status}</td>
+                            <td>
+                                <button class="edit-button" onclick = "openModal('${account.id}', '${account.name}', '${account.email}', '${account.points}')">
+                                <img src="../../static/images/bxs-edit.svg" alt="Edit" />
+                                </button>
+                                <button class="status-button unlocked" 
+                                onclick= "openBanModal('${account.id}','${account.name}', '${account.email}')" 
+                                id="banButton${account.id}"
+                                style="${status.styleBan}"
+                                >
+                                    <img src="../../static/images/lock-alt-solid-24.png" alt="Lock" />
+                                </button>
+                                <button
+                                  class="status-button unlocked"
+                                  onclick="openUnbanModal('${account.id}')"
+                                  id="unbanButton${account.id}"
+                                  style="${status.styleUnBan}"
+                                >
+                                  <img src="../../static/images/lock-open-alt-solid-24.png" alt="Unlock" />
+                                </button>
+                            </td>
+                        `;
                     tbody.appendChild(row);
                     i++;
                 });
@@ -120,28 +197,86 @@ function searchAccount(keyWord) {
 }
 
 
-function toggleLockStatus(id) {
-    const button = document.querySelector(
-        `button[onclick="toggleLockStatus('${id}')"]`
-    );
-    const img = button.querySelector("img");
-
-    if (button.classList.contains("locked")) {
-        button.classList.remove("locked");
-        button.classList.add("unlocked");
-        img.src = "../../static/images/lock-open-alt-solid-24.png"; // Thay đổi biểu tượng thành mở khóa
-        const message =`/unbanAcc/${id}`;
-        const server = "/topic/unbanAccount";
-        SendData(id,message,server);
-    } else {
-        button.classList.remove("unlocked");
-        button.classList.add("locked");
-        img.src = "../../static/images/lock-alt-solid-24.png"; // Thay đổi biểu tượng thành khóa
-        const message =`/banAcc/${id}`;
-        const server = "/topic/banAccount";
-        SendData(id,message,server);
-    }
+// Hàm xác nhận mở khóa tài khoản
+export function confirmUnban() {
+    const userId = document
+        .getElementById("unbanModal")
+        .getAttribute("data-user-id");
+    console.log(`User ID ${userId} has been unbanned.`);
+    const message =`/app/unBanAccount/${userId}`;
+    const topic ="/topic/unBan";
+    const banStatus=""
+    editStatusAccount(message, topic,banStatus);
+    closeUnbanModal();
 }
+window.confirmUnban = confirmUnban;
+
+
+// Mở modal khóa tài khoản với thông tin người dùng
+export function openBanModal(userId, userName, userEmail) {
+    document.getElementById("banUserName").textContent = userName;
+    document.getElementById("banUserEmail").textContent = userEmail;
+    document.getElementById("banModal").style.display = "block";
+    document.getElementById("banModal").setAttribute("data-user-id", userId);
+}
+window.openBanModal = openBanModal;
+
+// Đóng modal khóa tài khoản
+export function closeBanModal() {
+    document.getElementById("banModal").style.display = "none";
+}
+window.closeBanModal = closeBanModal;
+
+
+// Áp dụng lệnh khóa tài khoản
+export function applyBan() {
+    const userId = document
+        .getElementById("banModal")
+        .getAttribute("data-user-id");
+    const duration = document.getElementById("banDuration").value;
+    var banStatus;
+    if(duration ==="10"){
+        banStatus = "TEMPORARY_10_DAYS";
+    }else if(duration ==="30"){
+        banStatus = "TEMPORARY_30_DAYS";
+    }else if(duration ==="permanent"){
+        banStatus = "PERMANENT";
+    }
+    const message =`/app/banAccount/${userId}/ban`;
+    const topic ="/topic/banAcc";
+    editStatusAccount(message, topic,banStatus);
+    closeBanModal();
+}
+window.applyBan = applyBan;
+
+function editStatusAccount(message,topic,banStatus){
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+        client.subscribe(topic, function (message) {
+            window.location.reload();
+        })
+        client.send(message,{},JSON.stringify(banStatus));
+    })
+}
+
+// Mở modal mở khóa tài khoản
+export function openUnbanModal(userId) {
+    document.getElementById("unbanModal").style.display = "block";
+    document.getElementById("unbanModal").setAttribute("data-user-id", userId);
+}
+
+window. openUnbanModal=  openUnbanModal;
+
+
+// Đóng modal mở khóa tài khoản
+export function closeUnbanModal() {
+    document.getElementById("unbanModal").style.display = "none";
+}
+window.closeUnbanModal = closeUnbanModal;
+
 
 
 

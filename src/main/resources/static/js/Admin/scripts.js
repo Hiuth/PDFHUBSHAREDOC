@@ -11,19 +11,7 @@
 //   openModal(accountId, accountName, accountEmail, accountPassword);
 // }
 
-function openModal(id, name, email, password) {
-  const modal = document.getElementById("editModal");
-  document.getElementById("accId").value = id;
-  document.getElementById("customerName").value = name;
-  document.getElementById("customerEmail").value = email;
-  document.getElementById("customerPassword").value = password;
-  modal.style.display = "block";
-}
 
-function closeModal() {
-  const modal = document.getElementById("editModal");
-  modal.style.display = "none";
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   const tabsTriggers = document.querySelectorAll(".tabs-trigger");

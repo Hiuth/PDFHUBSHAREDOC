@@ -101,8 +101,6 @@ public class AuthenticationService {
                     .expiryTime(expiryTime)
                     .build();
             invalidatedTokenRepository.save(invalidatedToken);
-
-            //return "Successfully logged out";
         }
         catch (AppException e){
             log.info("Token already expired");

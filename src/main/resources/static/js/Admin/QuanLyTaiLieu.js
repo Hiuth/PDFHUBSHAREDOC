@@ -1,82 +1,4 @@
 import {getToken} from "../Share/localStorageService.js";
-// Hiển thị modal chỉnh sửa tài liệu
-async function fetchCategories(selectedMainCategory, selectedSubCategory) {
-    try {
-        const response = await fetch('http://localhost:8088/docCategory/get-all'); // Đảm bảo URL chính xác
-        const data = await response.json();
-
-        if (data.result) {
-            populateCategoryOptions(data.result, selectedMainCategory, selectedSubCategory);
-        }
-    } catch (error) {
-        console.error("Error fetching categories:", error);
-    }
-}
-
-// Hàm để thêm danh mục vào documentCategory
-function populateCategoryOptions(categories, selectedMainCategory, selectedSubCategory) {
-    const categorySelect = document.getElementById("documentCategory");
-
-    // Tạo một tập hợp để loại bỏ các danh mục trùng lặp
-    const uniqueMainCategories = [...new Set(categories.map(category => category.mainCategory))];
-
-    // Xóa các tùy chọn cũ, trừ "Chọn danh mục"
-    categorySelect.innerHTML = '<option value="" >Chọn danh mục</option>';
-
-    uniqueMainCategories.forEach(mainCategory => {
-        const option = document.createElement("option");
-        option.value = mainCategory;
-        option.textContent = mainCategory;
-
-        // Gán giá trị selected nếu trùng với selectedMainCategory
-        if (mainCategory === selectedMainCategory) {
-            option.selected = true;
-        }
-        categorySelect.appendChild(option);
-    });
-
-    // Cập nhật nhóm con dựa trên danh mục được chọn
-    const subCategories = categories
-        .filter(category => category.mainCategory === selectedMainCategory)
-        .map(category => category.subCategory);
-
-    populateGroupOptions(subCategories, selectedSubCategory);
-
-    // Thêm sự kiện khi thay đổi danh mục
-    categorySelect.addEventListener("change", function () {
-        const selectedCategory = this.value;
-        const subCategories = categories
-            .filter(category => category.mainCategory === selectedCategory)
-            .map(category => category.subCategory);
-        populateGroupOptions(subCategories);
-    });
-}
-
-// Hàm để thêm nhóm vào documentGroup
-function populateGroupOptions(subCategories, selectedSubCategory = null) {
-    const groupSelect = document.getElementById("documentGroup");
-
-    // Xóa các tùy chọn cũ, trừ "Chọn nhóm"
-    groupSelect.innerHTML = '<option value="" disabled>Chọn nhóm</option>';
-
-    subCategories.forEach(subCategory => {
-        if (subCategory && subCategory.trim() !== "") {
-            const option = document.createElement("option");
-            option.value = subCategory;
-            option.textContent = subCategory;
-
-            // Gán giá trị selected nếu trùng với selectedSubCategory
-            if (subCategory === selectedSubCategory) {
-                option.selected = true;
-            }
-
-            groupSelect.appendChild(option);
-        }
-    });
-}
-
-
-
 
 // Đóng modal chỉnh sửa
 export function closeEditModal() {
@@ -328,3 +250,7 @@ function searchDocument(docName){
         });
     });
 }
+
+
+
+

@@ -1,8 +1,7 @@
 package com.example.webchiasetailieu.dto.request;
 
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PerInfoUpdateRequest {
+public class UpdatePerInfoRequest {
     @Size(min = 5, message = "NAME_INVALID")
     String fullName;
 
@@ -23,4 +22,3 @@ public class PerInfoUpdateRequest {
     @Pattern(regexp = "Male|Female", message = "GENDER_INVALID")
     String gender;
 }
-

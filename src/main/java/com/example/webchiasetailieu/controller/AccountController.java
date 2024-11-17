@@ -115,7 +115,9 @@ public class AccountController {
     }
 
     @PutMapping("{id}/ban")
-    ApiResponse<String> banAccount(@PathVariable String id, @RequestParam BanType banType) {
+    @MessageMapping("/banAccount/{id}/ban")
+    @SendTo("/topic/banAcc")
+    ApiResponse<String> banAccount(@DestinationVariable String id, @RequestParam BanType banType) {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Ban account: " + id);
         response.setResult(accountService.banAccount(id, banType));
@@ -123,7 +125,9 @@ public class AccountController {
     }
 
     @PutMapping("{id}/unban")
-    ApiResponse<String> unbanAccount(@PathVariable String id) {
+    @MessageMapping("/unBanAccount/{id}")
+    @SendTo("/topic/unBan")
+    ApiResponse<String> unbanAccount(@DestinationVariable String id) {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Unban account: " + id);
         response.setResult(accountService.unbanAccount(id));

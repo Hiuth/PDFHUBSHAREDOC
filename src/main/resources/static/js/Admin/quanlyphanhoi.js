@@ -8,13 +8,12 @@ function fetchAllFeedBack() {
     const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
-    client.connect({}, function (frame) {
-        client.debug = function (str) {};
+    client.debug = function (str) {};
+    client.connect({Authorization: `Bearer ${token}`}, function (frame) {
         //console.log("Connected: " + frame);
         client.send("/app/allFeed");  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
         // Nhận danh sách tài khoản từ server và hiển thị trong bảng
         client.subscribe('/topic/allFeedBack', function (data) {
-            console.log("1");
             const response = JSON.parse(data.body);
             const feedBacks = response.result
             //console.log(feedBacks);
@@ -23,7 +22,6 @@ function fetchAllFeedBack() {
                 const tbody = document.querySelector('.feedback-table tbody');
                 tbody.innerHTML = ''; // Xóa nội dung cũ trong bảng
                 feedBacks.forEach(feed => {
-                    console.log(feed);
                     const row = document.createElement('tr');
                     row.innerHTML = `
                      <tr>

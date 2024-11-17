@@ -6,12 +6,10 @@ import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Notifications;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
-import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +19,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationService {
     NotificationRepository repository;
-    AccountRepository accountRepository;
+    AccountService accountService;
 
     public NotificationResponse createNotification(NotificationCreationRequest request) {
-        Account account = accountRepository.findById(request.getAccount())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = accountService.getAccountFromAuthentication();
         Notifications notification = Notifications.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -37,9 +34,7 @@ public class NotificationService {
 
     //public
     public List<Notifications> getMyNotifications() {
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = accountService.getAccountFromAuthentication();
         List<Notifications> notifications = repository.findByAccount_Id(account.getId());
         if (notifications.isEmpty())
             throw new AppException(ErrorCode.LIST_EMPTY);
@@ -67,7 +62,7 @@ public class NotificationService {
                 .title("TÀI LIỆU BẠN ĐĂNG ĐÃ CÓ 1 LƯỢT MUA!")
                 .content("TÀI LIỆU ... BẠN ĐĂNG ĐÃ CÓ 1 MUA MỚI! CHÚC MỪNG BẠN!!!!")
                 .type("Thông báo")
-                .account(getUserFromContext().getId())
+                .account(accountService.getAccountFromAuthentication().getId())
                 .build());
     }
 
@@ -76,7 +71,7 @@ public class NotificationService {
                 .title("THÔNG BÁO MUA BÀI THÀNH CÔNG!")
                 .content("MUA BÀI THÀNH CÔNG!")
                 .type("Thông báo")
-                .account(getUserFromContext().getId())
+                .account(accountService.getAccountFromAuthentication().getId())
                 .build());
     }
 
@@ -90,9 +85,4 @@ public class NotificationService {
                 .build();
     }
 
-    private Account getUserFromContext(){
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
-        return accountRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-    }
 }

@@ -23,8 +23,4 @@ public class PerInfoResponse {
     int points;
     String accountId;
     Account account;
-
-//    public String getEmail() {
-//        return account != null ? account.getEmail() : null;
-//    }
 }
