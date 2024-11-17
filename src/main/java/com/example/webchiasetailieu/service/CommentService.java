@@ -26,18 +26,9 @@ public class CommentService {
     AccountRepository accountRepository;
     DocumentRepository documentRepository;
 
-//    public List<Comment> getAll(){
-//        return repository.findAll();
-//    }
-//
-//    public CommentRequest getById(String id){
-//        return convertToResponse(repository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXIST)));
-//    }
-
     @PreAuthorize("hasAuthority('COMMENT')")
     public CommentRequest addComment(CommentRequest commentRequest) {
-        Account account = accountRepository.findById(commentRequest.getAccount())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = getAccountFromAuthentication();
 
         Documents documents = documentRepository.findById(commentRequest.getDocument())
                 .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
@@ -45,7 +36,6 @@ public class CommentService {
         return convertToResponse(repository.save(Comment.builder()
                         .account(account)
                         .comText(commentRequest.getComText())
-                        .createdAt(commentRequest.getCreatedAt())
                         .document(documents)
                 .build()));
     }
@@ -82,5 +72,11 @@ public class CommentService {
                 .createdAt(comment.getCreatedAt())
                 .comText(comment.getComText())
                 .build();
+    }
+
+    private Account getAccountFromAuthentication() {
+        return accountRepository.findByEmail(
+                        SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }

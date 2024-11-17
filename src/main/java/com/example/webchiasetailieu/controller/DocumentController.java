@@ -169,4 +169,13 @@ public class DocumentController {
                 .result(documentService.numberOfDocuments())
                 .build();
     }
+
+    @GetMapping("/downloads-today")
+    ApiResponse<Long> getTodayDownloads(){
+        return ApiResponse.<Long>builder()
+                .code(1000)
+                .message("Downloads today:")
+                .result(documentService.getTotalDownloadsToday())
+                .build();
+    }
 }

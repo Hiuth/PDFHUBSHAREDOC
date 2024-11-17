@@ -22,7 +22,7 @@ public class FeedBackController {
     FeedBackService service;
 
     @PostMapping
-    public ApiResponse<FeedBackResponse> createFeedback(FeedBackRequest request) {
+    public ApiResponse<FeedBackResponse> createFeedback(@RequestBody FeedBackRequest request) {
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
         response.setResult(service.createFeedback(request));

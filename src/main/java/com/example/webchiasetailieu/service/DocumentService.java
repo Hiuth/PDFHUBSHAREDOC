@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 import java.io.File;
@@ -223,6 +224,14 @@ public class DocumentService {
     @PreAuthorize("hasRole('ADMIN')")
     public long numberOfDocuments(){
         return documentRepository.count();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getTotalDownloadsToday(){
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+        return downloadHistoryRepository.countDownloadsToday(startOfDay, endOfDay);
     }
 
     private DocumentResponse convertToResponse(Documents documents) {

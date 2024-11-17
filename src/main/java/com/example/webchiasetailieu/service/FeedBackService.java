@@ -27,12 +27,11 @@ public class FeedBackService {
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
-        Account account = accountRepository.findById(request.getAccount().getId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = getAccountFromAuthentication();
         Feedbacks feedbacks = Feedbacks.builder()
                 .feedback(request.getFeedback())
-                .date(request.getDate())
                 .type(request.getType())
-                .status(request.getStatus())
+                .status("Chưa xử lí")
                 .account(account)
                 .build();
         return convertToResponse(repository.save(feedbacks));
@@ -74,5 +73,10 @@ public class FeedBackService {
                 .status(feedbacks.getStatus())
                 .feedbackFromAdmin(feedbacks.getFeedbackFromAdmin())
                 .build();
+    }
+
+    private Account getAccountFromAuthentication() {
+        return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }
