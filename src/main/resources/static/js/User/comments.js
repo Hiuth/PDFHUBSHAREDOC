@@ -2,6 +2,8 @@ import { getToken } from "../Share/localStorageService.js";
 
 // Hàm gửi bình luận mới
 export function sendComment(documentId, commentText) {
+
+
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
     const token = getToken();
@@ -11,52 +13,30 @@ export function sendComment(documentId, commentText) {
 
             const comment = {
                 document: documentId,
-                comText: commentText
+                comText: commentText,
             };
-            console.log(comment);
 
-            // // Gửi bình luận qua WebSocket đến endpoint cụ thể
-            client.send(`/app/createComment`, {}, JSON.stringify(comment));
-            client.subscribe('/topic/comments', function (data){
-                window.location.reload();
-            });
+            // Gửi bình luận qua WebSocket đến endpoint cụ thể
+            client.send(`/app/creteComment`, {}, JSON.stringify(comment));
         },
-
+        function (error) {
+            console.error("Kết nối WebSocket thất bại:", error);
+            alert("Không thể kết nối WebSocket. Vui lòng thử lại sau.");
+        }
     );
 }
 
-// Lắng nghe sự kiện DOMContentLoaded để khởi tạo
-document.addEventListener('DOMContentLoaded', function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const documentId = urlParams.get('docId'); // Lấy documentId từ URL
-    if (documentId) {
-        // Nếu có documentId, lấy bình luận cho tài liệu
-        fetchCommentsForDocument(documentId);
+document.getElementById('submitComment').addEventListener('click', function () {
+    const commentText = document.getElementById('upcomment').value;
+    const documentId = new URLSearchParams(window.location.search).get('docId');
+    const account = "userAccount"; // Replace with actual account logic
+    if (documentId && commentText && account) {
+        sendComment(documentId, commentText, account);
+        document.getElementById('upcomment').value = ''; // Clear the input after sending
     } else {
-        console.error("Document ID not found in URL");
+        console.error("Document ID, comment text, or account is missing.");
     }
-
-    // Lắng nghe sự kiện khi người dùng nhấn nút gửi bình luận
-    document.getElementById("submitComment").addEventListener("click", function (event) {
-        event.preventDefault(); // Ngừng hành động mặc định của nút (nếu có)
-
-        const commentText = document.getElementById("upcomment").value.trim(); // Lấy giá trị từ textarea
-        // Kiểm tra nếu dữ liệu hợp lệ
-        if (!documentId || !commentText) {
-            console.error("documentId hoặc commentText không hợp lệ:", documentId, commentText);
-            alert("Vui lòng nhập đầy đủ thông tin bình luận!");
-            return; // Dừng lại nếu dữ liệu không hợp lệ
-        }
-
-        // Gọi hàm gửi bình luận
-        sendComment(documentId, commentText);
-
-        // Clear input sau khi gửi
-        document.getElementById("upcomment").value = '';
-
-    });
 });
-
 // Hàm lấy danh sách bình luận cho tài liệu
 export function fetchCommentsForDocument(documentId) {
     const socket = new SockJS("http://localhost:8088/ws");
@@ -116,3 +96,31 @@ export function fetchCommentsForDocument(documentId) {
         console.error("Connection error: ", error);
     });
 }
+
+// Lắng nghe sự kiện DOMContentLoaded để khởi tạo
+document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get('docId'); // Lấy documentId từ URL
+    if (documentId) {
+        fetchCommentsForDocument(documentId); // Gọi hàm với documentId
+    } else {
+        console.error("Document ID not found in URL");
+    }
+// Thêm sự kiện khi người dùng nhấn nút gửi bình luận
+    document.getElementById("submitComment").addEventListener("click", function (event) {
+        event.preventDefault(); // Ngừng hành động mặc định của nút (nếu có)
+
+        // Lấy giá trị của documentId và commentText từ các trường input
+        const documentId = document.getElementById("documentId").value; // Hoặc bạn có thể lấy từ URL hoặc context
+        const commentText = document.getElementById("upcomment").value.trim(); // Lấy giá trị từ textarea
+
+        // Kiểm tra nếu dữ liệu hợp lệ
+        if (!documentId || !commentText) {
+            console.error("documentId hoặc commentText không hợp lệ:", documentId, commentText);
+            alert("Vui lòng nhập đầy đủ thông tin bình luận!");
+            return; // Dừng lại nếu dữ liệu không hợp lệ
+        }
+    });
+
+
+});

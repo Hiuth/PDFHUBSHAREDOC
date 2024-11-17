@@ -25,7 +25,7 @@ public class CommentController {
 
     @MessageMapping("/creteComment")
     @SendTo("/topic/comments")
-    public ApiResponse<CommentRequest> createComment( @RequestBody CommentRequest commentRequest) {
+    public ApiResponse<CommentRequest> createComment(@Valid @RequestBody CommentRequest commentRequest) {
         return ApiResponse.<CommentRequest>builder()
                 .message("Comment created successfully.")
                 .result(service.addComment(commentRequest))
