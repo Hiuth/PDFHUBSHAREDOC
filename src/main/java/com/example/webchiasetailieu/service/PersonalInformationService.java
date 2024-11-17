@@ -28,7 +28,7 @@ import java.security.GeneralSecurityException;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PersonalInformationService {
-    PersonalInformationRepository perRepository;
+    PersonalInformationRepository repository;
     AccountRepository accountRepository;
     DriveService driveService;
     AccountService accountService;
@@ -42,8 +42,8 @@ public class PersonalInformationService {
                 .birthday(request.getBirthday())
                 .account(account)
                 .build();
-//        perRepository.save(personalInformation)
-        return convertToResponse(personalInformation);
+
+        return convertToResponse(repository.save(personalInformation));
     }
 
     @PreAuthorize("hasAuthority('ADD_PER_INFO')")
@@ -60,8 +60,7 @@ public class PersonalInformationService {
             personalInformation.setBirthday(request.getBirthday());
 
         personalInformation.setAccount(account);
-//        perRepository.save(personalInformation)
-        return convertToResponse(personalInformation);
+        return convertToResponse(repository.save(personalInformation));
     }
 
     @PreAuthorize("hasAuthority('VIEW_PER_INFO')")
@@ -73,7 +72,7 @@ public class PersonalInformationService {
     public PerInfoResponse saveMyAvatar(MultipartFile file) throws IOException, GeneralSecurityException {
         PersonalInformation personalInformation = getPerInfoFromContext();
         personalInformation.setAvatar(upImage(file).getUrl());
-        return convertToResponse(perRepository.save(personalInformation));
+        return convertToResponse(repository.save(personalInformation));
     }
 
     private PersonalInformation getPerInfoFromContext() {
@@ -81,7 +80,7 @@ public class PersonalInformationService {
         String email = context.getAuthentication().getName();
         Account account = accountRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return perRepository.findByAccountId(account.getId());
+        return repository.findByAccountId(account.getId());
     }
 
     private DriveResponse upImage(MultipartFile file) throws IOException, GeneralSecurityException {
