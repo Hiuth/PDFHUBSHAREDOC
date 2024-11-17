@@ -10,6 +10,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +37,8 @@ public class PersonalInformationController {
     }
 
     @GetMapping("/get-info")
+    @MessageMapping("/getInfo")
+    @SendTo("/topic/getInformation")
     ApiResponse<PerInfoResponse> getMyPerInfo() {
         ApiResponse<PerInfoResponse> response = new ApiResponse<>();
         response.setMessage("Get personal information ");
@@ -50,6 +55,8 @@ public class PersonalInformationController {
     }
 
     @PostMapping("/add-my-info")
+    @MessageMapping("/addInfo/")
+    @SendTo("/addInformation")
     ApiResponse<PerInfoResponse> addPersonalInformation(@RequestBody @Valid PerInfoUpdateRequest request) {
         ApiResponse<PerInfoResponse> response = new ApiResponse<>();
         response.setResult(perInfoService.addPersonalInformation(request));
@@ -72,7 +79,7 @@ public class PersonalInformationController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<PerInfoResponse> updatePersonalInformation(@PathVariable String id, @RequestBody @Valid PerInfoUpdateRequest request) {
+    ApiResponse<PerInfoResponse> updatePersonalInformation(@DestinationVariable String id, @RequestBody @Valid PerInfoUpdateRequest request) {
         ApiResponse<PerInfoResponse> response = new ApiResponse<>();
         response.setMessage("Update personal information");
         response.setResult(perInfoService.updatePersonalInformation(id, request));
