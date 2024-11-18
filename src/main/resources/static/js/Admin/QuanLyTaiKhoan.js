@@ -146,7 +146,7 @@ function searchAccount(keyWord) {
     client.connect({Authorization: `Bearer ${token}`}, function (frame) {
         client.debug = function (str) {};
         client.send(`/app/findAcc/${keyWord}`,{},JSON.stringify(keyWord));
-        client.subscribe('/topic/findAccount',function (data) {
+        client.subscribe('/topic/accounts',function (data) {
 
             const response = JSON.parse(data.body);
             const accounts = response.result

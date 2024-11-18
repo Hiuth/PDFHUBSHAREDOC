@@ -54,7 +54,7 @@ public class AccountController {
     @GetMapping("/find/{key}")
     @MessageMapping("/findAcc/{key}")
     @SendTo("/topic/accounts")
-    ApiResponse<List<Account>> findAccountsByKeyWord(@PathVariable String key) {
+    ApiResponse<List<Account>> findAccountsByKeyWord(@DestinationVariable String key) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("find accounts: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
