@@ -53,7 +53,8 @@ body{
 
 #login .form-group2 .static{
     min-width: 100px;
-    width: 25%;
+    width: 22%;
+    font-weight: normal;
 }
 
 #register .form-group2 .static{
@@ -62,8 +63,8 @@ body{
     font-weight: normal;
 }
 
-#register .form-group2 input[type="text"]{
-    width: 65%;
+#register .form-group2 input{
+    width: 70%;
 }
 
 #register .form-group2{

@@ -7,12 +7,16 @@
 
     <script defer src="../../static/js/User/include.js"></script>
     <script src="../../static/js/User/header.js"></script>
-    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="../../static/js/User/docs.js"></script>
+
     <link rel="stylesheet" href="../../static/css/docs.css">
     <link rel="stylesheet" href="../../static/css/home.css">
     <link rel="stylesheet" href="../../static/css/form.css">
 
-<!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
 </head>
 <body>
 <!-- Include header -->
@@ -22,23 +26,21 @@
 <!-- Nội dung chính -->
 <div class="main-content">
     <div th:if="${isLoggedIn}" class="docCategories">
-        <a class="docCate" href="index.html">Đề xuất</a>    
+        <a class="docCate" href="index.html">Đề xuất</a>
         <a class="docCate active" href="search.html">Tùy chỉnh</a>
-        <a class="docCate" href="category.html?tab=Hóa học">Hóa học</a>
-        <a class="docCate" href="category.html?tab=Vật lí">Vật lí</a>
-        <a class="docCate" href="category.html?tab=Tiếng Anh">Tiếng Anh</a>
-        <a class="docCate" href="category.html?tab=Công nghệ thông tin">Công nghệ thông tin</a>
-        <a class="docCate" href="category.html?tab=Thương mại điện tử">Thương mại điện tử</a>
+        <script>
+            fetchAllSubCategories();
+        </script>
     </div>
 
-    <div class="thumnail3" id="thumnail5">
+    <div class="thumnail3" id="thumnail6">
         <div class="thumnail-cap">Kết quả với từ khóa tìm kiếm <div class="thumnail-title" id="searchText">"từ khóa"</div></div>
     </div>
 
     <div class="recommend">
         <div class="form-group2" id="filter">
             <div class="form-group2" id="filter1">
-                <label for="">Danh mục</label>
+                <label>Danh mục</label>
                 <select name="fileType" id="fileType">
                     <option value="Tất cả">Tất cả</option>
                     <option value="Công nghệ thông tin">.pdf</option>

@@ -1,5 +1,7 @@
 .main-content{
     padding-top: 65px;
+    box-sizing: border-box;
+    margin: 0px;
 }
 
 .recommend-part {
@@ -37,6 +39,7 @@
     border-left: 1px solid #a5a5a5;
     padding: 10px 20px;
     padding-top: 10vh;
+    padding-right: 0px;
     width: 35vw;
     margin-left: 0px;
     box-sizing: border-box;
@@ -54,24 +57,32 @@
     font-size: 14px;
 }
 
-.UserAndCategory .form-group2 {
+.UserAndCategory .form-group2, .moreInfo .form-group2, .download-p .form-group2 {
     margin: 0px;
     padding: 0px;
+    width: auto;
 }
 
 .UserAndCategory, .moreInfo, .download-p{
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     justify-items: center;
     row-gap: 15px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
 .moreInfo{
     height: fit-content;
     padding-bottom: 15px;
     row-gap: 0px;
+}
+
+.moreInfo .form-group2{
+    flex-wrap: nowrap;
 }
 
 .DocTitle{
@@ -202,12 +213,14 @@
     padding-top: 10px;
     flex-wrap: nowrap;
     row-gap: 10px;
+    width: 100%;
 }
 
 #cmtAndTime .form-group2{
     padding-top: 0px;
     margin-top: 0px;
     flex-wrap: nowrap;
+    width: 100%;
 }
 
 .cmt-content{
@@ -217,8 +230,9 @@
     font-weight: lighter;
     font-size: 14px;
     text-align: justify;
-    min-width: none;
     box-sizing: border-box;
+    flex-grow: 1;
+    width: 60vw;
 }
 
 #comment-class .form-group2{
@@ -246,10 +260,16 @@
     }
 }
 
+@media (max-width: 800px) {
+    .comment-part{
+        display: none;
+    }
+}
+
 #report-popup{
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 51%;
     transform: translate(-50%, -50%);
     width: 600px;
     background-color: #fff;
@@ -295,6 +315,6 @@
     min-height: 90px;
 }
 
-#report{
+#report {
     padding-top: 0px;
 }

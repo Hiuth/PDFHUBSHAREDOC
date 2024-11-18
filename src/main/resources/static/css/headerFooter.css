@@ -70,7 +70,6 @@ nav {
     display: flex;
     align-items: center;
     width: 60%; /* Chiếm 60% của group2 */
-    max-width: 500px;
     margin-right: 10px;
 }
 
