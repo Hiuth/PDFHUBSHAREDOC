@@ -99,7 +99,7 @@
     white-space: nowrap;       /* Không cho phép xuống dòng */
     overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
     text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
-    box-sizing: border-box; 
+    box-sizing: border-box;
     max-width: 12vw;
 }
 
@@ -204,7 +204,7 @@
     font-weight: bold;
     white-space: nowrap;       /* Không cho phép xuống dòng */       /* Ẩn nội dung vượt quá chiều rộng */
     max-width: 12vw;             /* Đặt chiều rộng cố định */
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 #cmtAndTime{
@@ -213,14 +213,15 @@
     padding-top: 10px;
     flex-wrap: nowrap;
     row-gap: 10px;
-    width: 100%;
+
+    box-sizing: border-box;
 }
 
 #cmtAndTime .form-group2{
     padding-top: 0px;
     margin-top: 0px;
     flex-wrap: nowrap;
-    width: 100%;
+
 }
 
 .cmt-content{
@@ -231,8 +232,11 @@
     font-size: 14px;
     text-align: justify;
     box-sizing: border-box;
-    flex-grow: 1;
-    width: 60vw;
+    overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
+    text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
+    max-width: 400px;
+    white-space: wrap;
+
 }
 
 #comment-class .form-group2{
@@ -318,3 +322,74 @@
 #report {
     padding-top: 0px;
 }
+.comment-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-dots {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.menu-dots svg {
+    width: 16px;
+    height: 16px;
+    fill: #666;
+}
+
+.menu-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 120px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.menu-content.show {
+    display: block;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.menu-item svg {
+    width: 16px;
+    height: 16px;
+}
+
+.edit-icon {
+    fill: #666;
+}
+
+.delete-icon {
+    fill: #dc3545;
+}
+/*.edit-button-comment img,*/
+/*.status-button-comment img {*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    filter: invert(15%);*/
+/*}*/
