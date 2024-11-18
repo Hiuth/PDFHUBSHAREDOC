@@ -23,7 +23,7 @@ import java.util.List;
 public class CommentController {
     CommentService service;
 
-    @MessageMapping("/creteComment")
+    @MessageMapping("/createComment")
     @SendTo("/topic/comments")
     public ApiResponse<CommentRequest> createComment(@Valid @RequestBody CommentRequest commentRequest) {
         return ApiResponse.<CommentRequest>builder()
@@ -58,13 +58,15 @@ public class CommentController {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    ApiResponse<CommentRequest> updateComment(@PathVariable String id ,@RequestBody CommentRequest commentRequest) {
-        return ApiResponse.<CommentRequest>builder()
-                .message("Comment created")
-                .result(service.updateComment(id, commentRequest))
-                .build();
-    }
+//    @PutMapping("/{id}")
+//    @MessageMapping("/updateComment/{id}")
+//    @SendTo("/topic/commentUpdate")
+//    ApiResponse<CommentRequest> updateComment(@DestinationVariable String id ,@RequestBody CommentRequest commentRequest) {
+//        return ApiResponse.<CommentRequest>builder()
+//                .message("Comment created")
+//                .result(service.updateComment(id, commentRequest))
+//                .build();
+//    }
 
     @DeleteMapping("/{id}")
     ApiResponse<String> deleteComment(@PathVariable String id) {

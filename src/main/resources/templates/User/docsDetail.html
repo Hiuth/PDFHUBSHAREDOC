@@ -81,33 +81,34 @@
             <iframe src="https://www.orimi.com/pdf-test.pdf" class="docs-part">
             </iframe>
         </div>
-<!--        <div class="comment-part">-->
-<!--            <div class="form-group1">-->
-<!--                <div class="form-group1">-->
-<!--                    <label for="">Bình luận</label>-->
-<!--                    <textarea name="comment" id="upcomment" placeholder="Để lại bình luận của bạn..."></textarea>-->
-<!--                </div>-->
-<!--                <div class="form-group1" id="comment-class">-->
-<!--                    <div class="form-group2">-->
-<!--                        <img id="cmt-ava" src="../../static/images/icons/avatar.png" alt="">-->
-<!--                        <div class="gray" id="nameUserComment">Bé Hươu Cô Đơn</div>-->
-<!--                    </div>-->
-<!--                    <div id="cmtAndTime">-->
-<!--                        <div class="cmt-content">Ước mơ được làm siêu nhân, làm siêu nhân, làm siêu nhân</div>-->
-<!--                        <div class="form-group2">-->
-<!--                            <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">-->
-<!--                            <div class="black" id="cmt-time">9PM 22/10/2024</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+        <!--        <div class="comment-part">-->
+        <!--            <div class="form-group1">-->
+        <!--                <div class="form-group1">-->
+        <!--                    <label for="">Bình luận</label>-->
+        <!--                    <textarea name="comment" id="upcomment" placeholder="Để lại bình luận của bạn..."></textarea>-->
+        <!--                </div>-->
+        <!--                <div class="form-group1" id="comment-class">-->
+        <!--                    <div class="form-group2">-->
+        <!--                        <img id="cmt-ava" src="../../static/images/icons/avatar.png" alt="">-->
+        <!--                        <div class="gray" id="nameUserComment">Bé Hươu Cô Đơn</div>-->
+        <!--                    </div>-->
+        <!--                    <div id="cmtAndTime">-->
+        <!--                        <div class="cmt-content">Ước mơ được làm siêu nhân, làm siêu nhân, làm siêu nhân</div>-->
+        <!--                        <div class="form-group2">-->
+        <!--                            <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">-->
+        <!--                            <div class="black" id="cmt-time">9PM 22/10/2024</div>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
         <div class="comment-container">
             <div class="comment-part">
                 <div class="form-group1">
                     <label>Bình luận</label>
                     <textarea name="comment" id="upcomment" placeholder="Để lại bình luận của bạn..."></textarea>
+
                 </div>
                 <button id="submitComment" class="btn-submit">Gửi bình luận</button> <!-- Thêm nút gửi bình luận -->
                 <div id="comments-container">
@@ -260,11 +261,7 @@
     </form>
 </div>
 <div id="footer-placeholder"></div>
-<script src="../../static/js/User/comments.js"></script>
-<script type="module">
-    import { sendComment } from '../../static/js/User/comments.js';
-    sendComment();
-</script>
+<script type="module" src="../../static/js/User/comments.js"></script>
 <script type="module">
     import {fetchCommentsForDocument} from "../../static/js/User/comments.js";
     fetchCommentsForDocument();
