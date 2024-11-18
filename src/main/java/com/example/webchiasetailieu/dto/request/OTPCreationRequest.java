@@ -1,4 +1,4 @@
-package com.example.webchiasetailieu.dto.response;
+package com.example.webchiasetailieu.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SendEmailResponse {
-    String subject;
-    String body;
+public class OTPCreationRequest {
+    String otp;
+    long expiryTime;
 }

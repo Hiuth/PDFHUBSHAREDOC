@@ -40,6 +40,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1032, "You do not have permission", HttpStatus.FORBIDDEN),
     USERNAME_EXISTED(1033, "Username already exists", HttpStatus.BAD_REQUEST),
     FAILED_TO_SENT_EMAIL(1034, "Failed to sent email", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERROR_HASHING(1035,"Error hashing input when hash a otp", HttpStatus.INTERNAL_SERVER_ERROR),
+    OTP_EXPIRED(1036, "OTP expired", HttpStatus.UNAUTHORIZED),
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.SERVICE_UNAVAILABLE),
     INVALID_KEY(8888, "Invalid key", HttpStatus.BAD_REQUEST),

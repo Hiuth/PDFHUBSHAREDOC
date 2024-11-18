@@ -36,6 +36,7 @@ public class AccountService {
     MailService mailService;
     PasswordEncoder passwordEncoder;
     RoleService roleService;
+    OTPService otpService;
 
     public enum BanType {
         TEMPORARY_10_DAYS,
@@ -43,26 +44,21 @@ public class AccountService {
         PERMANENT
     }
 
-    //public
-    public AccountResponse createRequest(AccountCreationRequest accountRequest) throws MessagingException {
-        if(accountRepository.existsByEmail(accountRequest.getEmail()))
+//        public
+    public AccountResponse createRequest(AccountCreationRequest request) {
+        if(accountRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.EMAIL_EXISTED);
-        if(accountRepository.existsByName(accountRequest.getName()))
+        if(accountRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
 
-        if(!mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
-                        .email(accountRequest.getEmail())
-                        .emailType(EmailType.REGISTER)
-                .build()))
-            throw new AppException(ErrorCode.FAILED_TO_SENT_EMAIL);
-        if(Integer.parseInt(accountRequest.getOtp()) != 123456)
+        if(!otpService.validateSecureOTP(request.getEmail(), request.getOtp()))
             throw new AppException(ErrorCode.OTP_INCORRECT);
 
         Account account = Account.builder()
-                .email(accountRequest.getEmail())
-                .password(passwordEncoder.encode(accountRequest.getPassword()))
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .points(20)
-                .name(accountRequest.getName())
+                .name(request.getName())
                 .roles(new HashSet<>(roleRepository.findAllById(List.of("USER"))))
                 .build();
 
@@ -96,14 +92,9 @@ public class AccountService {
     }
 
     @PreAuthorize("hasRole('USER')")
-    public String forgetPassword(String newPass) throws MessagingException{
-        boolean check = mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
-                        .email(getAccountFromAuthentication().getEmail())
-                        .emailType(EmailType.FORGOT_PASSWORD)
-                        .accountName(getAccountFromAuthentication().getName())
-                        .otp("123456")
-                .build());
-        if(!check) throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
+    public String forgetPassword(String newPass, String otp){
+        if(!otpService.validateSecureOTP(getAccountFromAuthentication().getEmail(), otp))
+            throw new AppException(ErrorCode.OTP_INCORRECT);
 
         Account account = getAccountFromAuthentication();
         account.setPassword(passwordEncoder.encode(newPass));
@@ -229,8 +220,7 @@ public class AccountService {
     }
 
     public Account getAccountFromAuthentication(){
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return accountRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }

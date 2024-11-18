@@ -15,12 +15,7 @@ public class SendEmailRequest {
     String subject;
     String body;
 
-
     //Download
     String createBy;
     String docName;
-
-    //forgetPassword
-    String accountName;
-    String otp;
 }

@@ -31,7 +31,7 @@ public class AccountController {
     AccountService accountService;
 
     @PostMapping
-    ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest account) throws MessagingException {
+    ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest account){
         ApiResponse<AccountResponse> response = new ApiResponse<>();
         response.setResult(accountService.createRequest(account));
         return response;
@@ -135,10 +135,10 @@ public class AccountController {
     }
 
     @PostMapping("/forgetPassword")
-    ApiResponse<String> resetPassword(@RequestBody String newPass) throws MessagingException {
+    ApiResponse<String> resetPassword(@RequestBody String newPass, @RequestBody String otp){
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Forget password");
-        response.setResult(accountService.forgetPassword(newPass));
+        response.setResult(accountService.forgetPassword(newPass, otp));
         return response;
     }
 

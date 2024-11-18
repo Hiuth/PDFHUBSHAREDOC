@@ -1,8 +1,10 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
+import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
+import com.example.webchiasetailieu.repository.AccountRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
@@ -19,12 +22,15 @@ import java.util.regex.Pattern;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class MailService {
+public class MailService{
     JavaMailSender mailSender;
+    OTPService otpService;
+    AccountRepository accountRepository;
 
     public boolean classifyBeforeSendEmail(SendEmailRequest request) throws MessagingException {
         String subject;
         String body;
+        String otp = otpService.generateSecureOTP(request.getEmail());
 
         switch (request.getEmailType()) {
             case DOWNLOAD:
@@ -51,7 +57,6 @@ public class MailService {
                 break;
 
             case REGISTER:
-                String otp = "123456";
                 subject = "Mã đăng ký tài khoản";
                 body = String.format("""
                         <html>
@@ -101,7 +106,7 @@ public class MailService {
                                 </div>
                             </div>
                         </body>
-                        """, request.getAccountName(), request.getOtp());
+                        """,getEmailFromAuthentication().getName() , otp);
                 break;
 
             default:
@@ -147,4 +152,8 @@ public class MailService {
         }
     }
 
+    private Account getEmailFromAuthentication(){
+        return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
 }
