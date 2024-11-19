@@ -130,12 +130,20 @@ export function fetchCommentsForDocument(documentId) {
                                         </div>
                                         <div id="cmtAndTime">
                                             <div class="cmt-content">${commentText}</div>
+                                            <div class="comment-actions">
                                             <button
                                                 class="edit-button-comment"
                                                 onclick="openEditCommentPopup('${comment.id}')"
                                             >
                                                 <img src="../../static/images/bxs-edit.svg" alt="Edit" />
                                             </button>
+                                             <button
+                                                class="delete-button-comment"
+                                                onclick="openDeleteCommentPopup('${comment.id}')"
+                                                >
+                                                <img src="../../static/images/icons/delete-svgrepo-com.svg" alt="Delete" />
+                                             </button>
+                                            </div>
                                             <div class="form-group2">
                                                 <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">
                                                 <div class="black" id="cmt-time">${formattedDate}</div>
@@ -165,6 +173,7 @@ export function fetchCommentsForDocument(documentId) {
         }
     );
 }
+
 function editComment(commentId, newText) {
     if (!commentId || !newText) {
         console.error("Comment ID and new text are required");
@@ -269,4 +278,137 @@ function cancelEdit(commentId) {
     }
 }
 window.cancelEdit = cancelEdit;
+
+function deleteComment(commentId) {
+    if (!commentId) {
+        console.error("Comment ID is required");
+        return;
+    }
+
+    // Lấy documentId từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get('docId');
+
+    if (!documentId) {
+        console.error("Document ID not found in URL");
+        return;
+    }
+
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+
+    client.connect(
+        { Authorization: `Bearer ${token}` },
+        function (frame) {
+            // Tạo payload với cả documentId và commentId
+            // const payload = {
+            //     documentId: documentId,
+            //     commentId: commentId
+            // };
+
+            console.log("Sending delete request with commentID:", commentId);
+
+            // Gửi cả documentId và commentId
+            client.send(`/app/deleteComment/${commentId}`, {}, JSON.stringify(commentId));
+
+            client.subscribe('/topic/commentDelete', function (response) {
+                try {
+                    const result = JSON.parse(response.body);
+                    console.log("Delete response:", result);
+
+                    // Kiểm tra kết quả trả về từ service
+                    if (result.result === "Successfully deleted comment") {
+                        // Xóa comment element khỏi UI
+                        const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                        if (commentElement) {
+                            // Tìm phần tử cha gần nhất có class form-group1
+                            const parentElement = commentElement.closest('.form-group1');
+                            if (parentElement) {
+                                parentElement.remove();
+                            } else {
+                                commentElement.remove();
+                            }
+                        }
+
+                        // Đóng popup sau khi xóa thành công
+                        const confirmDeletePopup = document.querySelector('.confirm-delete-popup');
+                        if (confirmDeletePopup) {
+                            confirmDeletePopup.remove();
+                        }
+
+                        // Optional: Refresh danh sách comments
+                        fetchCommentsForDocument(documentId);
+                    } else {
+                        throw new Error(result.message || "Failed to delete comment");
+                    }
+
+                } catch (error) {
+                    console.error("Error processing delete response:", error);
+                    alert("Không thể xóa bình luận. Vui lòng thử lại.");
+                }
+
+                client.disconnect();
+            });
+        },
+        function (error) {
+            console.error("WebSocket connection failed:", error);
+            alert("Không thể kết nối đến server. Vui lòng thử lại.");
+        }
+    );
+}
+
+function openDeleteCommentPopup(commentId) {
+    const cmtContent = document.querySelector(`[data-comment-id="${commentId}"] .cmt-content`);
+    if (!cmtContent) {
+        console.error("Comment content element not found");
+        return;
+    }
+
+    // Kiểm tra xem đã có popup nào đang mở không
+    const existingPopup = document.querySelector('.confirm-delete-popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+
+    // Tạo popup xác nhận xóa
+    const confirmDeletePopup = document.createElement('div');
+    confirmDeletePopup.className = 'confirm-delete-popup';
+    confirmDeletePopup.innerHTML = `
+        <div class="confirm-delete-content">
+            <p>Bạn có chắc chắn muốn xóa bình luận này?</p>
+            <div class="confirm-delete-buttons">
+                <button class="confirm-yes">Xóa</button>
+                <button class="confirm-no">Hủy</button>
+            </div>
+        </div>
+    `;
+
+    // Chèn popup vào sau nút delete
+    const deleteButton = document.querySelector(`[data-comment-id="${commentId}"] .delete-button-comment`);
+    deleteButton.parentNode.insertBefore(confirmDeletePopup, deleteButton.nextSibling);
+
+    // Xử lý sự kiện cho các nút
+    const confirmYesButton = confirmDeletePopup.querySelector('.confirm-yes');
+    const confirmNoButton = confirmDeletePopup.querySelector('.confirm-no');
+
+    confirmYesButton.addEventListener('click', () => {
+        deleteComment(commentId);
+    });
+
+    confirmNoButton.addEventListener('click', () => {
+        confirmDeletePopup.remove();
+    });
+
+    // Đóng popup khi click ra ngoài
+    document.addEventListener('click', function closePopup(e) {
+        if (!confirmDeletePopup.contains(e.target) &&
+            !deleteButton.contains(e.target)) {
+            confirmDeletePopup.remove();
+            document.removeEventListener('click', closePopup);
+        }
+    });
+}
+
+window.openDeleteCommentPopup = openDeleteCommentPopup;
 

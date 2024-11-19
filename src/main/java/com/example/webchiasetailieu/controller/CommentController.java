@@ -68,10 +68,12 @@ public class CommentController {
                 .build();
     }
 
-    @DeleteMapping("/{id}")
-    ApiResponse<String> deleteComment(@PathVariable String id) {
+//    @DeleteMapping("/{id}")
+    @MessageMapping("/deleteComment/{id}")
+    @SendTo("/topic/commentDelete")
+    ApiResponse<String> deleteComment(@DestinationVariable String id) {
         return ApiResponse.<String>builder()
-                .message("Comment created")
+                .message("Comment deleted")
                 .result(service.deleteComment(id))
                 .build();
     }
