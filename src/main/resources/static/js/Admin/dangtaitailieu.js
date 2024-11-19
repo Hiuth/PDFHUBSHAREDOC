@@ -1,3 +1,5 @@
+import {getToken} from "../Share/localStorageService.js";
+
 async function fetchCategories() {
     try {
         const response = await fetch('http://localhost:8088/docCategory/get-all'); // Đảm bảo URL chính xác
@@ -58,12 +60,65 @@ function populateGroupOptions(subCategories) {
 
     });
 }
-
-function upDocument(){
-
-}
 // Gọi hàm fetch khi trang tải xong
 document.addEventListener("DOMContentLoaded", fetchCategories);
 
 
+export function upDocument() {
+    const token = getToken();
+    const formData = new FormData();
 
+    // Lấy giá trị từ form
+    const documentFile = document.getElementById("documentFile").files[0];
+    //const documentAvatar = document.getElementById("documentAvatar").files[0];
+    const documentAvatar ="sachToan.jpg"
+    // Kiểm tra file bắt buộc
+    if (!documentFile) {
+        console.error("Vui lòng chọn file tài liệu");
+        return;
+    }
+
+    // Lấy phần mở rộng của file
+    const docType = documentFile.name.substring(documentFile.name.lastIndexOf('.') + 1);
+
+    // Thêm tất cả dữ liệu form
+    formData.append('file', documentFile);
+    formData.append('docName', document.getElementById("documentTitle").value);
+    formData.append('docType', docType);
+    formData.append('description', document.getElementById("documentDescription").value);
+    formData.append('docCategoryId', document.getElementById("groupSelect").value);
+    formData.append('point', document.getElementById("pointSelect").value);
+    if (documentAvatar) {
+        formData.append('avatar', documentAvatar);
+    }
+
+    // Gọi API
+    fetch('http://localhost:8088/doc/upload', {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`
+            // Không đặt Content-Type - để trình duyệt tự đặt với boundary
+        },
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.code === 9999) {
+                throw new Error(data.message);
+            }
+            console.log("Upload thành công:", data);
+            window.location .reload();
+            // Xử lý thành công - có thể hiển thị thông báo thành công hoặc chuyển hướng
+        })
+        .catch(error => {
+            console.error("Upload thất bại:", error.message);
+            // Xử lý lỗi - hiển thị thông báo lỗi cho người dùng
+        });
+}
+
+window.upDocument = upDocument;

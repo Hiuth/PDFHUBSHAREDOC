@@ -187,7 +187,7 @@
               </div>
 
               <div class="mb-3">
-                <label for="documentFile" class="form-label">Chọn ảnh bìa</label>
+                <label for="documentFile" class="form-label">Chọn ảnh bìa(tạm thời nếu nếu up bài test hàm thì đừng chọn cái này. vô trong file js mà đổi tên)</label>
                 <input
                         type="file"
                         class="form-control"
@@ -197,7 +197,7 @@
                 />
               </div>
 
-              <button type="submit" class="btn btn-primary">Tải lên</button>
+              <button type="button" class="btn btn-primary" onclick="upDocument()">Tải lên</button>
 
               <div class="progress mt-3" style="display: none">
                 <div
@@ -218,6 +218,6 @@
     <script src="../../static/js/Admin/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src = "../../static/js/Admin/dangtaitailieu.js"></script>
+    <script type="module" src = "../../static/js/Admin/dangtaitailieu.js"></script>
   </body>
 </html>

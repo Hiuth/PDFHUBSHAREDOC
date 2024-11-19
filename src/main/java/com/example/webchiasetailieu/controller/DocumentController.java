@@ -28,6 +28,8 @@ public class DocumentController {
     DocumentService documentService;
 
     @PostMapping("/upload")
+    @MessageMapping("/uploadDoc")
+    @SendTo("/topic/uploadDocument")
     public ApiResponse<DriveResponse> handleFileUpload(
             @RequestParam("file") MultipartFile file,
             @RequestParam("docName") String docName,
