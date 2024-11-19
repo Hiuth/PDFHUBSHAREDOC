@@ -13,6 +13,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../static\css\quanlykhachhang.css" />
+      <script src ="../../static/js/Admin/thongbao.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -61,48 +62,79 @@
         </nav>
 
         <!-- Top Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light top-navbar">
-          <div class="container-fluid">
-            <a class="navbar-brand d-none d-md-block" href="#">
-              <img src="../../static\images\pdfhub 6.png" alt="Logo" width="100" />
-            </a>
-            <div class="d-flex align-items-center">
-              <a class="nav-link me-3" href="#">
-                <i class="fas fa-bell"></i>
-                <span class="badge bg-danger"></span>
-              </a>
-              <div class="dropdown">
-                <a
-                  class="nav-link dropdown-toggle d-flex align-items-center"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <span class="user-profile me-2">
-                    <img src="../../static\images\Ellipse 14.png" alt="User" />
-                  </span>
-                  Quân sói đơn độc
-                </a>
-                <ul
-                class="dropdown-menu dropdown-menu-end"
-                aria-labelledby="navbarDropdown"
-              >
-                <li>
-                  <a class="dropdown-item" href="user_profile.html"
-                    >Profile</a
-                  >
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item" href="login.html">Log out</a>
-                </li>
-              </ul>
+          <nav class="navbar navbar-expand-lg navbar-light top-navbar">
+              <div class="container-fluid">
+                  <a class="navbar-brand d-none d-md-block" href="#">
+                      <img
+                              src="../../static/images/pdfhub 6.png"
+                              alt="Logo"
+                              width="100"
+                      />
+                  </a>
+                  <div class="d-flex align-items-center">
+                      <!-- Bell icon with notification count -->
+                      <a
+                              class="nav-link me-3 position-relative"
+                              href="#"
+                              id="notificationBell"
+                              onclick="toggleNotificationPanel()"
+                      >
+                          <i class="fas fa-bell"></i>
+                          <span
+                                  id="notificationCount"
+                                  class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                          ></span>
+                      </a>
+
+                      <!-- Notification panel -->
+                      <div id="notificationPanel" class="notification-panel">
+                          <h5>Thông báo</h5>
+
+                          <ul id="notificationList" class="list-unstyled">
+                              <!-- Thông báo sẽ được thêm động tại đây -->
+                          </ul>
+                      </div>
+
+                      <!-- User profile dropdown -->
+                      <div class="dropdown">
+                          <a
+                                  class="nav-link dropdown-toggle d-flex align-items-center"
+                                  href="#"
+                                  id="navbarDropdown"
+                                  role="button"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
+                          >
+                    <span class="user-profile me-2">
+                      <img
+                              src="../../static/images/Ellipse 14.png"
+                              alt="User"
+                      />
+                    </span>
+                              Quân sói đơn độc
+                          </a>
+                          <ul
+                                  class="dropdown-menu dropdown-menu-end"
+                                  aria-labelledby="navbarDropdown"
+                          >
+                              <li>
+                                  <a class="dropdown-item" href="user_profile.html"
+                                  >Profile</a
+                                  >
+                              </li>
+                              <li><hr class="dropdown-divider" /></li>
+                              <li>
+                                  <a
+                                          class="dropdown-item"
+                                          href="../../templates/Admin/login.html"
+                                  >Log out</a
+                                  >
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
               </div>
-            </div>
-          </div>
-        </nav>
+          </nav>
 
         <!-- Content Area -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content-area">
