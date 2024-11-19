@@ -13,11 +13,8 @@ import java.util.List;
 @Repository
 public interface PersonalInformationRepository extends JpaRepository<PersonalInformation, String> {
     boolean existsById(String id);
-//    PersonalInformation findByAccountId(String id);
+    boolean existsByAccount_Id(String account_Id);
 
     @Query("SELECT c FROM PersonalInformation c WHERE c.account.id = :accountId")
     PersonalInformation findByAccountId(String accountId);
-
-//    @Query("SELECT c FROM PersonalInformation c WHERE c.account.id = :accountId")
-//    List<PersonalInformation> findByAccountId(String accountId);
 }

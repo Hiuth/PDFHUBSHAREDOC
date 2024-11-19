@@ -36,6 +36,8 @@ public class PersonalInformationService {
     @PreAuthorize("hasAuthority('ADD_PER_INFO')")
     public PerInfoResponse create(CreateMyPerInfoRequest request) {
         Account account = accountService.getAccountFromAuthentication();
+        if(repository.existsByAccount_Id(account.getId()))
+            throw new AppException(ErrorCode.PER_INFO_EXISTED);
         PersonalInformation personalInformation = PersonalInformation.builder()
                 .fullName(request.getFullName())
                 .gender(request.getGender())

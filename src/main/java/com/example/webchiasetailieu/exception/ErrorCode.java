@@ -43,6 +43,7 @@ public enum ErrorCode {
     ERROR_HASHING(1035,"Error hashing input when hash a otp", HttpStatus.INTERNAL_SERVER_ERROR),
     OTP_EXPIRED(1036, "OTP expired", HttpStatus.UNAUTHORIZED),
     FEEDBACK_NOT_FOUND(1037, "Feedback does not exist", HttpStatus.NOT_FOUND),
+    PER_INFO_EXISTED(1038, "Per-info already exists", HttpStatus.CONFLICT),
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.SERVICE_UNAVAILABLE),
     INVALID_KEY(8888, "Invalid key", HttpStatus.BAD_REQUEST),
