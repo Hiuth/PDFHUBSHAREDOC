@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.FeedBackRequest;
+import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Feedbacks;
@@ -34,6 +35,17 @@ public class FeedBackService {
                 .status("Chưa xử lí")
                 .account(account)
                 .build();
+        return convertToResponse(repository.save(feedbacks));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public FeedBackResponse updateFeedback(UpdateFeedbackRequest request) {
+        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+        if(request.getStatus() != null)
+            feedbacks.setStatus(request.getStatus());
+        if(request.getResponseFromAdmin()!= null)
+            feedbacks.setFeedbackFromAdmin(request.getResponseFromAdmin());
         return convertToResponse(repository.save(feedbacks));
     }
 

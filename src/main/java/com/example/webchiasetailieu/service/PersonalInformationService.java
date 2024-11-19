@@ -34,7 +34,7 @@ public class PersonalInformationService {
     AccountService accountService;
 
     @PreAuthorize("hasAuthority('ADD_PER_INFO')")
-    public PerInfoResponse create(CreateMyPerInfoRequest request) throws AppException {
+    public PerInfoResponse create(CreateMyPerInfoRequest request) {
         Account account = accountService.getAccountFromAuthentication();
         PersonalInformation personalInformation = PersonalInformation.builder()
                 .fullName(request.getFullName())
@@ -47,9 +47,8 @@ public class PersonalInformationService {
     }
 
     @PreAuthorize("hasAuthority('ADD_PER_INFO')")
-    public PerInfoResponse update(UpdatePerInfoRequest request) throws AppException {
-        Account account = accountService.getAccountFromAuthentication();
-        PersonalInformation personalInformation = new PersonalInformation();
+    public PerInfoResponse update(UpdatePerInfoRequest request) {
+        PersonalInformation personalInformation = getPerInfoFromContext();
         if(request.getFullName() != null)
             personalInformation.setFullName(request.getFullName());
 
@@ -59,7 +58,6 @@ public class PersonalInformationService {
         if(request.getBirthday() != null)
             personalInformation.setBirthday(request.getBirthday());
 
-        personalInformation.setAccount(account);
         return convertToResponse(repository.save(personalInformation));
     }
 

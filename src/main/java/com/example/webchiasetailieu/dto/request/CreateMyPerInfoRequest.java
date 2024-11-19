@@ -15,16 +15,15 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateMyPerInfoRequest {
-    @Size(min = 5, message = "NAME_INVALID")
     @NotBlank(message = "NOT_NULL")
+    @Size(min = 5, message = "NAME_INVALID")
     String fullName;
 
     @Past(message = "BIRTHDAY_INVALID")
-    @NotBlank(message = "NOT_NULL")
     Date birthday;
 
-    @Pattern(regexp = "Male|Female", message = "GENDER_INVALID")
     @NotBlank(message = "NOT_NULL")
+    @Pattern(regexp = "Male|Female", message = "GENDER_INVALID")
     String gender;
 }
 

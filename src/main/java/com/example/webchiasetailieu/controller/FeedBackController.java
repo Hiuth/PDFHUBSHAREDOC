@@ -1,10 +1,12 @@
 package com.example.webchiasetailieu.controller;
 
 import com.example.webchiasetailieu.dto.request.FeedBackRequest;
+import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.entity.Feedbacks;
 import com.example.webchiasetailieu.service.FeedBackService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,10 +24,18 @@ public class FeedBackController {
     FeedBackService service;
 
     @PostMapping
-    public ApiResponse<FeedBackResponse> createFeedback(@RequestBody FeedBackRequest request) {
+    public ApiResponse<FeedBackResponse> createFeedback(@RequestBody @Valid FeedBackRequest request) {
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
         response.setResult(service.createFeedback(request));
+        return response;
+    }
+
+    @PutMapping
+    public ApiResponse<FeedBackResponse> updateFeedback(@RequestBody @Valid UpdateFeedbackRequest request) {
+        ApiResponse<FeedBackResponse> response = new ApiResponse<>();
+        response.setMessage("Create feedback: ");
+        response.setResult(service.updateFeedback(request));
         return response;
     }
 

@@ -7,7 +7,6 @@ import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.service.AccountService;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
