@@ -4,9 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Lấy documentId từ URL
     const urlParams = new URLSearchParams(window.location.search);
     const documentId = urlParams.get('docId');
-    console.log(window.location.href);
-
-    console.log( documentId); // Debugging log
 
     if (documentId) {
         // Gọi hàm fetchCommentsForDocument với documentId
@@ -86,44 +83,33 @@ function sendComment(documentId, commentText) {
 
 // Hàm lấy danh sách bình luận cho tài liệu
 export function fetchCommentsForDocument(documentId) {
-    // Kiểm tra và xử lý input
     if (!documentId) {
         console.error("Document ID is required");
         return;
     }
 
-    // Chuyển đổi sang string để đảm bảo
     documentId = String(documentId);
-
     console.log("Fetching comments for Document ID:", documentId);
 
-    // Tạo kết nối WebSocket
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
-
-    // Tắt debug
     client.debug = null;
 
-    // Kết nối và lấy danh sách bình luận
     client.connect(
         {},
         function (frame) {
             console.log("WebSocket connected. Fetching comments.");
-
-            // Gửi yêu cầu lấy danh sách bình luận từ server
             client.send(`/app/comments/${documentId}`, {}, JSON.stringify({ documentId }));
 
-            // Đăng ký để lắng nghe phản hồi
             const subscription = client.subscribe('/topic/getComments', function (data) {
                 try {
                     const response = JSON.parse(data.body);
                     const comments = response.result;
 
-                    // Kiểm tra và xử lý bình luận
                     if (Array.isArray(comments)) {
                         const commentsContainer = document.getElementById('comments-container');
                         if (commentsContainer) {
-                            commentsContainer.innerHTML = ''; // Xóa nội dung cũ
+                            commentsContainer.innerHTML = '';
 
                             comments.forEach((comment) => {
                                 const userName = comment.account ? comment.account.name : 'Anonymous';
@@ -131,9 +117,11 @@ export function fetchCommentsForDocument(documentId) {
                                 const createdAt = new Date(comment.createdAt);
                                 const formattedDate = isNaN(createdAt) ? 'Invalid Date' : createdAt.toLocaleString();
 
-                                // Tạo phần tử HTML cho mỗi bình luận
                                 const commentElement = document.createElement('div');
                                 commentElement.id = 'cmtAndTime';
+                                // Add this line to set the comment ID
+                                commentElement.setAttribute('data-comment-id', comment.id);
+
                                 commentElement.innerHTML = `
                                     <div class="form-group1" id="comment-class">
                                         <div class="form-group2">
@@ -142,6 +130,12 @@ export function fetchCommentsForDocument(documentId) {
                                         </div>
                                         <div id="cmtAndTime">
                                             <div class="cmt-content">${commentText}</div>
+                                            <button
+                                                class="edit-button-comment"
+                                                onclick="openEditCommentPopup('${comment.id}')"
+                                            >
+                                                <img src="../../static/images/bxs-edit.svg" alt="Edit" />
+                                            </button>
                                             <div class="form-group2">
                                                 <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">
                                                 <div class="black" id="cmt-time">${formattedDate}</div>
@@ -149,7 +143,6 @@ export function fetchCommentsForDocument(documentId) {
                                         </div>
                                     </div>
                                 `;
-                                // Thêm phần tử bình luận vào container
                                 commentsContainer.appendChild(commentElement);
                             });
                         } else {
@@ -159,10 +152,7 @@ export function fetchCommentsForDocument(documentId) {
                         console.error("Expected an array but received:", comments);
                     }
 
-                    // Hủy đăng ký sau khi nhận dữ liệu
                     subscription.unsubscribe();
-
-                    // Đóng kết nối
                     client.disconnect();
                 } catch (error) {
                     console.error("Error processing comments:", error);
@@ -175,5 +165,108 @@ export function fetchCommentsForDocument(documentId) {
         }
     );
 }
+function editComment(commentId, newText) {
+    if (!commentId || !newText) {
+        console.error("Comment ID and new text are required");
+        return;
+    }
 
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+
+    client.connect(
+        { Authorization: `Bearer ${token}` },
+        function (frame) {
+            const comment = {
+                comText: newText
+            };
+
+            console.log("Sending edit request for comment:", commentId, comment);
+
+            client.send(`/app/updateComment/${commentId}`, {}, JSON.stringify(comment));
+
+            client.subscribe('/topic/commentUpdate', function (response) {
+                try {
+                    const updatedComment = JSON.parse(response.body);
+                    console.log("Comment updated successfully:", updatedComment);
+
+                    // Update UI with new comment text
+                    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    if (commentElement) {
+                        const contentElement = commentElement.querySelector('.cmt-content');
+                        if (contentElement) {
+                            contentElement.textContent = newText;
+                        }
+                    }
+
+                    // Close edit mode
+                    const editInput = document.querySelector('.edit-input');
+                    if (editInput) {
+                        const cmtContent = document.querySelector('.cmt-content');
+                        cmtContent.classList.remove('hidden');
+                        editInput.remove();
+                    }
+
+                } catch (error) {
+                    console.error("Error processing update response:", error);
+                    alert("Error updating comment. Please try again.");
+                }
+
+                // Disconnect after receiving response
+                client.disconnect();
+            });
+        },
+        function (error) {
+            console.error("WebSocket connection failed:", error);
+            alert("Unable to connect to server. Please try again.");
+        }
+    );
+}
+
+function openEditCommentPopup(commentId) {
+    const cmtContent = document.querySelector(`[data-comment-id="${commentId}"] .cmt-content`);
+    if (!cmtContent) {
+        console.error("Comment content element not found");
+        return;
+    }
+
+    const commentText = cmtContent.textContent;
+    cmtContent.classList.add('hidden');
+
+    const editInput = document.createElement('input');
+    editInput.type = 'text';
+    editInput.value = commentText;
+    editInput.className = 'edit-input';
+
+    const editButton = document.querySelector(`[data-comment-id="${commentId}"] .edit-button-comment`);
+    editButton.parentNode.insertBefore(editInput, editButton);
+
+    editInput.focus();
+
+    editInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (this.value.trim()) {
+                editComment(commentId, this.value.trim());
+            }
+        }
+    });
+
+    editInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Escape') {
+            cancelEdit(commentId);
+        }
+    });
+}
+window.openEditCommentPopup = openEditCommentPopup;
+function cancelEdit(commentId) {
+    const cmtContent = document.querySelector(`[data-comment-id="${commentId}"] .cmt-content`);
+    cmtContent.classList.remove('hidden');
+
+    const editInput = document.querySelector(`[data-comment-id="${commentId}"] .edit-input`);
+    if (editInput) {
+        editInput.remove();
+    }
+}
+window.cancelEdit = cancelEdit;
 
