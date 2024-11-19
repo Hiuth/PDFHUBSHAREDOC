@@ -6,10 +6,10 @@ function sendData(perInfo){
   const client = Stomp.over(socket);
   client.connect({Authorization: `Bearer ${token}`}, function (frame) {
     client.debug = function (str) {}; // Tắt debug nếu không cần thiết
-    client.send(`/app/addInfo}`, {}, JSON.stringify(perInfo));
+    client.send(`/app/addInfo`, {}, JSON.stringify(perInfo));
 
     client.subscribe("/topic/addInformation", function (data) {
-
+          window.location.reload();
     });
   });
 }
@@ -26,8 +26,9 @@ export function saveUserInfo() {
     id:id,
     fullName:name,
     birthday:birthday,
-    gender:gender,
+    gender:gender
   }
+  // console.log(perInfo);
   if (name && gender && birthday) {
     sendData(perInfo);
     let modal = bootstrap.Modal.getInstance(
@@ -95,9 +96,9 @@ export function fetchPersonalInformation() {
   const token = getToken();
   client.connect({Authorization: `Bearer ${token}`}, function (frame) {
     client.debug = function (str) {}; // Tắt debug nếu không cần thiết
-    client.send(`/app/getInfo`, {}, JSON.stringify());
+    client.send(`/app/getInfo`);
 
-    client.subscribe("/topic/getInformation", function (data) {
+    client.subscribe("/topic/getInfo", function (data) {
       const response = JSON.parse(data.body);
       const perInfo = response.result;
       const birthday =  convertISOToDateInput(perInfo.birthday);
@@ -159,11 +160,14 @@ export function fetchPersonalInformation() {
                           <label class="form-label">Họ và Tên</label>
                           <input type="text" class="form-control" id="modalName" placeholder="Họ và Tên" value="${perInfo.fullName}"/>
                         </div>
-                        <div class="mb-3">
-                          <label class="form-label">Giới tính</label>
-                          <input type="text" class="form-control" id="modalGender" placeholder="Giới Tính" value="${perInfo.gender}"/>
-                        </div>
-                        <div class="mb-3">
+                          <div class="mb-3">
+                            <label class="form-label">Giới tính</label>
+                            <select class="form-control" id="modalGender">
+                              <option value="Male" ${perInfo.gender === "Male" ? "selected" : ""}>Male</option>
+                              <option value="Female" ${perInfo.gender === "Female" ? "selected" : ""}>Female</option>
+                            </select>
+                          </div>
+                         <div class="mb-3">
                           <label class="form-label">Sinh nhật</label>
                           <input type="date" class="form-control" id="modalBirthday" value="${birthday}"/>
                         </div>
@@ -184,7 +188,7 @@ export function fetchPersonalInformation() {
                   <div class="card card-profile text-center">
                     <div class="card-body">
                       <img src="${perInfo.avatar}" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
-                      <h5 class="card-title">Ạt Văn Min</h5>
+                      <h5 class="card-title">${perInfo.fullName}</h5>
                       <p class="card-text">Tôi là người quản lý web</p>
                       <button type="button" class="btn btn-secondary mt-3" onclick="changeAvatar()">Đổi ảnh đại diện</button>
                     </div>
@@ -197,5 +201,6 @@ export function fetchPersonalInformation() {
     });
   });
 }
+
 
 

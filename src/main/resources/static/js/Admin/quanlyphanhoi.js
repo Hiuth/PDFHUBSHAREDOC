@@ -31,6 +31,7 @@ function fetchAllFeedBack() {
                       <td>${feed.type}</td>
                       <td>${feed.feedback}</td>
                       <td>${feed.status}</td>
+                      <input type="hidden" id="feedId" value="${feed.id}"/>
                       <td><button class="btn-process">Xử lý</button></td>
                     </tr>
                 `;
@@ -45,16 +46,21 @@ function fetchAllFeedBack() {
 }
 
 
-function adminUpdateFeedBack(status, response) {
+function adminUpdateFeedBack(id,status, response) {
     const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
+    const feedBacks={
+        id: id,
+        status: status,
+        responseFromAdmin: response
+    }
     client.connect({Authorization: `Bearer ${token}`}, function (frame) {
         //console.log("Connected: " + frame);
-        client.send("/app/allFeed");  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
+        client.send("/app/adminUpdateFeed",{},JSON.stringify(feedBacks));  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
         // Nhận danh sách tài khoản từ server và hiển thị trong bảng
-        client.subscribe('/topic/allFeedBack', function (data) {
-
+        client.subscribe('/topic/adminUpdateFeedBack', function (data) {
+            window.location.reload();
         });
     });
 }
@@ -94,13 +100,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentRow.querySelector("td:nth-child(3)").textContent;
             const content = currentRow.querySelector("td:nth-child(5)").textContent;
             const status = currentRow.querySelector("td:nth-child(6)").textContent;
-
+            const feedId = currentRow.querySelector('input[type="hidden"]').value; // Lấy id chính xác từ hàng hiện tại
             // Điền nội dung động vào modal
             document.querySelector(".sender-name").textContent = senderName;
             document.querySelector(".sender-email").textContent = senderEmail;
             document.querySelector(".feedback-content").textContent = content;
             statusSelect.value = status;
-
+            document.getElementById("feedbackId").value = feedId;
             modal.style.display = "flex";
         }
     });
@@ -115,14 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
     btnSubmit.addEventListener("click", () => {
         const newStatus = statusSelect.value;
         const response = responseTextarea.value;
-
+        const id = document.getElementById('feedbackId').value;
         // Cập nhật hàng trong bảng với trạng thái mới
         currentRow.querySelector("td:nth-child(6)").textContent = newStatus;
-
-        // Thường sẽ gửi dữ liệu này tới server
-        console.log("Trạng thái đã cập nhật:", newStatus);
-        console.log("Phản hồi:", response);
-
+        adminUpdateFeedBack(id,newStatus,response);
         // Đóng modal và đặt lại các trường
         modal.style.display = "none";
         resetModalFields();

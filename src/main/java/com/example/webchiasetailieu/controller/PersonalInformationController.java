@@ -26,6 +26,7 @@ public class PersonalInformationController {
     PersonalInformationService service;
 
     @PostMapping
+
     ApiResponse<PerInfoResponse> addMyPersonalInformation(@RequestBody @Valid CreateMyPerInfoRequest request) {
         return ApiResponse.<PerInfoResponse>builder()
                 .code(1000)
@@ -35,6 +36,8 @@ public class PersonalInformationController {
     }
 
     @PutMapping
+    @MessageMapping("/addInfo")
+    @SendTo("/topic/addInformation")
     ApiResponse<PerInfoResponse> updateMyPersonalInformation(@RequestBody @Valid UpdatePerInfoRequest request) {
         return ApiResponse.<PerInfoResponse>builder()
                 .code(1000)

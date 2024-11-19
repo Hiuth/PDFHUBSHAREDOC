@@ -32,6 +32,8 @@ public class FeedBackController {
     }
 
     @PutMapping
+    @MessageMapping("/adminUpdateFeed")
+    @SendTo("/topic/adminUpdateFeedBack")
     public ApiResponse<FeedBackResponse> updateFeedback(@RequestBody @Valid UpdateFeedbackRequest request) {
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
