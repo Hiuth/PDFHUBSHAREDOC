@@ -5,14 +5,15 @@ import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Feedbacks;
+import com.example.webchiasetailieu.enums.StatusFeedbackType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
+import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,17 @@ import java.util.List;
 public class FeedBackService {
     FeedBackRepository repository;
     AccountRepository accountRepository;
+    private final DocumentRepository documentRepository;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
         Account account = getAccountFromAuthentication();
         Feedbacks feedbacks = Feedbacks.builder()
                 .feedback(request.getFeedback())
-                .type(request.getType())
-                .status("Chưa xử lí")
+                .type(request.getFeedbackType().toString())
+                .status(StatusFeedbackType.UNPROCESSED.getDescription())
                 .account(account)
+                .otherId(request.getOtherId())
                 .build();
         return convertToResponse(repository.save(feedbacks));
     }
@@ -67,7 +70,7 @@ public class FeedBackService {
     @PreAuthorize("hasRole('ADMIN')")
     public FeedBackResponse getById(String id) {
         return convertToResponse(repository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.NOTI_NOT_EXISTED)));
+                () -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED)));
     }
 
     @PreAuthorize("hasAuthority('DELETE_FEEDBACK')")

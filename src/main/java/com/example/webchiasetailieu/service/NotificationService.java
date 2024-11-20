@@ -117,7 +117,7 @@ public class NotificationService {
     @PreAuthorize("hasRole('ADMIN')")
     public NotificationResponse getById(String id) {
         return convertToResponse(repository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.NOTI_NOT_EXISTED)));
+                () -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

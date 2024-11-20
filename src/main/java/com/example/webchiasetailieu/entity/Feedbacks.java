@@ -28,6 +28,8 @@ public class Feedbacks {
     @JoinColumn(name = "accoutn_id", referencedColumnName = "id")
     Account account;
 
+    String otherId;
+
     @PrePersist
     protected void onCreate() {
         date = LocalDateTime.now();
