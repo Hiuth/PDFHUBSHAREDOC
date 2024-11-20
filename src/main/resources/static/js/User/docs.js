@@ -281,3 +281,116 @@ function compareStringsWithNumbers(a, b) {
     // Trường hợp có độ dài khác nhau, phần dài hơn sẽ đứng sau
     return partsA.length - partsB.length;
 }
+
+function fetchDetailsDocument() {
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+
+    client.connect({}, function (frame) {
+        client.debug = function (str) {}; // Disable debug logging
+
+        // Get docId from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const docId = urlParams.get('docId');
+
+        if (!docId) {
+            console.error("No document ID found in URL parameters");
+            return;
+        }
+
+        // Send request to get document details
+        client.send(`/app/getDocById/${docId}`, {}, JSON.stringify({ docId }));
+
+        // Subscribe to receive document details
+        client.subscribe('/topic/getDocById', function (data) {
+            try {
+                const response = JSON.parse(data.body);
+                const documentData = response.result;
+                const docDetailElement = document.querySelector('.docsInfo-part');
+
+                if (!docDetailElement) {
+                    console.error("docsInfo-part element not found");
+                    return;
+                }
+
+                if (!documentData) {
+                    console.error("No document data received");
+                    return;
+                }
+
+                const formattedDate = formatDateTime(documentData.createdAt);
+
+                // Update document info section with null checks
+                docDetailElement.innerHTML = `
+                    <div class="Info-part">
+                        <div class="DocTitle">
+                            ${documentData.name || 'Untitled Document'}
+                        </div>
+                        <div class="UserAndCategory">
+                            <div class="form-group2 admin">
+                                <img src="../../static/images/icons/avatar.png" alt="Avatar">
+                                <div class="gray" id="userName">${documentData.createdBy?.fullName || 'Unknown Author'}</div>
+                                <div class="role">Tác giả</div>
+                            </div>
+                            <div class="form-group2 Category">
+                                <div class="gray">Thể loại</div>
+                                <a>${documentData.category?.name || 'Uncategorized'}</a>
+                            </div>
+                        </div>
+                        <div class="caption">
+                            ${documentData.description || 'No description available'}
+                        </div>
+                        <div class="moreInfo">
+                            <div class="form-group2">
+                                <img src="../../static/images/icons/Clock.png" alt="Clock">
+                                <div class="pink" id="uptime">${formattedDate}</div>
+                            </div>
+                            <div class="num">
+                                <div class="form-group2">
+                                    <img src="../../static/images/icons/QuotePink.png" alt="Comments">
+                                    <div class="pink"><div id="numComment">${documentData.commentCount || 0}</div>bình luận</div>
+                                </div>
+                                <div class="form-group2">
+                                    <img src="../../static/images/icons/Downloading Updates.png" alt="Downloads">
+                                    <div class="pink"><div id="numDownLoads">${documentData.downloadTimes || 0}</div>lượt tải</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Add download button event listener if URL exists
+                if (documentData.url) {
+                    const downloadBtn = document.querySelector('.download-button');
+                    if (downloadBtn) {
+                        downloadBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.location.href = documentData.url;
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error processing document data:", error);
+            }
+        }, function(error) {
+            console.error("Error subscribing to topic:", error);
+        });
+    }, function(error) {
+        console.error("Error connecting to WebSocket:", error);
+    });
+}
+
+// Helper function to format datetime
+    function formatDateTime(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        const hours = date.getHours();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${formattedHours}${ampm} ${day}/${month}/${year}`;
+    }
+
+

@@ -112,7 +112,9 @@ public class DocumentController {
     }
 
     @GetMapping("/get-id/{id}")
-    ApiResponse<DocumentResponse> getDocumentById(@PathVariable String id){
+    @MessageMapping("/getDocById/{id}")
+    @SendTo("/topic/getDocById")
+    ApiResponse<DocumentResponse> getDocumentById(@DestinationVariable String id){
         return ApiResponse.<DocumentResponse>builder()
                 .message("Find document by id:")
                 .result(documentService.getById(id))
