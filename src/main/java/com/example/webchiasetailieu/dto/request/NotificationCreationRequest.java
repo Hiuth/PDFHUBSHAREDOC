@@ -1,5 +1,6 @@
 package com.example.webchiasetailieu.dto.request;
 
+import com.example.webchiasetailieu.enums.NotificationType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -11,15 +12,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationCreationRequest {
-    @NotBlank
-    @Size(min = 5, message = "NOTI_LENGTH")
     String title;
-
-    @NotBlank
-    @Size(min = 5, message = "NOTI_LENGTH")
     String content;
 
-    @NotBlank
-    String type;
-    String account;
+    @NotBlank(message = "NOT_NULL")
+    NotificationType type;
+
+    @NotBlank(message = "NOT_NULL")
+    String accountId;
 }

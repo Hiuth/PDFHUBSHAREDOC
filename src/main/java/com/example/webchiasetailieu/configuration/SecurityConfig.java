@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private static final String[] POST_PUBLIC_ENDPOINTS = {"/account", "/auth/token", "/auth/introspect", "/auth/logout",
-            "/auth/refresh","/email/send/otp"};
+            "/auth/refresh","/email/send/otp","/noti"};
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {"/comment/doc/*", "/docCategory/get-all", "/doc/get-all",
             "/doc/get-id/*","/doc/find/*","/doc/findBySubCategory/*"};

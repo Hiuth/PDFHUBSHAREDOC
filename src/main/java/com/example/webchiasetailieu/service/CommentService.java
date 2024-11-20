@@ -1,9 +1,11 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.CommentRequest;
+import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Comment;
 import com.example.webchiasetailieu.entity.Documents;
+import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
@@ -25,6 +27,7 @@ public class CommentService {
     CommentRepository repository;
     AccountRepository accountRepository;
     DocumentRepository documentRepository;
+    NotificationService notificationService;
 
     @PreAuthorize("hasAuthority('COMMENT')")
     public CommentRequest addComment(CommentRequest commentRequest) {
@@ -32,6 +35,11 @@ public class CommentService {
 
         Documents documents = documentRepository.findById(commentRequest.getDocument())
                 .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
+
+        notificationService.notify(NotificationCreationRequest.builder()
+                        .type(NotificationType.COMMENT)
+                        .accountId(account.getId())
+                .build());
 
         return convertToResponse(repository.save(Comment.builder()
                         .account(account)

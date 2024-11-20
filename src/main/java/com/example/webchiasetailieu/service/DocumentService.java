@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.DocumentCreationRequest;
+import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
 import com.example.webchiasetailieu.dto.request.UpdateDocumentRequest;
 import com.example.webchiasetailieu.dto.response.DocumentResponse;
@@ -10,6 +11,7 @@ import com.example.webchiasetailieu.entity.DocCategory;
 import com.example.webchiasetailieu.entity.Documents;
 import com.example.webchiasetailieu.entity.DownloadHistory;
 import com.example.webchiasetailieu.enums.EmailType;
+import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
@@ -26,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
@@ -47,6 +50,7 @@ public class DocumentService {
     DocumentRepository documentRepository;
     MailService mailService;
     DownloadHistoryRepository downloadHistoryRepository;
+    NotificationService notificationService;
 
     //public
     public List<Documents> getAll(){
@@ -86,7 +90,7 @@ public class DocumentService {
     }
 
     @PreAuthorize("hasAuthority('UPDATE_DOC')")
-    public DocumentResponse updateDocument(String docId, UpdateDocumentRequest request) throws IOException {
+    public DocumentResponse updateDocument(String docId, UpdateDocumentRequest request) throws GeneralSecurityException, IOException {
         Documents document = isDocumentOwnedByAccount(docId);
 
         if (!request.getFile().isEmpty()) {
@@ -115,7 +119,8 @@ public class DocumentService {
 
     @PreAuthorize("hasAuthority('UP_FILE')")
     public DriveResponse uploadFile(MultipartFile file, String name, String type, String description,
-                                    String docCategoryId,int point, String avatar) throws IOException{
+                                    String docCategoryId,int point, String avatar)
+            throws GeneralSecurityException, IOException{
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
         Account account = accountRepository.findByEmail(email).orElseThrow(
@@ -134,22 +139,33 @@ public class DocumentService {
         File tempFile = File.createTempFile(fileNameWithoutExtension, fileExtension);
         file.transferTo(tempFile);
         DriveResponse res = driveService.uploadFileToDrive(tempFile);
-        if(!res.getUrl().isBlank()){
-            DocCategory docCategory = docCategoryRepository.findById(docCategoryId)
-                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
-            DocumentCreationRequest request = DocumentCreationRequest.builder()
-                    .name(name)
-                    .type(type)
-                    .description(description)
-                    .avatar(avatar)
-                    .point(point)
-                    .docUrl(res.getUrl())
-                    .createdBy(account)
-                    .category(docCategory)
-                    .build();
-            uploadDocument(request);
+
+        if (res.getUrl() == null || res.getUrl().isBlank()) {
+            throw new AppException(ErrorCode.DRIVE_UPLOAD_FAILED);
         }
+
+        DocCategory docCategory = docCategoryRepository.findById(docCategoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
+
+        DocumentCreationRequest request = DocumentCreationRequest.builder()
+                .name(name)
+                .type(type)
+                .description(description)
+                .avatar(avatar)
+                .point(point)
+                .docUrl(res.getUrl())
+                .createdBy(account)
+                .category(docCategory)
+                .build();
+        uploadDocument(request);
+
+        notificationService.notify(NotificationCreationRequest.builder()
+                .type(NotificationType.UPLOAD)
+                .accountId(account.getId())
+                .build());
+
         return res;
+
     }
 
     @PreAuthorize("hasAuthority('DOWNLOAD')")
@@ -189,7 +205,7 @@ public class DocumentService {
     }
 
     @PreAuthorize("hasAuthority('DELETE_DOC')")
-    public String delete(String id) {
+    public String delete(String id) throws GeneralSecurityException, IOException {
         Documents documents = documentRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.DOC_NOT_EXIST));
 
@@ -278,7 +294,7 @@ public class DocumentService {
         documentRepository.save(documents);
     }
 
-    private String updateFile(MultipartFile file, Documents document) throws IOException {
+    private String updateFile(MultipartFile file, Documents document) throws GeneralSecurityException, IOException {
         String url = document.getUrl();
         int index = url.indexOf("id=");
         String fieldId = url.substring(index + 3);

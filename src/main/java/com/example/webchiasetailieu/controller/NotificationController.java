@@ -23,7 +23,7 @@ public class NotificationController {
     public ApiResponse<NotificationResponse> createNotification(NotificationCreationRequest request) {
         ApiResponse<NotificationResponse> response = new ApiResponse<>();
         response.setMessage("Create notification: ");
-        response.setResult(service.createNotification(request));
+        response.setResult(service.notify(request));
         return response;
     }
 

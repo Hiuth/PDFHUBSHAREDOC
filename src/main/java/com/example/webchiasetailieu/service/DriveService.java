@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
@@ -32,21 +35,18 @@ import java.util.Collections;
 public class DriveService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-    private String getPathToGoogleCredentials() {
+    private static String getPathToGoogleCredentials() {
         String currentDirectory = System.getProperty("user.dir");
         Path encryptedFilePath = Paths.get(currentDirectory, "drive.json.enc");
         Path tempDecryptedFilePath = Paths.get(currentDirectory, "decrypted_drive.json");
-        String decryptedContent = null;
 
         if (!Files.exists(encryptedFilePath)) {
             log.error("File không tồn tại: " + encryptedFilePath);
             return null;
         }
 
-        if(!Files.exists(tempDecryptedFilePath)) {
-            JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
-            decryptedContent = jsonEncryptorUtil.decryptJsonFile(encryptedFilePath.toString());
-        }
+        JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
+        String decryptedContent = jsonEncryptorUtil.decryptJsonFile(encryptedFilePath.toString());
 
         if (decryptedContent != null) {
             log.info("Giải mã thành công");
@@ -108,7 +108,7 @@ public class DriveService {
             com.google.api.services.drive.model.File uploadedFile = drive.files().create(fileMetadata, mediaContent)
                     .setFields("id").execute();
             String url = "https://drive.google.com/file/d/"+uploadedFile.getId()+"/view";
-            cleanUp(file.toPath());
+            file.delete();
             res.setStatus(200);
             res.setMessage("File uploaded successfully");
             res.setUrl(url);
@@ -122,7 +122,7 @@ public class DriveService {
         return res;
     }
 
-    public DriveResponse uploadFileToDrive(File file) {
+    public DriveResponse uploadFileToDrive(File file) throws GeneralSecurityException, IOException {
         DriveResponse res = new DriveResponse();
 
         try{
@@ -137,7 +137,7 @@ public class DriveService {
                     .setFields("id").execute();
 
             String url = "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
-            cleanUp(file.toPath());
+            file.delete();
 
             res.setStatus(200);
             res.setMessage("File uploaded successfully");
@@ -148,14 +148,11 @@ public class DriveService {
             res.setStatus(500);
             res.setMessage(e.getMessage());
         }
+
         return res;
     }
 
-    public void cleanUp(Path path) throws IOException {
-        Files.delete(path);
-    }
-
-    public DriveResponse deleteFileFromDrive(String fileId) {
+    public DriveResponse deleteFileFromDrive(String fileId) throws GeneralSecurityException, IOException {
         DriveResponse res = new DriveResponse();
 
         try {
@@ -179,7 +176,7 @@ public class DriveService {
             throw new IOException("Không thể giải mã file thông tin đăng nhập Google.");
         }
 
-        GoogleCredential credentials = GoogleCredential.fromStream(new FileInputStream(decryptedFilePath))
+        GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream(decryptedFilePath))
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));
 
         try {
@@ -192,6 +189,6 @@ public class DriveService {
         return new Drive.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
                 JSON_FACTORY,
-                credentials).build();
+                credential).build();
     }
 }

@@ -38,7 +38,7 @@ public class DocumentController {
             @RequestParam("docCategoryId") String docCategoryId,
             @RequestParam("point") int point,
             @RequestParam("avatar") String avatar)
-            throws IOException {
+            throws GeneralSecurityException, IOException {
         return ApiResponse.<DriveResponse>builder()
                 .result(documentService.uploadFile(file,docName,docType,description,
                          docCategoryId,point,avatar))
@@ -95,7 +95,7 @@ public class DocumentController {
     @GetMapping("/find/{keyword}")
     @MessageMapping("/findDoc/{keyword}")
     @SendTo("/topic/findDocument")
-    ApiResponse<List<Documents>> findDocumentsByKeyWord(@DestinationVariable String keyword){ //chuyển về @PathVariable nếu muốn xài trên post man
+    ApiResponse<List<Documents>> findDocumentsByKeyWord(@DestinationVariable String keyword){
         return ApiResponse.<List<Documents>>builder()
                 .message("List of documents:")
                 .result(documentService.findDocumentByKeyword(keyword))
@@ -130,7 +130,7 @@ public class DocumentController {
             @RequestParam("description") String description,
             @RequestParam("docCategoryId") String docCategoryId,
             @RequestParam("avatar") String avatar)
-            throws IOException {
+            throws GeneralSecurityException, IOException {
         return ApiResponse.<DocumentResponse>builder()
                 .code(1000)
                 .message("Update document:")
@@ -148,7 +148,7 @@ public class DocumentController {
     @DeleteMapping("/{id}")
     @MessageMapping("/deleteDoc/{id}")
     @SendTo("/topic/deleteDocument")
-    ApiResponse<String> deleteDocument(@DestinationVariable String id) {
+    ApiResponse<String> deleteDocument(@DestinationVariable String id) throws GeneralSecurityException, IOException {
         return ApiResponse.<String>builder()
                 .message("Delete document")
                 .result(documentService.delete(id))
