@@ -49,9 +49,6 @@ public class AccountService {
         if(accountRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
 
-        if(!otpService.validateSecureOTP(request.getEmail(), request.getOtp()))
-            throw new AppException(ErrorCode.OTP_INCORRECT);
-
         Account account = Account.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -96,9 +93,6 @@ public class AccountService {
 
     @PreAuthorize("hasRole('USER')")
     public String forgetPassword(String newPass, String otp){
-        if(!otpService.validateSecureOTP(getAccountFromAuthentication().getEmail(), otp))
-            throw new AppException(ErrorCode.OTP_INCORRECT);
-
         Account account = getAccountFromAuthentication();
         account.setPassword(passwordEncoder.encode(newPass));
         accountRepository.save(account);

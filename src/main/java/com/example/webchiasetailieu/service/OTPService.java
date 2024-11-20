@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.OTPCreationRequest;
+import com.example.webchiasetailieu.dto.request.ValidationOTPRequest;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -35,18 +36,18 @@ public class OTPService {
         return rawOtp;
     }
 
-    public boolean validateSecureOTP(String email, String inputOtp) {
-        if (!otpStorage.containsKey(email)) {
+    public boolean validateSecureOTP(ValidationOTPRequest request) {
+        if (!otpStorage.containsKey(request.getEmail())) {
             return false;
         }
 
-        OTPCreationRequest otpDetails = otpStorage.get(email);
+        OTPCreationRequest otpDetails = otpStorage.get(request.getEmail());
         if (System.currentTimeMillis() > otpDetails.getExpiryTime()) {
-            otpStorage.remove(email); // Xóa OTP đã hết hạn
+            otpStorage.remove(request.getEmail()); // Xóa OTP đã hết hạn
             throw new AppException(ErrorCode.OTP_EXPIRED);
         }
 
-        String hashedInputOtp = hash(inputOtp);
+        String hashedInputOtp = hash(request.getOtp());
 
         return hashedInputOtp.equals(otpDetails.getOtp());
     }

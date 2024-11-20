@@ -40,10 +40,6 @@ public class AccountController {
     @MessageMapping("/allAccounts")
     @SendTo("/topic/accounts")
     ApiResponse<List<Account>> getAccounts() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("account: {}", authentication.getName());
-        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-
         ApiResponse<List<Account>> response = new ApiResponse<>();
         response.setMessage("List of accounts");
         response.setResult(accountService.getAllAccounts());
@@ -54,9 +50,6 @@ public class AccountController {
     @MessageMapping("/findAcc/{key}")
     @SendTo("/topic/accounts")
     ApiResponse<List<Account>> findAccountsByKeyWord(@DestinationVariable String key) {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("find accounts: {}", authentication.getName());
-        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         ApiResponse<List<Account>> response = new ApiResponse<>();
         response.setMessage("List of accounts");
         response.setResult(accountService.findAccountsByKeyword(key));
