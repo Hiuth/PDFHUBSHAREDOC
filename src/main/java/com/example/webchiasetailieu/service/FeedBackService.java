@@ -5,11 +5,11 @@ import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Feedbacks;
+import com.example.webchiasetailieu.enums.FeedbackType;
 import com.example.webchiasetailieu.enums.StatusFeedbackType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
-import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,23 @@ import java.util.List;
 public class FeedBackService {
     FeedBackRepository repository;
     AccountRepository accountRepository;
-    private final DocumentRepository documentRepository;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
+        String type;
         Account account = getAccountFromAuthentication();
+
+        if (!isValidFeedbackType(request.getFeedbackType().toString()))
+            throw new AppException(ErrorCode.FEEDBACK_TYPE_INCORRECT);
+
+        type = switch (request.getFeedbackType()) {
+            case VIOLATING_COMMENT -> "Violating content of documents";
+            case VIOLATING_CONTENT -> "Violating content of comments";
+        };
+
         Feedbacks feedbacks = Feedbacks.builder()
                 .feedback(request.getFeedback())
-                .type(request.getFeedbackType().toString())
+                .type(type)
                 .status(StatusFeedbackType.UNPROCESSED.getDescription())
                 .account(account)
                 .otherId(request.getOtherId())
@@ -93,5 +102,14 @@ public class FeedBackService {
     private Account getAccountFromAuthentication() {
         return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
+
+    private boolean isValidFeedbackType(String input) {
+        for (FeedbackType type : FeedbackType.values()) {
+            if (type.name().equals(input)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
