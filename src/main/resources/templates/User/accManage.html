@@ -85,19 +85,20 @@
                 </div>
 
                 <div id="overlay" style="display: none;"></div>
-                <div id="otp-popup" style="display: none;">
+                <div id="otp-popup" style="display: none">
                     <div class="popup-header">
-                        <h3>Xác nhận đổi mật khẩu</h3>
+                        <h3>Đăng ký</h3>
                         <button class="close-btn" onclick="closeOTPPopup()">×</button>
                     </div>
-                    <form class="form-group1" id="inputOTP" onsubmit="ChangePass(event)">
-                        <div class="ChangeTitle" id="OTP-title">Nhập mã OTP vừa được gửi về mail của bạn</div>
-                        <div class="form-group2" style="justify-content: center;">
-                            <div class="static" style="font-weight: bold;">Mã OTP</div>
-                            <input type="text" id="OTP">
+                    <form class="form-group1" id="inputOTP" onsubmit="">
+
+                        <div id="OTP-title">
+                            Nhập mã OTP vừa được gửi về mail của bạn:
                         </div>
-                        <div class="error"></div>
-                        <input type="submit" value="Xác nhận">
+                        <input type="text" id="OTP" placeholder="">
+                        <div class="error" style="text-align: center"></div>
+                        <input type="submit" value="Xác nhận" id="OTP-submit">
+                        <div id="otp-resend">Bạn không nhận được email? <a>Gửi lại</a></div>
                     </form>
                 </div>
             </div>

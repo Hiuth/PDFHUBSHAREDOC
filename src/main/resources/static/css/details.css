@@ -283,31 +283,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 8px;
-    border-bottom: 1px solid black;
-}
-
-.close-btn {
-    background-color: red;
-    border: none;
-    font-size: 20px;
-    color: white;
-    padding: 0px 5px 0px 5px;
-    border-radius: 8px;
-}
-
-.popup-header h3 {
-    margin: 0;
-    font-size: 18px;
-    flex-grow: 1;
-    text-align: center;
-    padding-left: 30px;
-}
-
 #violation-type{
     background-color: white;
     border: 1px solid black;

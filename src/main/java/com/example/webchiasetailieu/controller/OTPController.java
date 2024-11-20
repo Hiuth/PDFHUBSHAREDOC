@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OTPController {
     OTPService service;
 
-    @PostMapping
+    @PostMapping("/validOTP")
     ApiResponse<Boolean> validateOTP(@RequestBody @Valid ValidationOTPRequest otpRequest) {
         return ApiResponse.<Boolean>builder()
                 .code(1000)

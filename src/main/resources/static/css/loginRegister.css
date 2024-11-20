@@ -46,7 +46,7 @@ body{
     margin-bottom: -10px;
 }
 
-#login, #register{
+#login, #register, #get-otp{
     display: flex;
     flex-direction: column;
 }
@@ -63,15 +63,23 @@ body{
     font-weight: normal;
 }
 
-#register .form-group2 input{
+#get-otp .form-group2 .static{
+    min-width: 70px;
+    padding-left: 10px;
+    width: 24%;
+    font-weight: normal;
+}
+
+#register .form-group2 input, #get-otp .form-group2 input{
     width: 70%;
 }
 
-#register .form-group2{
+#register .form-group2, #get-otp .form-group2{
     flex-wrap: nowrap;
 }
 
-#login input[type="submit"], #register input[type="submit"]{
+
+#login input[type="submit"], #register input[type="submit"], #get-otp input[type="submit"]{
     background-color: #D82B8A;
     margin-top: 8px;
 }
@@ -106,18 +114,18 @@ label[for="rememberme"]{
     display: flex;
 }
 
-.getOTP{
-    padding: 8px 15px;
-    font-size: 15px;
-    background-color: #D82B8A;
-    border-radius: 10px;
-    border: none;
-    color: white;
-    font-weight: bold;
-    white-space: nowrap;
+.login .form-group2 input{
     flex-grow: 1;
 }
 
-.login .form-group2 input{
-    flex-grow: 1;
+#overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Độ trong suốt 50% */
+    z-index: 1;
+}
+
+.error{
+    margin-left: 30%;
 }

@@ -10,8 +10,9 @@
     <script defer src="../../static/js/User/include.js"></script>
     <script src="../../static/js/User/form.js"></script>
 
-    <link rel="stylesheet" href="../../static/css/userManage.css">
+
     <link rel="stylesheet" href="../../static/css/form.css">
+    <link rel="stylesheet" href="../../static/css/userManage.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
 </head>
@@ -33,12 +34,15 @@
                     <div class="error"></div>
                     <div class="form-group2" id="file-group">
                         <label class="alt name-title">Tệp tài liệu</label>
-                        <label for="file" id="alter-file">
-                            Chọn file từ máy của bạn
-                            <img src="../../static/images/icons/Folder.png" alt="?">
-                        </label>
+                        <div class="group3">
+                            <label for="file" id="alter-file">
+                                Chọn file từ máy của bạn
+                                <img src="../../static/images/icons/Folder.png" alt="?">
+                            </label>
+                            <div id="fileName"></div>
+                        </div>
                         <input type="file" name="file" id="file" style="display: none;" onchange="updateFileName()">
-                        <div id="fileName"></div>
+
                     </div>
                     <div class="error"></div>
                     <div class="form-group2">
@@ -72,7 +76,7 @@
                         </select>
                     </div>
                     <div class="error"></div>
-                    <div class="form-group2" style="display: none">
+                    <div class="form-group2">
                         <label for="" class="name-title">Phí tải về</label>
                         <div class="inputprice">
                             <input type="number" min="0" max="500" step="1" id="price" placeholder="0">
@@ -83,7 +87,9 @@
                         <input type="submit" value="Đăng tải">
                     </div>
                 </form>
-                <div id="pdfview"></div>
+                <div id="pdfview">
+                    <div class="center-text">PDF BẠN TẢI LÊN SẼ ĐƯỢC HIỂN THỊ Ở ĐÂY</div>
+                </div>
             </div>
         </div>
     </div>

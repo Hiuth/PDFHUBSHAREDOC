@@ -23,6 +23,31 @@ function updateFileName() {
     } else {
         fileNameDisplay.textContent = 'Chưa chọn tệp'; // Thông báo nếu không có tệp nào được chọn
     }
+
+    const fileNameDiv = document.getElementById("fileName");
+    const pdfViewDiv = document.getElementById("pdfview");
+
+    // Lấy file từ input
+    const file = fileInput.files[0];
+
+    if (file) {
+        // Hiển thị tên file
+        fileNameDiv.textContent = file.name;
+
+        // Kiểm tra xem file có phải là PDF không
+        if (file.type === "application/pdf") {
+            const fileURL = URL.createObjectURL(file);
+
+            // Tạo iframe để hiển thị PDF
+            pdfViewDiv.innerHTML = `<iframe src="${fileURL}" width="100%" height="100%"></iframe>`;
+        } else {
+            fileNameDisplay.innerHTML = "Vui lòng chọn một tệp PDF.";
+        }
+    } else {
+        // Xóa nội dung nếu không có file
+        fileNameDiv.textContent = "";
+        pdfViewDiv.innerHTML = "";
+    }
 }
 
 function ChangeInfo() {

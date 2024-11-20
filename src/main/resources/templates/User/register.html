@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập</title>
+    <title>Đăng ký</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
     <link rel="stylesheet" href="../../static/css/loginRegister.css">
     <link rel="stylesheet" href="../../static/css/form.css">
+
+    <script src="../../static/js/User/form.js"></script>
+    <script src="../../static/js/User/register_forgotpass.js"></script>
 </head>
 <body>
 <div class="center-box">
@@ -14,36 +17,54 @@
         <img src="../../static/images/pdfhub.png" alt="">
         <div class="formname">register</div>
     </div>
-    <form action="" id="register">
+    <form id="get-otp" onsubmit="sendOTP(event)">
         <div class="form-group2">
-            <label for="" class="static">Email xác nhận</label>
-            <input type="email" id="mail" placeholder="Nhập mail của bạn">
+            <label class="static">Email đăng ký</label>
+            <input type="email" id="mail" placeholder="Nhập mail của bạn" autocomplete="off">
+        </div>
+        <div class="error"></div>
+        <a href="login.html" class="redirect" id="redirect-login">Đã có tài khoản? Đăng nhập</a>
+        <input type="submit" value="Tiếp theo">
+    </form>
+    <form id="register" style="display: none">
+        <div class="form-group2">
+            <label class="static">Họ và tên</label>
+            <input type="text" id="name" placeholder="Nhập họ và tên" autocomplete="off">
         </div>
         <div class="error"></div>
         <div class="form-group2">
-            <label for="" class="static">Họ và tên</label>
-            <input type="text" id="name" placeholder="Nhập họ và tên">
-        </div>
-        <div class="error"></div>
-        <div class="form-group2">
-            <label for="" class="static">Mật khẩu</label>
-            <input type="password" id="npass" placeholder="Nhập mật khẩu">
+            <label class="static">Mật khẩu</label>
+            <input type="password" id="npass" placeholder="Nhập mật khẩu" autocomplete="new-password">
         </div>
         <div class="error"></div>
 
         <div class="form-group2">
-            <label for="" class="static">Nhập lại mật khẩu</label>
-            <input type="password" id="repass" placeholder="Xác nhận mật khẩu">
+            <label class="static">Nhập lại mật khẩu</label>
+            <input type="password" id="repass" placeholder="Xác nhận mật khẩu" autocomplete="new-password">
         </div>
         <div class="error"></div>
         <a href="login.html" class="redirect" id="redirect-login">Đã có tài khoản? Đăng nhập</a>
 
-        <input type="submit" name="" id="" value="Tiếp theo">
-
+        <input type="submit" value="Đăng ký">
     </form>
 </div>
 
-
+<div id="overlay" style="display: none"></div>
+<div id="otp-popup" style="display: none">
+    <div class="popup-header">
+        <h3>Đăng ký</h3>
+        <button class="close-btn" onclick="closeOTPPopup()">×</button>
+    </div>
+    <form id="otp-form" class="form-group1" id="inputOTP" onsubmit="validateOTP(event)">
+        <div id="OTP-title">
+            Nhập mã OTP vừa được gửi về mail của bạn:
+        </div>
+        <input type="text" id="OTP" placeholder="">
+        <div class="error" style="text-align: center"></div>
+        <input type="submit" value="Xác nhận" id="OTP-submit">
+        <div id="otp-resend">Bạn không nhận được email? <a onclick="sendOTP(event)">Gửi lại</a></div>
+    </form>
+</div>
 
 </body>
 </html>
