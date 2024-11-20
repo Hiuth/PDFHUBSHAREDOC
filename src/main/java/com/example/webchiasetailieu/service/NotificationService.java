@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationService {
     NotificationRepository repository;
-    AccountService accountService;
     AccountRepository accountRepository;
 
     public NotificationResponse notify(NotificationCreationRequest request){
@@ -100,7 +100,7 @@ public class NotificationService {
 
     //public
     public List<Notifications> getMyNotifications() {
-        Account account = accountService.getAccountFromAuthentication();
+        Account account = getAccountFromAuthentication();
         List<Notifications> notifications = repository.findByAccount_Id(account.getId());
         if (notifications.isEmpty())
             throw new AppException(ErrorCode.LIST_EMPTY);
@@ -134,6 +134,11 @@ public class NotificationService {
                 .type(notification.getType())
                 .email(notification.getAccount().getEmail())
                 .build();
+    }
+
+    private Account getAccountFromAuthentication() {
+        return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
 }
