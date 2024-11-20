@@ -38,7 +38,7 @@ public class CommentService {
 
         notificationService.notify(NotificationCreationRequest.builder()
                         .type(NotificationType.COMMENT)
-                        .accountId(account.getId())
+                        .accountId(documents.getCreatedBy().getId())
                 .build());
 
         return convertToResponse(repository.save(Comment.builder()

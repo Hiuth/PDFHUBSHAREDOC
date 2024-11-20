@@ -164,6 +164,11 @@ public class DocumentService {
                 .accountId(account.getId())
                 .build());
 
+        notificationService.notify(NotificationCreationRequest.builder()
+                .type(NotificationType.RECEIVE_POINTS)
+                .accountId(account.getId())
+                .build());
+
         return res;
 
     }
@@ -199,6 +204,12 @@ public class DocumentService {
                     .point(documents.getPoint())
                     .build();
             downloadHistoryRepository.save(downloadHistory);
+
+            notificationService.notify(NotificationCreationRequest.builder()
+                            .type(NotificationType.DOWNLOAD)
+                            .accountId(documents.getCreatedBy().getId())
+                    .build());
+
             return "Successfully downloaded file";
         }
         return "Failed to download file";

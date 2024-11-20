@@ -95,7 +95,6 @@ public class NotificationService {
                 .type(request.getType().toString())
                 .account(account)
                 .build();
-        System.out.println(notification);
         return convertToResponse(repository.save(notification));
     }
 

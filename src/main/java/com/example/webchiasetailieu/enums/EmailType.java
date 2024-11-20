@@ -4,4 +4,5 @@ public enum EmailType {
     DOWNLOAD,
     REGISTER,
     FORGOT_PASSWORD,
+    BANK_ACCOUNT,
 }

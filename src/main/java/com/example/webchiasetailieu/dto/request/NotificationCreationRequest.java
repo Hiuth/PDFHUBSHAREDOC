@@ -2,7 +2,6 @@ package com.example.webchiasetailieu.dto.request;
 
 import com.example.webchiasetailieu.enums.NotificationType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -1,13 +1,11 @@
 package com.example.webchiasetailieu.service;
 
-import com.example.webchiasetailieu.dto.request.AccountCreationRequest;
-import com.example.webchiasetailieu.dto.request.AccountUpdateRequest;
-import com.example.webchiasetailieu.dto.request.SendEmailRequest;
-import com.example.webchiasetailieu.dto.request.UpdatePassword;
+import com.example.webchiasetailieu.dto.request.*;
 import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.RoleResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.enums.EmailType;
+import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
@@ -33,10 +31,10 @@ import java.util.stream.Collectors;
 public class AccountService {
     AccountRepository accountRepository;
     RoleRepository roleRepository;
-    MailService mailService;
     PasswordEncoder passwordEncoder;
     RoleService roleService;
     OTPService otpService;
+    NotificationService notificationService;
 
     public enum BanType {
         TEMPORARY_10_DAYS,
@@ -61,6 +59,11 @@ public class AccountService {
                 .name(request.getName())
                 .roles(new HashSet<>(roleRepository.findAllById(List.of("USER"))))
                 .build();
+
+        notificationService.notify(NotificationCreationRequest.builder()
+                        .type(NotificationType.REGISTER)
+                        .accountId(account.getId())
+                .build());
 
         return convertToResponse(accountRepository.save(account));
     }
@@ -163,7 +166,8 @@ public class AccountService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public String banAccount(String id, BanType banType) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if(account.isBanned())
             throw new AppException(ErrorCode.ACCOUNT_BANNED);
 
@@ -176,6 +180,12 @@ public class AccountService {
         }
 
         accountRepository.save(account);
+
+        notificationService.notify(NotificationCreationRequest.builder()
+                .type(NotificationType.ACCOUNT_LOCKED)
+                .accountId(account.getId())
+                .build());
+
         return "Ban account successfully for " + banType;
     }
 
