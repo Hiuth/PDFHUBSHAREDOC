@@ -107,7 +107,6 @@
 <!--                                        >-->
 <!--                                    <img src="../../static/images/icons/delete-svgrepo-com.svg" alt="Delete" />-->
 <!--                                </button>-->
-<!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </div>-->
@@ -254,7 +253,7 @@
         <h3>Mẫu báo cáo vi phạm</h3>
         <button class="close-btn" onclick="closeReportPopup()">×</button>
     </div>
-    <form action="" name="report" id="report" class="form-group1">
+    <form  name="report" id="report-form" class="form-group1"  >
         <div class="form-group2">
             <label for="violation-type">Loại vi phạm</label>
             <select id="violation-type">
@@ -271,15 +270,19 @@
             <textarea id="description" placeholder="Viết mô tả cụ thể ở đây..."></textarea>
         </div>
 
-        <input type="submit" onclick="return submitReportPopup()" style="width: 100%;" value="Xác nhận gửi báo cáo"></input>
+        <div class="modal-actions">
+
+            <input type="submit" class="btn btn-primary"style="width: 100%;"></input>
+        </div>
+
     </form>
 </div>
 <div id="footer-placeholder"></div>
 <script src="../../static/js/User/comments.js"></script>
+<script type="module" src="../../static/js/User/feedbacks.js"></script>
 <script type="module">
     import {fetchCommentsForDocument} from "../../static/js/User/comments.js";
     fetchCommentsForDocument();
 </script>
-
 </body>
 </html>

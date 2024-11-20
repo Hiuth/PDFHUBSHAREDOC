@@ -24,6 +24,8 @@ public class FeedBackController {
     FeedBackService service;
 
     @PostMapping
+    @MessageMapping("/createFeedback")
+    @SendTo("/topic/feedbacks")
     public ApiResponse<FeedBackResponse> createFeedback(@RequestBody @Valid FeedBackRequest request) {
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
@@ -35,6 +37,7 @@ public class FeedBackController {
     @MessageMapping("/adminUpdateFeed")
     @SendTo("/topic/adminUpdateFeedBack")
     public ApiResponse<FeedBackResponse> updateFeedback(@RequestBody @Valid UpdateFeedbackRequest request) {
+        System.out.println("Request Received: " + request);
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
         response.setResult(service.updateFeedback(request));
