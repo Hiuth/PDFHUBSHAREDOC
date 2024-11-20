@@ -8,6 +8,9 @@ import com.example.webchiasetailieu.service.NotificationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +22,14 @@ import java.util.List;
 public class NotificationController {
     NotificationService service;
 
+
     @PostMapping
     public ApiResponse<NotificationResponse> createNotification(NotificationCreationRequest request) {
         ApiResponse<NotificationResponse> response = new ApiResponse<>();
         response.setMessage("Create notification: ");
         response.setResult(service.notify(request));
+//        ApiResponse<List<Notifications>> wsResponse = getMyNotification();
+//        messagingTemplate.convertAndSend("/topic/getNotification", wsResponse);
         return response;
     }
 
@@ -37,6 +43,8 @@ public class NotificationController {
     }
 
     @GetMapping("/get/my-notification")
+    @MessageMapping("/getMyNoti")
+    @SendTo("/topic/getNotification")
     public ApiResponse<List<Notifications>> getMyNotification() {
         ApiResponse<List<Notifications>> response = new ApiResponse<>();
         response.setMessage("Get all notification: ");

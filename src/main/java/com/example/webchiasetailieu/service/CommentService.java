@@ -2,6 +2,8 @@ package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.CommentRequest;
 import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
+import com.example.webchiasetailieu.dto.response.ApiResponse;
+import com.example.webchiasetailieu.dto.response.NotificationResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Comment;
 import com.example.webchiasetailieu.entity.Documents;
@@ -14,6 +16,7 @@ import com.example.webchiasetailieu.repository.DocumentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,7 @@ public class CommentService {
     AccountRepository accountRepository;
     DocumentRepository documentRepository;
     NotificationService notificationService;
-
+    private final SimpMessagingTemplate messagingTemplate;
     @PreAuthorize("hasAuthority('COMMENT')")
     public CommentRequest addComment(CommentRequest commentRequest) {
         Account account = getAccountFromAuthentication();
@@ -36,10 +39,18 @@ public class CommentService {
         Documents documents = documentRepository.findById(commentRequest.getDocument())
                 .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
 
-        notificationService.notify(NotificationCreationRequest.builder()
+        NotificationResponse notification = notificationService.notify(
+                NotificationCreationRequest.builder()
                         .type(NotificationType.COMMENT)
                         .accountId(documents.getCreatedBy().getId())
-                .build());
+                        .build());
+
+        // Gửi thông báo đến client qua WebSocket
+        messagingTemplate.convertAndSend("/topic/getNotification",
+                ApiResponse.<NotificationResponse>builder()
+                        .result(notification)
+                        .message("Thông báo mới")
+                        .build());
 
         return convertToResponse(repository.save(Comment.builder()
                         .account(account)

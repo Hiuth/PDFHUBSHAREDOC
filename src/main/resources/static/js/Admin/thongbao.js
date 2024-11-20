@@ -1,50 +1,88 @@
 // Mở/đóng bảng thông báo
-function toggleNotificationPanel() {
+import {getToken} from "../Share/localStorageService.js";
+
+export function toggleNotificationPanel() {
     const panel = document.getElementById("notificationPanel");
     panel.style.display = panel.style.display === "block" ? "none" : "block";
 }
-
+window.toggleNotificationPanel=toggleNotificationPanel;
 // Tải danh sách thông báo
-function loadNotifications() {
-    const notifications = [
-        "Tài khoản của bạn đã được cập mới vui lòng kiểm tra.",
-        "Quản trị viên đã thêm tài khoản mới.",
-    ];
 
-    const notificationList = document.getElementById("notificationList");
-    notificationList.innerHTML = ""; // Xóa thông báo cũ
+export function loadNotifications() {
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
 
-    notifications.forEach((message, index) => {
-        const li = document.createElement("li");
+    client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+        client.debug = function (str) {}; // Tắt log debug
 
-        // Tạo phần tử chứa nội dung thông báo
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message";
-        messageDiv.textContent = message;
+        // Gửi yêu cầu tải danh sách thông báo ban đầu
+        client.send("/app/getMyNoti", {}, JSON.stringify({}));
 
-        // Tạo nút xóa
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "notification-delete-btn";
-        deleteBtn.setAttribute("aria-label", "Delete notification");
+        // Lắng nghe các thông báo mới từ server
+        client.subscribe("/topic/getNotification", function (data) {
+            const response = JSON.parse(data.body);
+            let notifications = [];
 
-        // Thêm sự kiện click cho nút xóa
-        deleteBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
-            li.style.animation = "fadeOut 0.3s ease";
-            setTimeout(() => {
-                li.remove();
-                updateNotificationCount();
-            }, 300);
+            // Xử lý response.result là array hoặc single object
+            if (Array.isArray(response.result)) {
+                notifications = response.result;
+            } else if (response.result) {
+                notifications = [response.result];
+            }
+            console.log(notifications);
+
+            const notificationList = document.getElementById("notificationList");
+            //notificationList.innerHTML = ''; // Xóa danh sách cũ
+
+            notifications.forEach((message) => {
+
+                const li = document.createElement("li");
+                // Tạo phần tử chứa nội dung thông báo
+                const messageDiv = document.createElement("div");
+                messageDiv.className = "message";
+                messageDiv.textContent = message.content;
+
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.value = message.id; // Gán giá trị id thông báo vào input
+                hiddenInput.className = "notificationId";
+                messageDiv.appendChild(hiddenInput);
+
+                // Tạo nút xóa
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "notification-delete-btn";
+                deleteBtn.setAttribute("aria-label", "Delete notification");
+
+                // Thêm sự kiện click cho nút xóa
+                deleteBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    li.style.animation = "fadeOut 0.3s ease";
+                    setTimeout(() => {
+                        li.remove();
+                        const hiddenInput = li.querySelector(".notificationId");
+                        const id = hiddenInput ? hiddenInput.value : null;
+                        console.log(id);
+                        updateNotificationCount();
+                    }, 300);
+                });
+
+                // Ghép các phần tử lại với nhau
+                li.appendChild(messageDiv);
+                li.appendChild(deleteBtn);
+
+                // Thêm animation cho thông báo mới
+                li.style.animation = "fadeIn 0.3s ease";
+
+                // Thêm thông báo mới vào đầu danh sách
+                notificationList.prepend(li);
+            });
+
+            updateNotificationCount();
         });
-
-        // Ghép các phần tử lại với nhau
-        li.appendChild(messageDiv);
-        li.appendChild(deleteBtn);
-        notificationList.appendChild(li);
     });
-
-    updateNotificationCount();
 }
+
 
 // Cập nhật số lượng thông báo
 function updateNotificationCount() {

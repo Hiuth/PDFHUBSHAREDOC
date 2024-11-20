@@ -26,7 +26,7 @@ public class Account {
     boolean isBanned;
     LocalDateTime banUntil;
 
-    @JsonIgnore
-    @ManyToMany
+//    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     Set<Role> roles;
 }
