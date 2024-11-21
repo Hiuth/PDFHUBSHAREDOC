@@ -1,11 +1,11 @@
 package com.example.webchiasetailieu.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -26,7 +26,13 @@ public class Account {
     boolean isBanned;
     LocalDateTime banUntil;
 
-//    @JsonIgnore
+    LocalDate registerDate;
+
     @ManyToMany(fetch = FetchType.EAGER)
     Set<Role> roles;
+
+    @PrePersist
+    protected void onCreate() {
+        registerDate = LocalDate.now();
+    }
 }

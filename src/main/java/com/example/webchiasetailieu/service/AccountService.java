@@ -2,7 +2,9 @@ package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.*;
 import com.example.webchiasetailieu.dto.response.AccountResponse;
+import com.example.webchiasetailieu.dto.response.MonthlyRegistrationCountResponse;
 import com.example.webchiasetailieu.dto.response.RoleResponse;
+import com.example.webchiasetailieu.dto.response.WeeklyRegistrationCountResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
@@ -18,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -202,6 +206,102 @@ public class AccountService {
     @PreAuthorize("hasRole('ADMIN')")
     public long numberOfAccounts() {
         return accountRepository.count();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Long> getRegistrationsByDayOfWeek() {
+        LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY); // Lấy đầu tuần
+        LocalDate endOfWeek = startOfWeek.plusDays(7); // Lấy cuối tuần
+
+        // Lấy danh sách các tài khoản đăng ký trong tuần hiện tại
+        List<Account> accounts = accountRepository.findAllByWeek(startOfWeek, endOfWeek);
+
+        // Khởi tạo danh sách đếm số lượt đăng ký trong 7 ngày
+        List<Long> registrations = new ArrayList<>(Collections.nCopies(7, 0L)); // 7 ngày trong tuần
+
+        for (Account account : accounts) {
+            int dayOfWeek = account.getRegisterDate().getDayOfWeek().getValue(); // 1 (Thứ Hai) -> 7 (Chủ Nhật)
+            registrations.set(dayOfWeek - 1, registrations.get(dayOfWeek - 1) + 1);
+        }
+
+        return registrations;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<WeeklyRegistrationCountResponse> getWeeklyRegistrationsInCurrentMonth() {
+        LocalDate now = LocalDate.now();
+        int currentMonth = now.getMonthValue();
+        int currentYear = now.getYear();
+
+        // Lấy tất cả tài khoản trong tháng hiện tại
+        List<Account> accounts = accountRepository.findAllByMonthAndYear(currentMonth, currentYear);
+
+        // Chia tài khoản theo tuần trong tháng
+        Map<Integer, Long> weeklyCounts = accounts.stream()
+                .collect(Collectors.groupingBy(
+                        account -> {
+                            // Tính tuần của tháng (tuần trong tháng, không phải tuần của năm)
+                            LocalDate registerDate = account.getRegisterDate();
+                            int weekOfMonth = (registerDate.getDayOfMonth() - 1) / 7 + 1;
+                            return weekOfMonth;
+                        },
+                        Collectors.counting()
+                ));
+
+        // Tạo đối tượng WeeklyRegistrationCountResponse cho từng tuần
+        List<WeeklyRegistrationCountResponse> response = new ArrayList<>();
+        for (int week = 1; week <= 4; week++) {  // Giả sử tháng này có 4 tuần
+            long count = weeklyCounts.getOrDefault(week, 0L);
+
+            // Tính ngày bắt đầu và ngày kết thúc của tuần
+            LocalDate startOfWeek = getStartOfWeek(week, currentMonth, currentYear);
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+            response.add(new WeeklyRegistrationCountResponse(week, count, startOfWeek, endOfWeek));
+        }
+
+        // Sắp xếp theo tuần
+        return response.stream()
+                .sorted(Comparator.comparing(WeeklyRegistrationCountResponse::getWeek))
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<MonthlyRegistrationCountResponse> getMonthlyRegistrationsInCurrentYear() {
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+
+        // Lấy tất cả tài khoản trong năm hiện tại
+        List<Account> accounts = accountRepository.findAllByYear(currentYear);
+
+        // Chia tài khoản theo tháng trong năm
+        Map<Integer, Long> monthlyCounts = accounts.stream()
+                .collect(Collectors.groupingBy(
+                        account -> account.getRegisterDate().getMonthValue(),  // Lấy tháng của ngày đăng ký
+                        Collectors.counting()
+                ));
+
+        // Tạo đối tượng MonthlyRegistrationCountResponse cho từng tháng
+        List<MonthlyRegistrationCountResponse> response = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {  // 12 tháng trong năm
+            long count = monthlyCounts.getOrDefault(month, 0L);
+
+            response.add(new MonthlyRegistrationCountResponse(month, count));
+        }
+
+        // Sắp xếp theo tháng
+        return response.stream()
+                .sorted(Comparator.comparing(MonthlyRegistrationCountResponse::getMonth))
+                .collect(Collectors.toList());
+    }
+
+    // Phương thức tính ngày bắt đầu của tuần trong tháng
+    private LocalDate getStartOfWeek(int week, int month, int year) {
+        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
+
+        // Tính số ngày cần thêm để có ngày bắt đầu của tuần
+        int daysToAdd = (week - 1) * 7;
+        return firstDayOfMonth.plusDays(daysToAdd);
     }
 
     public void rewardPoint(String id, int point){

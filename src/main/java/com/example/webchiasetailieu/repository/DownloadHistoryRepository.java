@@ -17,4 +17,10 @@ public interface DownloadHistoryRepository extends JpaRepository<DownloadHistory
 
     @Query("SELECT COUNT(dh) FROM DownloadHistory dh WHERE dh.downloadTime >= :startOfDay AND dh.downloadTime < :endOfDay")
     long countDownloadsToday(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    @Query("SELECT MONTH(d.downloadTime) as month, COUNT(d) as downloadCount " +
+            "FROM DownloadHistory d " +
+            "WHERE YEAR(d.downloadTime) = :currentYear " +
+            "GROUP BY MONTH(d.downloadTime)")
+    List<Object[]> countDownloadsByMonth(int currentYear);
 }
