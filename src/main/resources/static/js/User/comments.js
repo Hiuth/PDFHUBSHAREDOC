@@ -71,6 +71,7 @@ function sendComment(documentId, commentText) {
             client.send(`/app/createComment`, {}, JSON.stringify(comment));
             client.subscribe('/topic/comments', function (data) {
                 console.log("Received comment response:", data.body);
+                location.reload();
             });
 
         },
@@ -199,7 +200,7 @@ function editComment(commentId, newText) {
                 try {
                     const updatedComment = JSON.parse(response.body);
                     console.log("Comment updated successfully:", updatedComment);
-
+                    location.reload();
                     // Update UI with new comment text
                     const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
                     if (commentElement) {
@@ -319,6 +320,7 @@ function deleteComment(commentId) {
 
                     // Kiểm tra kết quả trả về từ service
                     if (result.result === "Successfully deleted comment") {
+                        location.reload();
                         // Xóa comment element khỏi UI
                         const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
                         if (commentElement) {

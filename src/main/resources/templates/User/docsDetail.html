@@ -68,13 +68,12 @@
         <div class="docsInfo-part">
 <!--            <div class="Info-part">-->
             <!-- The content will be dynamically inserted here by fetchDetailsDocument() -->
-
-        </div>
+<!--            </div>-->
             <div class="download-part">
                 <div class="download-p">
                     <div class="form-group2">
                         <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
-                        <a onclick="" id="share">Chia sẻ</a>
+                        <!--                        <a onclick="" id="share">Chia sẻ</a>-->
                     </div>
                     <div class="form-group2">
                         <input type="number" name="numPages" id="numPages" value="1">
@@ -86,6 +85,9 @@
             <iframe src="https://www.orimi.com/pdf-test.pdf" class="docs-part">
             </iframe>
         </div>
+
+
+
 <!--                <div class="comment-part">-->
 <!--                    <div class="form-group1">-->
 <!--                        <div class="form-group1">-->
@@ -135,7 +137,7 @@
             </div>
         </div>
     </div>
-
+</div>
     <div class="recommend-part">
         <div class="recommend">
             <div class="Group-title">Truyện hay cho bé</div>
@@ -289,11 +291,5 @@
     import {fetchCommentsForDocument} from "../../static/js/User/comments.js";
     fetchCommentsForDocument();
 </script>
-<!--<script>-->
-<!--    // Wait for DOM to be fully loaded before executing-->
-<!--    document.addEventListener('DOMContentLoaded', function() {-->
-<!--        fetchDetailsDocument();-->
-<!--    });-->
-<!--</script>-->
 </body>
 </html>

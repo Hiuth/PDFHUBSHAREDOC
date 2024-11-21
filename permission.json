@@ -66,5 +66,9 @@
   {
     "name": "VIEW_DOWN_HISTORY",
     "description": "view my download history"
+  },
+  {
+    "name": "MY_DOC",
+    "description": "view my document's uploaded"
   }
 ]

@@ -46,6 +46,8 @@ public class DocumentController {
     }
 
     @GetMapping("/get-my-doc")
+    @MessageMapping("/getMyDoc")
+    @SendTo("/topic/getMyDoc")
     public ApiResponse<List<Documents>> getMyDoc(){
         return ApiResponse.<List<Documents>>builder()
                 .code(1000)
