@@ -240,7 +240,6 @@ public class DocumentService {
         if(documentRepository.existsById(id))
             return "Failed to delete account";
         else return "Delete successfully";
-
     }
 
     @PreAuthorize("hasRole('ADMIN')")

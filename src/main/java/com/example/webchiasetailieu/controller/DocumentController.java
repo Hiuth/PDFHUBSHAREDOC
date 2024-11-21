@@ -154,7 +154,7 @@ public class DocumentController {
     @DeleteMapping("/{id}")
     @MessageMapping("/deleteDoc/{id}")
     @SendTo("/topic/deleteDocument")
-    ApiResponse<String> deleteDocument(@DestinationVariable String id) throws GeneralSecurityException, IOException {
+    ApiResponse<String> deleteDocument(@PathVariable String id) throws GeneralSecurityException, IOException {
         return ApiResponse.<String>builder()
                 .message("Delete document")
                 .result(documentService.delete(id))
