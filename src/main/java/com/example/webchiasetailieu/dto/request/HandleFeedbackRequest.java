@@ -1,6 +1,5 @@
 package com.example.webchiasetailieu.dto.request;
 
-import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.enums.FeedbackType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -11,13 +10,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FeedBackRequest {
+public class HandleFeedbackRequest {
     @NotBlank(message = "NOT_NULL")
-    String feedback;
-    FeedbackType feedbackType;
-    String status;
-    String feedbackFromAdmin;
-    String email;
-    Account account;
-    String otherId;
+    String id;
+
+    @NotBlank(message = "NOT_NULL")
+    FeedbackType type;
+
+    @NotBlank(message = "NOT_NULL")
+    String content;
+
+    String docId;
 }

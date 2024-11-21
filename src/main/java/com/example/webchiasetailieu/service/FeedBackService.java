@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.FeedBackRequest;
+import com.example.webchiasetailieu.dto.request.HandleFeedbackRequest;
 import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.entity.Account;
@@ -9,13 +10,11 @@ import com.example.webchiasetailieu.enums.FeedbackType;
 import com.example.webchiasetailieu.enums.StatusFeedbackType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
-import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,19 +24,20 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FeedBackService {
     FeedBackRepository repository;
-    AccountRepository accountRepository;
+    AccountService accountService;
+    NotificationService notificationService;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
         String type;
-        Account account = getAccountFromAuthentication();
+        Account account = accountService.getAccountFromAuthentication();
 
         if (!isValidFeedbackType(request.getFeedbackType().toString()))
             throw new AppException(ErrorCode.FEEDBACK_TYPE_INCORRECT);
 
         type = switch (request.getFeedbackType()) {
-            case VIOLATING_COMMENT -> "Violating content of documents";
-            case VIOLATING_CONTENT -> "Violating content of comments";
+            case ANOTHER_PROBLEM -> "Violating content of documents";
+            case REPORT_DOCUMENT -> "Another problem";
         };
 
         Feedbacks feedbacks = Feedbacks.builder()
@@ -61,12 +61,35 @@ public class FeedBackService {
         return convertToResponse(repository.save(feedbacks));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public FeedBackResponse updateStatusFeedback(UpdateFeedbackRequest request) {
+        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+        feedbacks.setStatus(request.getStatus());
+        return convertToResponse(repository.save(feedbacks));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public FeedBackResponse responseFromAdmin(UpdateFeedbackRequest request) {
+        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+        feedbacks.setFeedbackFromAdmin(request.getResponseFromAdmin());
+        return convertToResponse(repository.save(feedbacks));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public FeedBackResponse violationNotification(HandleFeedbackRequest request) {
+        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+
+
+
+        return convertToResponse(repository.save(feedbacks));
+    }
+
     @PreAuthorize("hasRole('USER')")
     public List<Feedbacks> getMyFeedbacks() {
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
-        Account account = accountRepository.findById(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return repository.findAllByAccount_Id(account.getId());
+        return repository.findAllByAccount_Id(accountService.getAccountFromAuthentication().getId());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -97,11 +120,6 @@ public class FeedBackService {
                 .status(feedbacks.getStatus())
                 .feedbackFromAdmin(feedbacks.getFeedbackFromAdmin())
                 .build();
-    }
-
-    private Account getAccountFromAuthentication() {
-        return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
     private boolean isValidFeedbackType(String input) {

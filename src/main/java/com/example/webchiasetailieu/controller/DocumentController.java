@@ -190,4 +190,22 @@ public class DocumentController {
                 .result(documentService.getTotalDownloadsToday())
                 .build();
     }
+
+    @GetMapping("/monthly-stats")
+    ApiResponse<List<MonthlyDownloadStatsResponse>> getMonthlyStats(){
+        return ApiResponse.<List<MonthlyDownloadStatsResponse>>builder()
+                .code(1000)
+                .message("Month Stats:")
+                .result(documentService.getDownloadsByMonth())
+                .build();
+    }
+
+    @GetMapping("/doc-type/count")
+    ApiResponse<List<DocumentTypeCountResponse>> getDocumentTypeCount(){
+        return ApiResponse.<List<DocumentTypeCountResponse>>builder()
+                .code(1000)
+                .message("Document type count:")
+                .result(documentService.getDocumentTypeCounts())
+                .build();
+    }
 }
