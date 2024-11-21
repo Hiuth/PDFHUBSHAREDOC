@@ -17,6 +17,8 @@ public class Documents {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+
+    @Column(columnDefinition = "TEXT")
     String description;
     String type;
     String url;

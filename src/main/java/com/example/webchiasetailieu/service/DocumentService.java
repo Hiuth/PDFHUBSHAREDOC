@@ -5,7 +5,9 @@ import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
 import com.example.webchiasetailieu.dto.request.UpdateDocumentRequest;
 import com.example.webchiasetailieu.dto.response.DocumentResponse;
+import com.example.webchiasetailieu.dto.response.DocumentTypeCountResponse;
 import com.example.webchiasetailieu.dto.response.DriveResponse;
+import com.example.webchiasetailieu.dto.response.MonthlyDownloadStatsResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.DocCategory;
 import com.example.webchiasetailieu.entity.Documents;
@@ -31,6 +33,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import java.io.File;
@@ -265,6 +269,35 @@ public class DocumentService {
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
         return downloadHistoryRepository.countDownloadsToday(startOfDay, endOfDay);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<MonthlyDownloadStatsResponse> getDownloadsByMonth() {
+        int currentYear = LocalDateTime.now().getYear();
+
+        List<Object[]> rawStats = downloadHistoryRepository.countDownloadsByMonth(currentYear);
+
+        return rawStats.stream()
+                .map(record -> new MonthlyDownloadStatsResponse(
+                        (int) record[0],
+                        (long) record[1]
+                ))
+                .toList();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<DocumentTypeCountResponse> getDocumentTypeCounts() {
+        List<Object[]> counts = documentRepository.countDocumentsByType();
+        if (counts.isEmpty() || counts.get(0).length != 3) {
+            throw new IllegalStateException("Invalid result from countDocumentsByType query");
+        }
+
+        Object[] countArray = counts.get(0);
+        return Arrays.asList(
+                new DocumentTypeCountResponse("PDF", ((Number) countArray[0]).longValue()),
+                new DocumentTypeCountResponse("Word", ((Number) countArray[1]).longValue()),
+                new DocumentTypeCountResponse("Other", ((Number) countArray[2]).longValue())
+        );
     }
 
     private DocumentResponse convertToResponse(Documents documents) {

@@ -21,4 +21,11 @@ public interface DocumentRepository extends JpaRepository<Documents, String> {
 
     @Query("select c from Documents c where c.category.subCategory Like %:KeyWord%")
     List<Documents> findDocumentsBySubCategory(String KeyWord);
+
+    @Query("SELECT " +
+            "SUM(CASE WHEN d.type = 'pdf' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN d.type = 'word' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN d.type NOT IN ('pdf', 'word') THEN 1 ELSE 0 END) " +
+            "FROM Documents d")
+    List<Object[]> countDocumentsByType();
 }

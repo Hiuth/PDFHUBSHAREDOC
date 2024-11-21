@@ -75,65 +75,41 @@ public class ApplicationInitConfig {
             for (PermissionRequest request : permissions) {
                 Permission permission = existingPermissions.get(request.getName());
                 if (permission == null) {
-                    // Thêm mới
                     updatedPermissions.add(Permission.builder()
                             .name(request.getName())
                             .description(request.getDescription())
                             .build());
                 } else if (!permission.getDescription().equals(request.getDescription())) {
-                    // Cập nhật
                     permission.setDescription(request.getDescription());
                     updatedPermissions.add(permission);
                 }
             }
             permissionRepository.saveAll(updatedPermissions);
 
-//            List<RoleRequest> roles = roleLoader.loadRolesFromFile(rolesFilePath.toString());
-//            for (RoleRequest request : roles) {
-//                if (!roleRepository.existsById(request.getName())) {
-//                    var permission = permissionRepository.findAllById(request.getPermissions());
-//                    Role role = Role.builder()
-//                            .name(request.getName())
-//                            .description(request.getDescription())
-//                            .permissions(new HashSet<>(permission))
-//                            .build();
-//                    roleRepository.save(role);
-//                }
-//            }
-
             List<RoleRequest> roles = roleLoader.loadRolesFromFile(rolesFilePath.toString());
-//            Map<String, Permission> existingPermissions = permissionRepository.findAll()
-//                    .stream()
-//                    .collect(Collectors.toMap(Permission::getName, Function.identity()));
 
             for (RoleRequest request : roles) {
-                // Lấy danh sách quyền từ JSON
                 Set<Permission> rolePermissions = new HashSet<>();
                 for (String permissionName : request.getPermissions()) {
-                    // Kiểm tra nếu quyền đã tồn tại trong cơ sở dữ liệu
                     Permission permission = existingPermissions.get(permissionName);
                     if (permission == null) {
-                        // Thêm mới quyền vào cơ sở dữ liệu
                         permission = permissionRepository.save(Permission.builder()
                                 .name(permissionName)
-                                .description(permissionName + " description") // Có thể thêm mô tả mặc định
+                                .description(permissionName + " description")
                                 .build());
                         existingPermissions.put(permissionName, permission);
                     }
                     rolePermissions.add(permission);
                 }
 
-                // Kiểm tra nếu vai trò đã tồn tại trong cơ sở dữ liệu
                 Optional<Role> existingRole = roleRepository.findById(request.getName());
                 if (existingRole.isPresent()) {
                     Role role = existingRole.get();
-                    // Cập nhật danh sách quyền nếu có thay đổi
                     if (!role.getPermissions().equals(rolePermissions)) {
                         role.setPermissions(rolePermissions);
                         roleRepository.save(role);
                     }
                 } else {
-                    // Thêm mới vai trò nếu chưa tồn tại
                     Role role = Role.builder()
                             .name(request.getName())
                             .description(request.getDescription())
@@ -144,11 +120,11 @@ public class ApplicationInitConfig {
             }
 
 
-            if(accountRepository.findByEmail("admin").isEmpty()) {
+            if(accountRepository.findByEmail("pdfhubsharedoc@gmail.com").isEmpty()) {
                 Account account = Account.builder()
-                        .email("admin")
+                        .email("pdfhubsharedoc@gmail.com")
                         .password(passwordEncoder.encode(adminPassword))
-                        .name("thu")
+                        .name("Admin")
                         .roles(new HashSet<>(roleRepository.findAllById(List.of(UserRole.ADMIN.name()))))
                         .build();
                 accountRepository.save(account);

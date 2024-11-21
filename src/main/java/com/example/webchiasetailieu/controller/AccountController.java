@@ -5,6 +5,8 @@ import com.example.webchiasetailieu.dto.request.AccountUpdateRequest;
 import com.example.webchiasetailieu.dto.request.UpdatePassword;
 import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
+import com.example.webchiasetailieu.dto.response.MonthlyRegistrationCountResponse;
+import com.example.webchiasetailieu.dto.response.WeeklyRegistrationCountResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.service.AccountService;
 import jakarta.validation.Valid;
@@ -143,6 +145,34 @@ public class AccountController {
                 .message("Number of accounts")
                 .code(1000)
                 .result(accountService.numberOfAccounts())
+                .build();
+    }
+
+    @GetMapping("/registrations/daily-in-current-week")
+    ApiResponse<List<Long>> getRegistrationsByDayOfWeek() {
+        return ApiResponse.<List<Long>>builder()
+                .message("Registrations of week:")
+                .code(1000)
+                .result(accountService.getRegistrationsByDayOfWeek())
+                .build();
+    }
+
+    @GetMapping("/registrations/weekly")
+    ApiResponse<List<WeeklyRegistrationCountResponse>> getWeeklyRegistrations() {
+        return ApiResponse.<List<WeeklyRegistrationCountResponse>>builder()
+                .code(1000)
+                .message("Weekly registrations in current month")
+                .result(accountService.getWeeklyRegistrationsInCurrentMonth())
+                .build();
+    }
+
+    @GetMapping("/registrations/monthly")
+    public ApiResponse<List<MonthlyRegistrationCountResponse>> getMonthlyRegistrations() {
+        List<MonthlyRegistrationCountResponse> monthlyRegistrations = accountService.getMonthlyRegistrationsInCurrentYear();
+        return ApiResponse.<List<MonthlyRegistrationCountResponse>>builder()
+                .code(1000)
+                .message("Monthly registration count for the current year:")
+                .result(monthlyRegistrations)
                 .build();
     }
 }
