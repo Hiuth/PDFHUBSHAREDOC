@@ -1,9 +1,11 @@
 package com.example.webchiasetailieu.controller;
 
 import com.example.webchiasetailieu.dto.request.FeedBackRequest;
+import com.example.webchiasetailieu.dto.request.HandleFeedbackRequest;
 import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
+import com.example.webchiasetailieu.dto.response.NotificationResponse;
 import com.example.webchiasetailieu.entity.Feedbacks;
 import com.example.webchiasetailieu.service.FeedBackService;
 import jakarta.validation.Valid;
@@ -37,10 +39,9 @@ public class FeedBackController {
     @MessageMapping("/adminUpdateFeed")
     @SendTo("/topic/adminUpdateFeedBack")
     public ApiResponse<FeedBackResponse> updateFeedback(@RequestBody @Valid UpdateFeedbackRequest request) {
-        System.out.println("Request Received: " + request);
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Create feedback: ");
-        response.setResult(service.updateFeedback(request));
+        response.setResult(service.updateStatusFeedbackOrResponseFromAdmin(request));
         return response;
     }
 
@@ -76,6 +77,15 @@ public class FeedBackController {
                 .code(1000)
                 .message("Delete feedback: " + id)
                 .result(service.deleteById(id))
+                .build();
+    }
+
+    @PostMapping("/send-notification")
+    public ApiResponse<NotificationResponse> sendNotification(@RequestBody @Valid HandleFeedbackRequest request) {
+        return ApiResponse.<NotificationResponse>builder()
+                .code(1000)
+                .message("Send notification to user who uploaded violating document:")
+                .result(service.violationNotification(request))
                 .build();
     }
 }

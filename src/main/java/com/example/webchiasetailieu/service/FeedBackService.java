@@ -2,15 +2,21 @@ package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.FeedBackRequest;
 import com.example.webchiasetailieu.dto.request.HandleFeedbackRequest;
+import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
+import com.example.webchiasetailieu.dto.response.NotificationResponse;
 import com.example.webchiasetailieu.entity.Account;
+import com.example.webchiasetailieu.entity.Documents;
 import com.example.webchiasetailieu.entity.Feedbacks;
 import com.example.webchiasetailieu.enums.FeedbackType;
+import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.enums.StatusFeedbackType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
+import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
+import com.example.webchiasetailieu.repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +32,8 @@ public class FeedBackService {
     FeedBackRepository repository;
     AccountService accountService;
     NotificationService notificationService;
+    private final DocumentRepository documentRepository;
+    private final NotificationRepository notificationRepository;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
@@ -51,7 +59,7 @@ public class FeedBackService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public FeedBackResponse updateFeedback(UpdateFeedbackRequest request) {
+    public FeedBackResponse updateStatusFeedbackOrResponseFromAdmin(UpdateFeedbackRequest request) {
         Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
                 () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
         if(request.getStatus() != null)
@@ -62,29 +70,14 @@ public class FeedBackService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public FeedBackResponse updateStatusFeedback(UpdateFeedbackRequest request) {
-        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
-                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
-        feedbacks.setStatus(request.getStatus());
-        return convertToResponse(repository.save(feedbacks));
-    }
+    public NotificationResponse violationNotification(HandleFeedbackRequest request) {
+        Documents documents = documentRepository.findById(request.getDocId())
+                                .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public FeedBackResponse responseFromAdmin(UpdateFeedbackRequest request) {
-        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
-                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
-        feedbacks.setFeedbackFromAdmin(request.getResponseFromAdmin());
-        return convertToResponse(repository.save(feedbacks));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    public FeedBackResponse violationNotification(HandleFeedbackRequest request) {
-        Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
-                () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
-
-
-
-        return convertToResponse(repository.save(feedbacks));
+        return notificationService.notify(NotificationCreationRequest.builder()
+                    .type(NotificationType.POST_VIOLATION)
+                    .accountId(documents.getCreatedBy().getId())
+                .build());
     }
 
     @PreAuthorize("hasRole('USER')")
