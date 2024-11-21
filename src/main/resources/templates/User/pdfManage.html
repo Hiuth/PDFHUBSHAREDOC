@@ -10,6 +10,8 @@
     <script defer src="../../static/js/User/include.js"></script>
     <link rel="stylesheet" href="../../static/css/docs.css">
     <link rel="stylesheet" href="../../static/css/userManage.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
 </head>
 <body>
@@ -24,155 +26,15 @@
             
             <div class="recommend" id="manage">
                 <div class="Docs-group">
-                    <div class="Docs">  <!-- Đổi từ <a> thành <div> -->
-                        <div class="docs-content">  <!-- Thêm container mới -->
-                            <a href="docsDetail.html">  <!-- Di chuyển href vào đây -->
-                                <img src="../../static/images/sachHoa.jpg" alt="">
-                            </a>
-                            <a class="docsbutton" id="edit" href="editPdf.html">
-                                <img src="../../static/images/icons/Pencil.png" alt="">
-                            </a>
-                            <a class="docsbutton" id="delete" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
-                                <img src="../../static/images/icons/Delete.png" alt="">
-                            </a>
-                        </div>
-                        <a href="docsDetail.html" class="docTitle">Hóa học bổ túc đúc cấp 1</a>
-                        <div class="docInfor">
-                            <div class="uptime">
-                                <img src="../../static/images/icons/Clock.png" alt="">
-                                <div id="time">9PM 22/12/2023</div>
-                            </div>
-                            <div class="downtime">
-                                <img src="../../static/images/icons/Downloading Updates.png" alt="">
-                                <div id="down">20K</div>
-                            </div>
-                            <div class="price">
-                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">
-                                <div id="docPrice">30</div>
-                            </div>
-                        </div>
-                    </div>
 <!--                    <div class="Docs">  &lt;!&ndash; Đổi từ <a> thành <div> &ndash;&gt;-->
 <!--                        <div class="docs-content">  &lt;!&ndash; Thêm container mới &ndash;&gt;-->
 <!--                            <a href="docsDetail.html">  &lt;!&ndash; Di chuyển href vào đây &ndash;&gt;-->
 <!--                                <img src="../../static/images/sachHoa.jpg" alt="">-->
 <!--                            </a>-->
-<!--                            <a class="docsbutton" id="edit">-->
+<!--                            <a class="docsbutton" id="edit" href="editPdf.html">-->
 <!--                                <img src="../../static/images/icons/Pencil.png" alt="">-->
 <!--                            </a>-->
-<!--                            <a class="docsbutton" id="delete">-->
-<!--                                <img src="../../static/images/icons/Delete.png" alt="">-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                        <a href="docsDetail.html" class="docTitle">Hóa học bổ túc đúc cấp 1</a>-->
-<!--                        <div class="docInfor">-->
-<!--                            <div class="uptime">-->
-<!--                                <img src="../../static/images/icons/Clock.png" alt="">-->
-<!--                                <div id="time">9PM 22/12/2023</div>-->
-<!--                            </div>-->
-<!--                            <div class="downtime">-->
-<!--                                <img src="../../static/images/icons/Downloading Updates.png" alt="">-->
-<!--                                <div id="down">20K</div>-->
-<!--                            </div>-->
-<!--                            <div class="price">-->
-<!--                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">-->
-<!--                                <div id="docPrice">30</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="Docs">  &lt;!&ndash; Đổi từ <a> thành <div> &ndash;&gt;-->
-<!--                        <div class="docs-content">  &lt;!&ndash; Thêm container mới &ndash;&gt;-->
-<!--                            <a href="docsDetail.html">  &lt;!&ndash; Di chuyển href vào đây &ndash;&gt;-->
-<!--                                <img src="../../static/images/sachHoa.jpg" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="edit">-->
-<!--                                <img src="../../static/images/icons/Pencil.png" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="delete">-->
-<!--                                <img src="../../static/images/icons/Delete.png" alt="">-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                        <a href="docsDetail.html" class="docTitle">Hóa học bổ túc đúc cấp 1</a>-->
-<!--                        <div class="docInfor">-->
-<!--                            <div class="uptime">-->
-<!--                                <img src="../../static/images/icons/Clock.png" alt="">-->
-<!--                                <div id="time">9PM 22/12/2023</div>-->
-<!--                            </div>-->
-<!--                            <div class="downtime">-->
-<!--                                <img src="../../static/images/icons/Downloading Updates.png" alt="">-->
-<!--                                <div id="down">20K</div>-->
-<!--                            </div>-->
-<!--                            <div class="price">-->
-<!--                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">-->
-<!--                                <div id="docPrice">30</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="Docs">  &lt;!&ndash; Đổi từ <a> thành <div> &ndash;&gt;-->
-<!--                        <div class="docs-content">  &lt;!&ndash; Thêm container mới &ndash;&gt;-->
-<!--                            <a href="docsDetail.html">  &lt;!&ndash; Di chuyển href vào đây &ndash;&gt;-->
-<!--                                <img src="../../static/images/sachHoa.jpg" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="edit">-->
-<!--                                <img src="../../static/images/icons/Pencil.png" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="delete">-->
-<!--                                <img src="../../static/images/icons/Delete.png" alt="">-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                        <a href="docsDetail.html" class="docTitle">Hóa học bổ túc đúc cấp 1</a>-->
-<!--                        <div class="docInfor">-->
-<!--                            <div class="uptime">-->
-<!--                                <img src="../../static/images/icons/Clock.png" alt="">-->
-<!--                                <div id="time">9PM 22/12/2023</div>-->
-<!--                            </div>-->
-<!--                            <div class="downtime">-->
-<!--                                <img src="../../static/images/icons/Downloading Updates.png" alt="">-->
-<!--                                <div id="down">20K</div>-->
-<!--                            </div>-->
-<!--                            <div class="price">-->
-<!--                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">-->
-<!--                                <div id="docPrice">30</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="Docs">  &lt;!&ndash; Đổi từ <a> thành <div> &ndash;&gt;-->
-<!--                        <div class="docs-content">  &lt;!&ndash; Thêm container mới &ndash;&gt;-->
-<!--                            <a href="docsDetail.html">  &lt;!&ndash; Di chuyển href vào đây &ndash;&gt;-->
-<!--                                <img src="../../static/images/sachHoa.jpg" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="edit">-->
-<!--                                <img src="../../static/images/icons/Pencil.png" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="delete">-->
-<!--                                <img src="../../static/images/icons/Delete.png" alt="">-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                        <a href="docsDetail.html" class="docTitle">Hóa học bổ túc đúc cấp 1</a>-->
-<!--                        <div class="docInfor">-->
-<!--                            <div class="uptime">-->
-<!--                                <img src="../../static/images/icons/Clock.png" alt="">-->
-<!--                                <div id="time">9PM 22/12/2023</div>-->
-<!--                            </div>-->
-<!--                            <div class="downtime">-->
-<!--                                <img src="../../static/images/icons/Downloading Updates.png" alt="">-->
-<!--                                <div id="down">20K</div>-->
-<!--                            </div>-->
-<!--                            <div class="price">-->
-<!--                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">-->
-<!--                                <div id="docPrice">30</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="Docs">  &lt;!&ndash; Đổi từ <a> thành <div> &ndash;&gt;-->
-<!--                        <div class="docs-content">  &lt;!&ndash; Thêm container mới &ndash;&gt;-->
-<!--                            <a href="docsDetail.html">  &lt;!&ndash; Di chuyển href vào đây &ndash;&gt;-->
-<!--                                <img src="../../static/images/sachHoa.jpg" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="edit">-->
-<!--                                <img src="../../static/images/icons/Pencil.png" alt="">-->
-<!--                            </a>-->
-<!--                            <a class="docsbutton" id="delete">-->
+<!--                            <a class="docsbutton" id="delete" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">-->
 <!--                                <img src="../../static/images/icons/Delete.png" alt="">-->
 <!--                            </a>-->
 <!--                        </div>-->
@@ -196,5 +58,18 @@
             </div>
         </div>
     </div>
+    <!-- Delete Confirmation Popup -->
+    <div id="deleteConfirmPopup" class="popup">
+        <div class="popup-content">
+            <h2>Xác nhận xóa</h2>
+            <p>Bạn có chắc chắn muốn xóa tài liệu này?</p>
+            <div class="popup-buttons">
+                <button id="confirmDelete" class="btn btn-danger">Xóa</button>
+                <button id="cancelDelete" class="btn btn-cancel">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../../static/js/User/getMyDocuments.js"></script>
 </body>
 </html>

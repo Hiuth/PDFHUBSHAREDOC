@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="../../static/css/userManage.css">
     <link rel="stylesheet" href="../../static/css/form.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -82,7 +83,7 @@
                     <!--                    </div>-->
                     <div class="submit" id="uploadFile">
                         <!--                        <input type="submit" value="Đăng tải" onclick="uploadDocument()">-->
-                        <button type="button" onclick="uploadDocument()">Đăng tải</button>
+                        <button type="button" onclick="updateDocument()">Cập Nhập</button>
                     </div>
                 </form>
                 <div id="pdfview">
@@ -91,5 +92,6 @@
             </div>
         </div>
     </div>
+<script type="module" src="../../static/js/User/updateDoc.js"></script>
 </body>
 </html>

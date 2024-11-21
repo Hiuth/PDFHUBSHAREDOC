@@ -1,6 +1,6 @@
 import { getToken } from '../Share/localStorageService.js';
 
-// Gửi dữ liệu qua WebSocket và trả về promise
+// Send data via WebSocket and return a promise
 function SendData(payload, destination, server) {
     return new Promise((resolve, reject) => {
         const token = getToken();
@@ -10,10 +10,11 @@ function SendData(payload, destination, server) {
         client.connect(
             { Authorization: `Bearer ${token}` },
             function () {
-                // Subscribe trước khi gửi để đảm bảo không bỏ lỡ response
+                // Subscribe before sending to ensure no response is missed
                 client.subscribe(server, function (response) {
-                    console.log("Received response:", JSON.parse(response.body));
-                    resolve(response);
+                    const parsedResponse = JSON.parse(response.body);
+                    console.log("Received response:", parsedResponse);
+                    resolve(parsedResponse);
                     client.disconnect();
                 });
 
@@ -28,50 +29,54 @@ function SendData(payload, destination, server) {
     });
 }
 
-// Xử lý khi submit form
+// Handle form submission
 export async function handleFeedbackSubmit(event) {
-    event.preventDefault(); // Ngăn hành vi mặc định của form
+    event.preventDefault(); // Prevent default form submission
 
-    // Disable submit button để tránh double submit
-    const submitInPut = event.target.querySelector('input[type="submit"]');
-    submitInPut.disabled = true;
+    // Disable submit button to prevent double submission
+    const submitButton = event.target.querySelector('input[type="submit"]');
+    submitButton.disabled = true;
 
     try {
-        // Lấy dữ liệu từ form
-        const violationType = document.getElementById('violation-type').value.trim();
+        // Get form data
         const description = document.getElementById('description').value.trim();
 
         const urlParams = new URLSearchParams(window.location.search);
         const docId = urlParams.get('docId');
 
         if (!docId) {
-            throw new Error("Không tìm thấy docId. Vui lòng thử lại.");
+            throw new Error("Document ID not found. Please try again.");
         }
 
-        // Kiểm tra dữ liệu hợp lệ
-        if (violationType === "" || description === "") {
-            throw new Error("Vui lòng điền đầy đủ thông tin.");
+        // Validate input
+        if (description === "") {
+            throw new Error("Please provide a description.");
         }
 
         const feedbackRequest = {
-            type: violationType,
             feedback: description,
-            docId: docId
+            feedbackType: "REPORT_DOCUMENT", // Explicitly set feedback type
+            otherId: docId // Use otherId instead of docId
         };
 
         console.log("Feedback Request:", feedbackRequest);
 
-        // Gửi dữ liệu và đợi response
+        // Send data and wait for response
         const message = "/app/createFeedback";
         const server = "/topic/feedbacks";
 
-        await SendData(feedbackRequest, message, server);
-        alert("Phản hồi của bạn đã được gửi thành công!");
-        closeReportPopup();
-        window.location.reload();
+        const response = await SendData(feedbackRequest, message, server);
+
+        if (response && response.result) {
+            alert("Your feedback has been submitted successfully!");
+            closeReportPopup(); // Assuming this function exists in your HTML/JS
+            window.location.reload();
+        } else {
+            throw new Error("Failed to submit feedback. Please try again.");
+        }
 
     } catch (error) {
-        alert(error.message || "Có lỗi xảy ra khi gửi phản hồi.");
+        alert(error.message || "An error occurred while submitting feedback.");
         console.error("Error:", error);
     } finally {
         // Re-enable submit button
@@ -79,7 +84,7 @@ export async function handleFeedbackSubmit(event) {
     }
 }
 
-// Đảm bảo hàm được gắn sự kiện khi DOM đã load
+// Ensure event listener is added when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('report-form');
     if (form) {
