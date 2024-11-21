@@ -268,7 +268,7 @@ public class DocumentService {
                 .description(documents.getDescription())
                 .type(documents.getType())
                 .category(documents.getCategory())
-                .email(documents.getCreatedBy().getEmail())
+                .accountName(documents.getCreatedBy().getName())
                 .downloadTimes(documents.getDownloadTimes())
                 .point(documents.getPoint())
                 .build();
