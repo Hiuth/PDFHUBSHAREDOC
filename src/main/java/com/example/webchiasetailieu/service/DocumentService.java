@@ -175,9 +175,7 @@ public class DocumentService {
 
     @PreAuthorize("hasAuthority('DOWNLOAD')")
     public String download(String docId) throws MessagingException {
-        var context = SecurityContextHolder.getContext();
-        String email = context.getAuthentication().getName();
-        Account account = accountRepository.findByEmail(email).orElseThrow(
+        Account account = accountRepository.findById(getAccountIdFromContext()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
         Documents documents = documentRepository.findById(docId).orElseThrow(
                 () -> new AppException(ErrorCode.DOC_NOT_EXIST));
@@ -189,7 +187,9 @@ public class DocumentService {
 
         if(check){
             accountService.rewardPoint(documents.getCreatedBy().getId(),  documents.getPoint());
-            accountService.rewardPoint(account.getId(), - documents.getPoint());
+            if(!downloadHistoryRepository.existsByAccountIdAndDocumentId(account.getId(), docId))
+                accountService.rewardPoint(account.getId(), - documents.getPoint());
+
             documents.setDownloadTimes(documents.getDownloadTimes() + 1);
             if(!mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
                             .email(documents.getCreatedBy().getEmail())
@@ -198,6 +198,7 @@ public class DocumentService {
                             .docName(documents.getName())
                     .build()))
                 throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
+
             DownloadHistory downloadHistory = DownloadHistory.builder()
                     .document(documents)
                     .account(account)

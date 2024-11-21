@@ -6,11 +6,11 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DownloadHistory {
     @Id
