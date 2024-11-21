@@ -64,13 +64,15 @@ public class DocumentController {
                 .build();
     }
 
-    @GetMapping("/my-download-history")
-    public ApiResponse<List<DownloadHistory>> getMyDownloadHistory(){
-        return ApiResponse.<List<DownloadHistory>>builder()
-                .message("My download history:")
-                .result(documentService.getMyDownloadHistory())
-                .build();
-    }
+        @GetMapping("/my-download-history")
+        @MessageMapping("/myDownloadHistory")
+        @SendTo("/topic/getMyDownloadHistory")
+        public ApiResponse<List<DownloadHistory>> getMyDownloadHistory(){
+            return ApiResponse.<List<DownloadHistory>>builder()
+                    .message("My download history:")
+                    .result(documentService.getMyDownloadHistory())
+                    .build();
+        }
 
     @GetMapping("/get-all")
     @MessageMapping("/allDocuments")

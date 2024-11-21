@@ -62,5 +62,9 @@
   {
     "name": "TEST",
     "description": "up my avatar"
+  },
+  {
+    "name": "VIEW_DOWN_HISTORY",
+    "description": "view my download history"
   }
 ]
