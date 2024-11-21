@@ -173,22 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const accountCtx = document.getElementById("accountChart").getContext("2d");
 
-    const weekData = [10, 15, 12, 30, 25, 18, 22];
-    const monthData = [120, 150, 130, 170, 140];
-    const yearData = [1200, 1500, 1300, 1700, 1400, 1600, 1800];
-
-    const labelsWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const labelsMonth = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    const labelsYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-
+    // Khởi tạo biểu đồ
     let accountChart = new Chart(accountCtx, {
         type: "bar",
         data: {
-            labels: labelsWeek,
+            labels: [],  // Labels sẽ được cập nhật từ API
             datasets: [
                 {
                     label: "Tài khoản đăng ký",
-                    data: weekData,
+                    data: [],  // Dữ liệu sẽ được cập nhật từ API
                     backgroundColor: "#4a00e0",
                     barPercentage: 0.6,
                     categoryPercentage: 0.7,
@@ -226,25 +219,65 @@ document.addEventListener("DOMContentLoaded", function () {
             },
         },
     });
-    // Event listeners for the time period buttons
+
+    // Hàm gọi API và cập nhật biểu đồ
+    async function fetchAndUpdateChart(apiUrl, type) {
+        const authToken = getToken(); // Thay thế bằng token của bạn (hoặc lấy từ localStorage/sessionStorage)
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${authToken}`,  // Gửi token qua header
+                    "Content-Type": "application/json",  // Đảm bảo Content-Type là application/json nếu cần
+                },
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            const data = await response.json(); // Dữ liệu JSON từ API
+
+            let labels = [];
+            let chartData = [];
+
+            if (type === "day") {
+                // Dữ liệu theo ngày trong tuần
+                labels = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+                chartData = data.result; // Mảng kết quả từ API
+            } else if (type === "week") {
+                // Xử lý dữ liệu tuần
+                labels = data.result.map((item, index) => `Tuần ${index + 1}`);
+                chartData = data.result.map(item => item.registrations);
+            } else if (type === "month") {
+                // Xử lý dữ liệu tháng
+                labels = data.result.map((item, index) => `Tháng ${index + 1}`);
+                chartData = data.result.map(item => item.count);
+            }
+
+            // Cập nhật biểu đồ
+            accountChart.data.labels = labels;
+            accountChart.data.datasets[0].data = chartData;
+            accountChart.update(); // Cập nhật biểu đồ với dữ liệu mới
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    // Event listeners cho các nút thời gian
     document.getElementById("weekBtn").addEventListener("click", function () {
-        accountChart.data.labels = labelsWeek;
-        accountChart.data.datasets[0].data = weekData;
-        accountChart.update();
+        fetchAndUpdateChart("http://localhost:8088/account/registrations/daily-in-current-week", "day");
     });
 
     document.getElementById("monthBtn").addEventListener("click", function () {
-        accountChart.data.labels = labelsMonth;
-        accountChart.data.datasets[0].data = monthData;
-        accountChart.update();
+        fetchAndUpdateChart("http://localhost:8088/account/registrations/weekly", "week");
     });
 
     document.getElementById("yearBtn").addEventListener("click", function () {
-        accountChart.data.labels = labelsYear;
-        accountChart.data.datasets[0].data = yearData;
-        accountChart.update();
+        fetchAndUpdateChart("http://localhost:8088/account/registrations/monthly", "month");
     });
 });
+
+
 
 function numberOfUser(){
     const userCountElement = document.querySelector("#numberOfUser h3");
