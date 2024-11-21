@@ -36,6 +36,53 @@
         <a href="register.html" class="redirect" id="redirect-register">Chưa có tài khoản? Đăng ký</a>
     </form>
 </div>
+
+<div id="success-popup" style="display: none">
+
+    <div class="welcome">
+        <div class="success-icon">
+            <div class="circle"></div>
+            <div class="checkmark"></div>
+        </div>
+        <div class="welcome-title">Đăng nhập lần đầu!</div>
+        <div class="welcome-text">Chào mừng bạn đã đến với thế giới tài liệu
+        </div>
+        <div class="submit">
+            <button onclick="nextFrame()">Tiếp theo</button>
+        </div>
+    </div>
+
+
+    <form id="info-form" class="form-group1" onsubmit="createPerInfo(event)" style="display: none">
+        <div class="form-btitle">Trước khi bắt đầu, chúng tôi cần 1 vài thông tin của bạn!</div>
+        <div class="form-stitle">Vui lòng cho biết:</div>
+        <div class="form-group1" style="margin: 0px 100px; border: 1px solid gainsboro; padding: 15px; border-radius: 10px">
+            <div class="form-group2">
+                <label class="static">Tên tài khoản</label>
+                <input type="text" id="fname">
+            </div>
+            <div class="error"></div>
+
+            <div class="form-group2">
+                <label class="static">Giới tính</label>
+                <select id="gender">
+                    <option>Chọn giới tính</option>
+                    <option value="Male">Nam</option>
+                    <option value="Female">Nữ</option>
+                </select>
+            </div>
+            <div class="error"></div>
+
+            <div class="form-group2">
+                <label class="static">Ngày sinh</label>
+                <input type="date" id="birthday">
+            </div>
+            <div class="error"></div>
+            <input type="submit" value="Xác nhận">
+        </div>
+
+    </form>
+</div>
 <!-- Required Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>

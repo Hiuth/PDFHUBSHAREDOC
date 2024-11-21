@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
     <script defer src="../../static/js/User/header.js"></script>
 </head>
-<header th:fragment="header">
+<header>
     <!-- Đường dẫn đến hình ảnh -->
 <!--    <img class="logo" th:src="@{/images/pdfhub.png}" alt="Logo PDF Hub">-->
     <a class="logo-contain" href="index.html"><img class="logo" src="../../static/images/pdfhub.png" alt="Logo PDF Hub"></a>
@@ -23,8 +23,8 @@
             </form>
             <!-- <a th:if="${!isLoggedIn}" class="register-button" href="register.html">Đăng ký</a>
             <a th:if="${!isLoggedIn}" class="login-button" href="login.html">Đăng nhập</a> -->
-            <button th:if="${isLoggedIn}" class="noti-button"><img src="../../static/images/icons/bell.png" alt=""><div>Thông báo</div></button>
-            <button th:if="${isLoggedIn}" class="menu-button"><img id="avatar" src="../../static/images/icons/avatar.png"></button>
+            <button class="noti-button"><img src="../../static/images/icons/bell.png" alt=""><div>Thông báo</div></button>
+            <button class="menu-button"><img id="avatar" src="../../static/images/icons/avatar.png"></button>
             <div></div>
         </div>
     </nav>
