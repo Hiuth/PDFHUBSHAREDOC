@@ -138,11 +138,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Gọi API và khởi tạo biểu đồ
     async function initCharts() {
         // Dữ liệu cho biểu đồ người dùng
-        const userData = await fetchData("/api/user-stats");
+        const userData = await fetchData("http://localhost:8088/doc/upload/monthly");
         if (userData) {
-            initUserChart(userData); // `users` là dữ liệu từ API
-        }
+            const monthlyUploads = Array(12).fill(0); // Mảng 12 tháng, khởi tạo giá trị 0
 
+            // Lặp qua dữ liệu API và điền số lượng tải lên vào mảng đúng tháng
+            userData.result.forEach(({ month, uploadCount }) => {
+                monthlyUploads[month - 1] = uploadCount; // Gán giá trị vào đúng tháng
+            });
+
+            // Truyền dữ liệu đã xử lý cho hàm vẽ biểu đồ
+            initUserChart(monthlyUploads);
+        }
         // Dữ liệu cho biểu đồ phân bố tài liệu
         const docData = await fetchData("http://localhost:8088/doc/doc-type/count");
         if (docData) {
