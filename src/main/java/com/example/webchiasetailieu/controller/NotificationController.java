@@ -8,6 +8,7 @@ import com.example.webchiasetailieu.service.NotificationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -59,7 +60,9 @@ public class NotificationController {
     }
 
     @GetMapping("/delete/{id}")
-    public ApiResponse<String> deleteNotificationById(@PathVariable String id) {
+    @MessageMapping("/deleteNoti/{id}")
+    @SendTo("/topic/deleteNotification")
+    public ApiResponse<String> deleteNotificationById(@DestinationVariable String id) {
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Get all notification: ");
         response.setResult(service.delete(id));
