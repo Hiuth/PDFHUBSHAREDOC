@@ -282,115 +282,193 @@ function compareStringsWithNumbers(a, b) {
     return partsA.length - partsB.length;
 }
 
+
 function fetchDetailsDocument() {
-    const socket = new SockJS("http://localhost:8088/ws");
-    const client = Stomp.over(socket);
+    // Extract document ID from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get('docId');
 
-    client.connect({}, function (frame) {
-        client.debug = function (str) {}; // Disable debug logging
-
-        // Get docId from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const docId = urlParams.get('docId');
-
-        if (!docId) {
-            console.error("No document ID found in URL parameters");
-            return;
-        }
-
-        // Send request to get document details
-        client.send(`/app/getDocById/${docId}`, {}, JSON.stringify({ docId }));
-
-        // Subscribe to receive document details
-        client.subscribe('/topic/getDocById', function (data) {
-            try {
-                const response = JSON.parse(data.body);
-                const documentData = response.result;
-                const docDetailElement = document.querySelector('.docsInfo-part');
-
-                if (!docDetailElement) {
-                    console.error("docsInfo-part element not found");
-                    return;
-                }
-
-                if (!documentData) {
-                    console.error("No document data received");
-                    return;
-                }
-
-                const formattedDate = formatDateTime(documentData.createdAt);
-
-                // Update document info section with null checks
-                docDetailElement.innerHTML = `
-                    <div class="Info-part">
-                        <div class="DocTitle">
-                            ${documentData.name || 'Untitled Document'}
-                        </div>
-                        <div class="UserAndCategory">
-                            <div class="form-group2 admin">
-                                <img src="../../static/images/icons/avatar.png" alt="Avatar">
-                                <div class="gray" id="userName">${documentData.createdBy?.fullName || 'Unknown Author'}</div>
-                                <div class="role">Tác giả</div>
-                            </div>
-                            <div class="form-group2 Category">
-                                <div class="gray">Thể loại</div>
-                                <a>${documentData.category?.name || 'Uncategorized'}</a>
-                            </div>
-                        </div>
-                        <div class="caption">
-                            ${documentData.description || 'No description available'}
-                        </div>
-                        <div class="moreInfo">
-                            <div class="form-group2">
-                                <img src="../../static/images/icons/Clock.png" alt="Clock">
-                                <div class="pink" id="uptime">${formattedDate}</div>
-                            </div>
-                            <div class="num">
-                                <div class="form-group2">
-                                    <img src="../../static/images/icons/QuotePink.png" alt="Comments">
-                                    <div class="pink"><div id="numComment">${documentData.commentCount || 0}</div>bình luận</div>
-                                </div>
-                                <div class="form-group2">
-                                    <img src="../../static/images/icons/Downloading Updates.png" alt="Downloads">
-                                    <div class="pink"><div id="numDownLoads">${documentData.downloadTimes || 0}</div>lượt tải</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Add download button event listener if URL exists
-                if (documentData.url) {
-                    const downloadBtn = document.querySelector('.download-button');
-                    if (downloadBtn) {
-                        downloadBtn.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            window.location.href = documentData.url;
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error("Error processing document data:", error);
-            }
-        }, function(error) {
-            console.error("Error subscribing to topic:", error);
-        });
-    }, function(error) {
-        console.error("Error connecting to WebSocket:", error);
-    });
-}
-
-// Helper function to format datetime
-    function formatDateTime(dateTimeStr) {
-        const date = new Date(dateTimeStr);
-        const hours = date.getHours();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedHours = hours % 12 || 12;
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-
-        return `${formattedHours}${ampm} ${day}/${month}/${year}`;
+    // Validate document ID
+    if (!documentId) {
+        console.error("Document ID is required");
+        displayErrorMessage("Không tìm thấy mã tài liệu");
+        return;
     }
 
+    // Configure WebSocket connection
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = null; // Disable debug logs
 
+    // Establish connection
+    client.connect({},
+        function onSuccess(frame) {
+            console.log("WebSocket connected successfully. Fetching document details.");
+
+            // Send request to fetch document details
+            client.send(`/app/getDocById/${documentId}`, {}, JSON.stringify({ documentId }));
+
+            // Subscribe to document details response
+            const detailsSubscription = client.subscribe('/topic/getDocById', function(data) {
+                try {
+                    const response = JSON.parse(data.body);
+                    const documentData = response.result;
+
+                    // Find document details container
+                    const docDetailElement = document.querySelector('.docsInfo-part');
+                    if (!docDetailElement) {
+                        console.error("Document detail container not found");
+                        return;
+                    }
+
+                    // Handle document data rendering
+                    renderDocumentDetails(docDetailElement, documentData);
+
+                    // Unsubscribe after receiving data
+                    detailsSubscription.unsubscribe();
+                } catch (error) {
+                    console.error("Error processing document details:", error);
+                    displayErrorMessage("Không thể tải chi tiết tài liệu");
+                }
+            });
+
+            // Send request to fetch comments
+            client.send(`/app/comments/${documentId}`, {}, JSON.stringify({}));
+
+            // Subscribe to comments
+            const commentsSubscription = client.subscribe('/topic/getComments', function(data) {
+                try {
+                    const response = JSON.parse(data.body);
+                    const allComments = response.result || [];
+                    const commentCount = Array.isArray(allComments) ? allComments.length : 0;
+
+                    const commentCountElement = document.getElementById('numComment');
+                    if (commentCountElement) {
+                        commentCountElement.textContent = commentCount;
+                    }
+
+                    commentsSubscription.unsubscribe();
+                } catch (error) {
+                    console.error("Error processing comments:", error);
+                }
+            });
+
+            // Disconnect after a short timeout
+            setTimeout(() => {
+                client.disconnect();
+            }, 5000);
+        },
+        function onError(error) {
+            console.error("WebSocket connection error:", error);
+            displayErrorMessage("Không thể kết nối. Vui lòng thử lại.");
+        }
+    );
+}
+
+// Helper function to render document details
+function renderDocumentDetails(containerElement, documentData) {
+    // Safely extract and format data
+    const username = getUsername(documentData);
+    const formattedDate = documentData.createdAt
+        ? formatDate(documentData.createdAt)
+        : 'Ngày không xác định';
+    const category = getCategory(documentData);
+    const description = documentData.description || 'Không có mô tả';
+    const downloadTimes = documentData.downloadTimes || 0;
+    const documentName = documentData.name || 'Tài liệu không có tiêu đề';
+
+
+    // Render document details HTML
+    containerElement.innerHTML = `
+        <div class="Info-part">
+            <div class="DocTitle">
+                ${documentData.name || 'Tài liệu không có tiêu đề'}
+            </div>
+            <div class="UserAndCategory">
+                <div class="form-group2 admin">
+                    <img src="../../static/images/icons/avatar.png" alt="Avatar">
+                    <div class="gray" id="userName">${username}</div>
+                    <div class="role">Tác giả</div>
+                </div>
+                <div class="form-group2 Category">
+                    <div class="gray">Thể loại</div>
+                    <a>${category}</a>
+                </div>
+            </div>
+            <div class="caption">
+                ${description}
+            </div>
+            <div class="moreInfo">
+                <div class="form-group2">
+                    <img src="../../static/images/icons/Clock.png" alt="Clock">
+                    <div class="pink" id="uptime">${formattedDate}</div>
+                </div>
+                <div class="num">
+                    <div class="form-group2">
+                        <img src="../../static/images/icons/QuotePink.png" alt="Comments">
+                        <div class="pink"><div id="numComment">0</div> bình luận</div>
+                    </div>
+                    <div class="form-group2">
+                        <img src="../../static/images/icons/Downloading Updates.png" alt="Downloads">
+                        <div class="pink"><div id="numDownLoads">${downloadTimes}</div> lượt tải</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Utility function to get username safely
+function getUsername(documentData) {
+    return documentData?.accountName
+        || documentData?.createdBy?.name
+        || documentData?.createdBy
+        || 'Tác giả không xác định';
+}
+
+// Utility function to format date safely
+function formatDate(dateString) {
+    if (!dateString) return 'Ngày không xác định';
+
+    try {
+        // Nếu không có dateString, trả về giá trị mặc định
+        if (!dateString) return 'Ngày không xác định';
+
+        const date = new Date(dateString);
+        return isNaN(date)
+            ? 'Ngày không hợp lệ'
+            : date.toLocaleString('vi-VN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+    } catch (error) {
+        console.error("Date formatting error:", error);
+        return 'Ngày không hợp lệ';
+    }
+}
+
+// Utility function to get category safely
+function getCategory(documentData) {
+    return documentData?.category?.mainCategory
+        || documentData?.category
+        || 'Chưa phân loại';
+}
+
+// Error display utility
+function displayErrorMessage(message) {
+    const docDetailElement = document.querySelector('.docsInfo-part');
+    if (docDetailElement) {
+        docDetailElement.innerHTML = `
+            <div class="Info-part">
+                <div class="DocTitle text-danger">Lỗi</div>
+                <div class="caption text-muted">${message}</div>
+            </div>
+        `;
+    }
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', fetchDetailsDocument);

@@ -66,13 +66,9 @@
 <!--                </div>-->
 <!--            </div>-->
         <div class="docsInfo-part">
+<!--            <div class="Info-part">-->
             <!-- The content will be dynamically inserted here by fetchDetailsDocument() -->
-            <script>
-                // Wait for DOM to be fully loaded before executing
-                document.addEventListener('DOMContentLoaded', function() {
-                    fetchDetailsDocument();
-                });
-            </script>
+
         </div>
             <div class="download-part">
                 <div class="download-p">
@@ -293,6 +289,11 @@
     import {fetchCommentsForDocument} from "../../static/js/User/comments.js";
     fetchCommentsForDocument();
 </script>
-
+<!--<script>-->
+<!--    // Wait for DOM to be fully loaded before executing-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        fetchDetailsDocument();-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>

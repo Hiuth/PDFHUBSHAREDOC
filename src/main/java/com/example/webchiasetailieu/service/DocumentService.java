@@ -271,6 +271,7 @@ public class DocumentService {
                 .accountName(documents.getCreatedBy().getName())
                 .downloadTimes(documents.getDownloadTimes())
                 .point(documents.getPoint())
+                .createdAt(documents.getCreatedAt())
                 .build();
     }
 
