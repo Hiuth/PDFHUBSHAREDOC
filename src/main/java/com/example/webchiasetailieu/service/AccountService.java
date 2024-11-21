@@ -55,12 +55,14 @@ public class AccountService {
                 .roles(new HashSet<>(roleRepository.findAllById(List.of("USER"))))
                 .build();
 
+        accountRepository.save(account);
+
         notificationService.notify(NotificationCreationRequest.builder()
                         .type(NotificationType.REGISTER)
                         .accountId(account.getId())
                 .build());
 
-        return convertToResponse(accountRepository.save(account));
+        return convertToResponse(account);
     }
 
     @PreAuthorize("hasAuthority('VIEW_ACCOUNT')")
