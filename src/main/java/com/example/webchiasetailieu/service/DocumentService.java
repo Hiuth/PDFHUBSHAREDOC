@@ -179,10 +179,11 @@ public class DocumentService {
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
         Documents documents = documentRepository.findById(docId).orElseThrow(
                 () -> new AppException(ErrorCode.DOC_NOT_EXIST));
-        boolean checkHistoryDownloadOfAccount = downloadHistoryRepository
-                .existsByAccountIdAndDocumentId(account.getId(), docId);
         if(account.getPoints() < documents.getPoint())
             throw new AppException(ErrorCode.NOT_ENOUGH_POINT_TO_DOWNLOAD);
+
+        boolean checkHistoryDownloadOfAccount = downloadHistoryRepository
+                .existsByAccountIdAndDocumentId(account.getId(), docId);
 
         boolean check = driveService.downloadFile(documents.getUrl(), documents.getType(),
                 removeAccentsAndReplaceSpaces(documents.getName()));
@@ -202,8 +203,8 @@ public class DocumentService {
                 throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
 
             DownloadHistory downloadHistory = DownloadHistory.builder()
-                    .document(documents)
                     .account(account)
+                    .document(documents)
                     .point(documents.getPoint())
                     .build();
             downloadHistoryRepository.save(downloadHistory);

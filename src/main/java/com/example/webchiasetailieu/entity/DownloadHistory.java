@@ -24,7 +24,7 @@ public class DownloadHistory {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     Account account;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "document_id", referencedColumnName = "id")
     Documents document;
 
