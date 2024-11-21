@@ -27,5 +27,5 @@ public class CreationInfoAfterRegisterRequest {
     String gender;
 
     @NotBlank(message = "NOT_NULL")
-    String accountId;
+    String email;
 }

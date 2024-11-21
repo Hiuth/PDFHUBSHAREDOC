@@ -78,7 +78,7 @@ public class PersonalInformationService {
 
     //public
     public PerInfoResponse createInfoAfterRegister(CreationInfoAfterRegisterRequest request) throws AppException {
-        Account account = accountRepository.findById(request.getAccountId())
+        Account account = accountRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if(repository.existsByAccount_Id(account.getId()))
             throw new AppException(ErrorCode.PER_INFO_EXISTED);
