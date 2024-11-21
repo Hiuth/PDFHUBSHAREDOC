@@ -41,25 +41,39 @@ export function saveUserInfo() {
 }
 window.saveUserInfo = saveUserInfo;
 
-function savePassword() {
-  const newPassword = document.getElementById("modalNewPassword").value;
-  const confirmPassword = document.getElementById("modalConfirmPassword").value;
-
-  if (
-    newPassword &&
-    newPassword === confirmPassword &&
-    newPassword.length >= 8
-  ) {
-    alert("Mật khẩu của bạn đã được đổi thành công!");
-    // Đóng modal sau khi lưu
-    let modal = bootstrap.Modal.getInstance(
-      document.getElementById("changePasswordModal")
-    );
-    modal.hide();
-  } else {
-    alert("Mật khẩu không hợp lệ hoặc không khớp. Vui lòng thử lại.");
+export function savePassword() {
+  const oldPassword = document.getElementById("oldPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  const password = {
+    oldPassword: oldPassword,
+    newPassword: newPassword
   }
+  console.log(password);
+
+  const token = getToken();
+  const socket = new SockJS("http://localhost:8088/ws");
+  const client = Stomp.over(socket);
+  if ( newPassword.length >= 8) {
+
+    let modal = bootstrap.Modal.getInstance(document.getElementById("changePasswordModal"));
+    modal.hide();
+    client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+      client.send("/app/updatePass",{},JSON.stringify(password));
+      client.subscribe('/topic/updatePassword',function (data) {
+        const result = JSON.parse(data);
+        const message = result.message;
+       // alert(message);
+      })
+    })
+  } else {
+    alert("Mật khẩu không hợp lệ. Vui lòng thử lại.");
+  }
+
+
+
 }
+window.savePassword = savePassword;
+
 
 function changeAvatar() {
   // Mở hộp thoại chọn ảnh
@@ -90,19 +104,24 @@ function convertISOToDateInput(isoString) {
   return `${year}-${month}-${day}`;
 }
 
+function updatePassword(){
+
+}
+
+
 export function fetchPersonalInformation() {
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
   const token = getToken();
+  client.debug = function (str) {};
   client.connect({Authorization: `Bearer ${token}`}, function (frame) {
-    client.debug = function (str) {}; // Tắt debug nếu không cần thiết
+   // Tắt debug nếu không cần thiết
     client.send(`/app/getInfo`);
 
     client.subscribe("/topic/getInfo", function (data) {
       const response = JSON.parse(data.body);
       const perInfo = response.result;
       const birthday =  convertISOToDateInput(perInfo.birthday);
-    console.log(perInfo);
       // Chuỗi HTML lưu trữ thông tin người dùng
       const userInfoHTML = `
         <div class="col-md-8">
@@ -143,6 +162,9 @@ export function fetchPersonalInformation() {
               </div>
             </div>
             <div class="mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                       Đổi mật khẩu 
+                  </button>
             </div>
           </form>
         </div>
@@ -182,15 +204,40 @@ export function fetchPersonalInformation() {
               </div>
 
               <!-- Modal Đổi Mật Khẩu -->
-              
+                <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">-->
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="changePasswordModalLabel">Đổi Mật Khẩu</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label class="form-label">Nhập mật khẩu cũ</label>
+                          <input type="text" class="form-control" id="oldPassword" placeholder="Mật khẩu mới" />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Nhập mật khẩu mới</label>
+                          <input type="text" class="form-control" id="newPassword" placeholder="Xác nhận mật khẩu mới" />
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                      <button type="button" class="btn btn-primary" onclick="savePassword()">Lưu Thay Đổi</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
                 <!-- Profile Card Section -->
                 <div class="col-md-4">
                   <div class="card card-profile text-center">
                     <div class="card-body">
-                      <img src="${perInfo.avatar}" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
+                      <img src="../../static/images/icons/avatar.png" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
                       <h5 class="card-title">${perInfo.fullName}</h5>
                       <p class="card-text">Tôi là người quản lý web</p>
-                      <button type="button" class="btn btn-secondary mt-3" onclick="changeAvatar()">Đổi ảnh đại diện</button>
+<!--                      <button type="button" class="btn btn-secondary mt-3" onclick="changeAvatar()">Đổi ảnh đại diện</button>-->
                     </div>
                   </div>
                 </div>

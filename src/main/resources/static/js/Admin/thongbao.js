@@ -2,11 +2,21 @@
 import {getToken} from "../Share/localStorageService.js";
 
 function fetchAvatar(){
-    const avatarSrc = document.getElementById('avatar').src;
-    const username = document.querySelector('.dropdown-toggle').textContent.trim();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    const token = getToken();
+    client.debug = function (str) {};
+    client.connect({Authorization: `Bearer ${token}`}, function (frame){
+        client.send(`/app/getInfo`,{},JSON.stringify());
+        client.subscribe("/topic/getInfo", function (data) {
+            const response = JSON.parse(data.body);
+            const perInfo = response.result;
+            //const url = "";
+           // document.getElementById('avatar').src ='../../static/images/icons/avatar.png';
+            document.querySelector('.dropdown-toggle').textContent = perInfo.fullName;
+        })
+    });
 
-    console.log('Avatar Source:', avatarSrc);
-    console.log('Username:', username);
 }
 document.addEventListener("DOMContentLoaded", fetchAvatar);
 

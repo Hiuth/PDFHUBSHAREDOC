@@ -91,6 +91,8 @@ public class AccountController {
     }
 
     @PutMapping("/up-password")
+    @MessageMapping("/updatePass")
+    @SendTo("/topic/updatePassword")
     ApiResponse<AccountResponse> updatePassword(@RequestBody @Valid UpdatePassword request) {
         ApiResponse<AccountResponse> response = new ApiResponse<>();
         response.setMessage("Update password: ");
