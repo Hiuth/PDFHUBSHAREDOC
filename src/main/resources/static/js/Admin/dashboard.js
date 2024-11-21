@@ -1,3 +1,5 @@
+import {getToken} from "../Share/localStorageService.js";
+
 document.addEventListener("DOMContentLoaded", function () {
     // Cấu hình chung cho tất cả biểu đồ
     const commonOptions = {
@@ -181,3 +183,57 @@ document.addEventListener("DOMContentLoaded", function () {
         accountChart.update();
     });
 });
+
+function numberOfUser(){
+    const userCountElement = document.querySelector("#numberOfUser h3");
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+        client.send("/app/numberOfAccounts",{},JSON.stringify({}));
+        client.subscribe('/topic/numberOfAcc',function (data) {
+            const response = JSON.parse(data.body);
+            const numberOfAccounts = response.result;
+            userCountElement.textContent = numberOfAccounts;
+        })
+    })
+}
+document.addEventListener("DOMContentLoaded", numberOfUser);
+
+function numberOfDocuments(){
+    const userCountElement = document.querySelector("#numberOfDocuments h3");
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+        // client.debug = function (str) {};
+        client.send("/app/numberOfDocuments",{},JSON.stringify({}));
+        client.subscribe('/topic/numberOfDoc',function (data) {
+            const response = JSON.parse(data.body);
+            const numberOfDocument = response.result;
+            userCountElement.textContent = numberOfDocument;
+        })
+    })
+}
+document.addEventListener("DOMContentLoaded", numberOfDocuments);
+
+
+
+function numberOfDownloads(){
+    const userCountElement = document.querySelector("#numberOfDownloads h3");
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+        client.send("/app/numberOfDownloads",{},JSON.stringify({}));
+        client.subscribe('/topic/numberOfDown',function (data) {
+            const response = JSON.parse(data.body);
+            const numberOfDownload = response.result;
+            userCountElement.textContent = numberOfDownload;
+        })
+    })
+}
+document.addEventListener("DOMContentLoaded", numberOfDownloads);

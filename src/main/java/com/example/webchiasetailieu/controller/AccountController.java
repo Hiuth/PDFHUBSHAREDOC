@@ -134,6 +134,8 @@ public class AccountController {
     }
 
     @GetMapping("/number-of-accounts")
+    @MessageMapping("/numberOfAccounts")
+    @SendTo("/topic/numberOfAcc")
     ApiResponse<Long> getAccountsNumber() {
         return ApiResponse.<Long>builder()
                 .message("Number of accounts")

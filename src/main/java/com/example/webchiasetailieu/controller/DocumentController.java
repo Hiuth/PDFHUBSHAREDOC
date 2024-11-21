@@ -166,6 +166,8 @@ public class DocumentController {
     }
 
     @GetMapping("/number-of-documents")
+    @MessageMapping("/numberOfDocuments")
+    @SendTo("/topic/numberOfDoc")
     ApiResponse<Long> getNumberOfDocuments(){
         return ApiResponse.<Long>builder()
                 .code(1000)
@@ -175,6 +177,8 @@ public class DocumentController {
     }
 
     @GetMapping("/downloads-today")
+    @MessageMapping("/numberOfDownloads")
+    @SendTo("/topic/numberOfDown")
     ApiResponse<Long> getTodayDownloads(){
         return ApiResponse.<Long>builder()
                 .code(1000)

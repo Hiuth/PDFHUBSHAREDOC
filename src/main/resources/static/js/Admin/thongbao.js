@@ -1,6 +1,16 @@
 // Mở/đóng bảng thông báo
 import {getToken} from "../Share/localStorageService.js";
 
+function fetchAvatar(){
+    const avatarSrc = document.getElementById('avatar').src;
+    const username = document.querySelector('.dropdown-toggle').textContent.trim();
+
+    console.log('Avatar Source:', avatarSrc);
+    console.log('Username:', username);
+}
+document.addEventListener("DOMContentLoaded", fetchAvatar);
+
+
 export function toggleNotificationPanel() {
     const panel = document.getElementById("notificationPanel");
     panel.style.display = panel.style.display === "block" ? "none" : "block";
@@ -127,3 +137,6 @@ notificationCount.textContent = notifications.length;
 
 // Gọi hàm khi trang được tải
 document.addEventListener("DOMContentLoaded", loadNotifications);
+
+
+
