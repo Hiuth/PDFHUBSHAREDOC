@@ -12,99 +12,161 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     };
 
-    // Biểu đồ người dùng
-    const userCtx = document.getElementById("userChart").getContext("2d");
-    new Chart(userCtx, {
-        type: "line",
-        data: {
-            labels: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
-            datasets: [
-                {
-                    label: "Số người dùng",
-                    data: [
-                        1000, 1500, 2200, 2800, 3500, 4200, 4800, 5000, 5200, 5400, 5800,
-                        6000,
-                    ],
-                    borderColor: "#8e2de2",
-                    tension: 0.4,
-                },
-            ],
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                y: {
-                    beginAtZero: true,
+    // Hàm khởi tạo biểu đồ người dùng
+    function initUserChart(data) {
+        const userCtx = document.getElementById("userChart").getContext("2d");
+        new Chart(userCtx, {
+            type: "line",
+            data: {
+                labels: [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ],
+                datasets: [
+                    {
+                        label: "Số người dùng",
+                        data: data, // Nhận dữ liệu từ API
+                        borderColor: "#8e2de2",
+                        tension: 0.4,
+                    },
+                ],
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
                 },
             },
-        },
-    });
+        });
+    }
 
-    // Biểu đồ phân bố tài liệu
-    const docCtx = document.getElementById("documentChart").getContext("2d");
-    new Chart(docCtx, {
-        type: "pie",
-        data: {
-            labels: ["PDF", "Word", "Khác"],
-            datasets: [
-                {
-                    data: [450, 300, 200],
-                    backgroundColor: ["#8e2de2", "#4a00e0", "#7c3aed"],
-                },
-            ],
-        },
-        options: commonOptions,
-    });
+    // Hàm khởi tạo biểu đồ phân bố tài liệu
+    function initDocumentChart({ labels, data }) {
+        const docCtx = document.getElementById("documentChart").getContext("2d");
+        new Chart(docCtx, {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        data: data, // Nhận dữ liệu từ API
+                        backgroundColor: ["#8e2de2", "#4a00e0", "#7c3aed"],
+                    },
+                ],
+            },
+            options: commonOptions,
+        });
+    }
 
-    // Biểu đồ lượt tải
-    const downloadCtx = document.getElementById("downloadChart").getContext("2d");
-    new Chart(downloadCtx, {
-        type: "bar",
-        data: {
-            labels: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
-            datasets: [
-                {
-                    label: "Lượt tải",
-                    data: [200, 350, 450, 400, 600, 550, 700, 650, 680, 720, 750, 800],
-                    backgroundColor: "#4a00e0",
-                },
-            ],
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                y: {
-                    beginAtZero: true,
+    // Hàm khởi tạo biểu đồ lượt tải
+    function initDownloadChart(data) {
+        const downloadCtx = document.getElementById("downloadChart").getContext("2d");
+        new Chart(downloadCtx, {
+            type: "bar",
+            data: {
+                labels: [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ],
+                datasets: [
+                    {
+                        label: "Lượt tải",
+                        data: data, // Nhận dữ liệu từ API
+                        backgroundColor: "#4a00e0",
+                    },
+                ],
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
                 },
             },
-        },
-    });
+        });
+    }
+
+    // Hàm lấy dữ liệu từ API
+    async function fetchData(apiUrl) {
+        try {
+            const token = getToken(); // Lấy token từ localStorage (hoặc sessionStorage)
+            if (!token) {
+                throw new Error("Token không tồn tại. Vui lòng đăng nhập.");
+            }
+
+            const response = await fetch(apiUrl, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}` // Thêm token vào tiêu đề
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null; // Trả về null nếu lỗi
+        }
+    }
+
+    // Gọi API và khởi tạo biểu đồ
+    async function initCharts() {
+        // Dữ liệu cho biểu đồ người dùng
+        const userData = await fetchData("/api/user-stats");
+        if (userData) {
+            initUserChart(userData); // `users` là dữ liệu từ API
+        }
+
+        // Dữ liệu cho biểu đồ phân bố tài liệu
+        const docData = await fetchData("http://localhost:8088/doc/doc-type/count");
+        if (docData) {
+            //console.log(docData.result);
+            const labels = docData.result.map(item => item.type); // ['PDF', 'Word', 'Other']
+            const data = docData.result.map(item => item.count);  // [1, 11, 0]
+            initDocumentChart({ labels, data }); // `documents` là dữ liệu từ API
+        }
+
+        // Dữ liệu cho biểu đồ lượt tải
+        const downloadData = await fetchData("http://localhost:8088/doc/monthly-stats");
+        if (downloadData) {
+            const downloadCounts = Array(12).fill(0);
+
+            // Điền giá trị từ API vào mảng
+            downloadData.result.forEach(({ month, downloadCount }) => {
+                downloadCounts[month - 1] = downloadCount; // `month` là từ 1-12
+            });
+            initDownloadChart(downloadCounts); // `downloads` là dữ liệu từ API
+        }
+    }
+
+    // Gọi hàm khởi tạo tất cả biểu đồ
+    initCharts();
 });
 
 

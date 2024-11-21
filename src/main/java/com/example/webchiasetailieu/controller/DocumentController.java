@@ -59,7 +59,7 @@ public class DocumentController {
     @GetMapping("/download/{docId}")
     @MessageMapping("/downloadFile/{docId}")
     @SendTo("/topic/downFile")
-    public ApiResponse<String> handleFileDownload(@PathVariable String docId) throws MessagingException {
+    public ApiResponse<String> handleFileDownload(@DestinationVariable String docId) throws MessagingException {
         return ApiResponse.<String>builder()
                 .message("Download file:")
                 .result(documentService.download(docId))

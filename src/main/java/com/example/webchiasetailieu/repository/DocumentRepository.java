@@ -24,8 +24,8 @@ public interface DocumentRepository extends JpaRepository<Documents, String> {
 
     @Query("SELECT " +
             "SUM(CASE WHEN d.type = 'pdf' THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN d.type = 'word' THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN d.type NOT IN ('pdf', 'word') THEN 1 ELSE 0 END) " +
+            "SUM(CASE WHEN d.type = 'docx' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN d.type NOT IN ('pdf', 'docx') THEN 1 ELSE 0 END) " +
             "FROM Documents d")
     List<Object[]> countDocumentsByType();
 }
