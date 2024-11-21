@@ -10,6 +10,8 @@
     <script defer src="../../static/js/User/include.js"></script>
     <link rel="stylesheet" href="../../static/css/form.css">
     <link rel="stylesheet" href="../../static/css/userManage.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -23,23 +25,21 @@
 
             <form action="" name="problemReport" id="problemForm">
                 <div class="form-group2">
-                    <label for="">Chọn loại vấn đề</label>
-                    <select name="problemType" id="">
-                        <option value="">Chọn vấn đề</option>
-                        <option value="Thay đổi mật khẩu">Thay đổi mật khẩu</option>
-                        <option value="Chỉnh sửa tài khoản">Chỉnh sửa tài khoản</option>
-                    </select>
+                    <label >Chọn loại vấn đề</label>
+                    <input style="width: 200px; flex-grow: 0" readonly value="Báo cáo tài khoản" class="read">
                 </div>
                 <div class="form-group1">
-                    <label for="">Mô tả</label>
+                    <label >Mô tả</label>
                     <textarea name="problemDes" id="problemDes" placeholder="Viết mô tả cụ thể ở đây..."></textarea>
                 </div>
-            </form>
+
 
             <div class="submit">
                 <input type="submit" value="Xác nhận gửi báo cáo">
             </div>
+            </form>
         </div>
     </div>
+<script type="module" src="../../static/js/User/problemReport.js"></script>
 </body>
 </html>
