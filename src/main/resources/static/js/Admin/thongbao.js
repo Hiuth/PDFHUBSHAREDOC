@@ -89,9 +89,8 @@ function updateNotificationCount() {
     const notificationCount = document.getElementById("notificationCount");
     const currentCount = document.querySelectorAll("#notificationList li").length;
     notificationCount.textContent = currentCount;
-
     // Ẩn badge khi không có thông báo
-    if (currentCount === 0) {
+    if (currentCount === 0 || currentCount === null) {
         notificationCount.style.display = "none";
     } else {
         notificationCount.style.display = "flex";

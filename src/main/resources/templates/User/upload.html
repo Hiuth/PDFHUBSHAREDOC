@@ -47,19 +47,19 @@
                     <div class="error"></div>
                     <div class="form-group2">
                         <label for="" class="name-title">Danh mục</label>
-                        <select name="category" id="">
+                        <select name="category" id="folderSelectUser">
                             <option value="">Chọn danh mục</option>
-                            <option value="">Đại học</option>
-                            <option value="">Trung học</option>
+<!--                            <option value="">Đại học</option>-->
+<!--                            <option value="">Trung học</option>-->
                         </select>
                     </div>
                     <div class="error"></div>
                     <div class="form-group2">
                         <label for="" class="name-title">Phân loại</label>
-                        <select name="group" id="">
+                        <select name="group" id="groupSelectUser">
                             <option value="">Chọn phân loại</option>
-                            <option value="">Công nghệ thông tin</option>
-                            <option value="">Toán</option>
+<!--                            <option value="">Công nghệ thông tin</option>-->
+<!--                            <option value="">Toán</option>-->
                         </select>
                         <div class="error"></div>
                     </div>
@@ -71,20 +71,21 @@
                     <div class="form-group2">
                         <label for="" class="name-title">Trả phí</label>
                         <select name="pay" id="">
-                            <option value="Không">Không</option>
-                            <option value="Có">Có</option>
+                            <option value="0">Không</option>
+                            <option value="10">Có</option>
                         </select>
                     </div>
                     <div class="error"></div>
-                    <div class="form-group2">
-                        <label for="" class="name-title">Phí tải về</label>
-                        <div class="inputprice">
-                            <input type="number" min="0" max="500" step="1" id="price" placeholder="0">
-                            <div class="unit">Xu</div>
-                        </div>
-                    </div>
-                    <div class="submit">
-                        <input type="submit" value="Đăng tải">
+<!--                    <div class="form-group2">-->
+<!--                        <label for="" class="name-title">Phí tải về</label>-->
+<!--                        <div class="inputprice">-->
+<!--                            <input type="number" min="0" max="500" step="1" id="price" placeholder="0">-->
+<!--                            <div class="unit">Xu</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="submit" id="uploadFile">
+<!--                        <input type="submit" value="Đăng tải" onclick="uploadDocument()">-->
+                        <button type="button" value="Đăng tải" onclick="uploadDocument()"></button>
                     </div>
                 </form>
                 <div id="pdfview">
@@ -94,4 +95,6 @@
         </div>
     </div>
 </body>
+
+<script type="module" src="../../static/js/User/upload.js"></script>
 </html>
