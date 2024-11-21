@@ -44,8 +44,8 @@ public class FeedBackService {
             throw new AppException(ErrorCode.FEEDBACK_TYPE_INCORRECT);
 
         type = switch (request.getFeedbackType()) {
-            case ANOTHER_PROBLEM -> "Violating content of documents";
-            case REPORT_DOCUMENT -> "Another problem";
+            case ANOTHER_PROBLEM -> "Another problem";
+            case REPORT_DOCUMENT -> "Violating content of documents";
         };
 
         Feedbacks feedbacks = Feedbacks.builder()
