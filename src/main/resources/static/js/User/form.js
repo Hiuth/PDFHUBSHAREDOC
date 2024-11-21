@@ -61,6 +61,7 @@ function ChangeInfo() {
     // Lấy tất cả các input có class 'read' trong form với id 'infoChange'
     document.querySelectorAll("#infoChange .read").forEach(input => {
         input.removeAttribute("readonly");
+        input.removeAttribute("disabled")
         input.style.pointerEvents = "auto"; // Cho phép click vào
         input.style.border = "1px solid #ccc"; // Đặt viền khi có thể chỉnh sửa
     });

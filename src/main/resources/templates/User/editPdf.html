@@ -22,68 +22,73 @@
             <div class="thumnail3">
                 <div class="thumnail-cap">Chỉnh sửa tài liệu</div>
             </div>
-            <form action="" name="upload" id="uploadForm">
-                <div class="form-group1">
-                    <label for="docstitle">Tiêu đề</label>
-                    <textarea name="" id="docstitle" placeholder="Nhập tiêu đề thật sang..."></textarea>
-                </div>
-                <div class="error"></div>
-                <div class="form-group2" id="file-group">
-                    <label class="alt">Tệp tài liệu</label>
-                    <label for="file" id="alter-file">
-                        Chọn file từ máy của bạn
-                        <img src="../../static/images/icons/Folder.png" alt="?">
-                    </label>
-                    <input type="file" name="file" id="file" style="display: none;" onchange="updateFileName()">
-                    <div id="fileName"></div>
-                </div>
-                <div class="error"></div>
-                <div class="group">
-                    <div class="form-group2">
-                        <label for="">Danh mục</label>
-                        <select name="category" id="">
-                            <option value="">Chọn danh mục</option>
-                            <option value="">Đại học</option>
-                            <option value="">Trung học</option>
-                        </select>
+            <div class="main">
+                <form action="" name="upload" id="uploadForm">
+                    <div class="form-group1">
+                        <label for="docstitle">Tiêu đề</label>
+                        <textarea name="" id="docstitle" placeholder="Nhập tiêu đề thật sang..."></textarea>
                     </div>
                     <div class="error"></div>
-                    <div class="form-group2">
-                        <label for="">Nhóm</label>
-                        <select name="group" id="">
-                            <option value="">Chọn nhóm</option>
-                            <option value="">Công nghệ thông tin</option>
-                            <option value="">Toán</option>
-                        </select>
-                    <div class="error"></div>
-                    </div>
-                </div>
-                <div class="form-group1">
-                    <label for="describe">Mô tả</label>
-                    <textarea name="" id="describe" placeholder="Mô tả rõ ràng..."></textarea>
-                    <div class="error"></div>
-                </div>
-                <div class="group">
-                    <div class="form-group2">
-                        <label for="">Trả phí</label>
-                        <select name="pay" id="">
-                            <option value="Không">Không</option>
-                            <option value="Có">Có</option>
-                        </select>
-                    </div>
-                    <div class="error"></div>
-                    <div class="form-group2">
-                        <label for="">Giá</label>
-                        <div class="inputprice">
-                            <input type="number" min="0" max="500" step="1" id="price" placeholder="0">
-                            <div class="unit">Xu</div>
+                    <div class="form-group2" id="file-group">
+                        <label class="alt name-title">Tệp tài liệu</label>
+                        <div class="group3">
+                            <label for="file" id="alter-file">
+                                Chọn file từ máy của bạn
+                                <img src="../../static/images/icons/Folder.png" alt="?">
+                            </label>
+                            <div id="fileName"></div>
                         </div>
+                        <input type="file" name="file" id="file" style="display: none;" onchange="updateFileName()">
+
                     </div>
+                    <div class="error"></div>
+                    <div class="form-group2">
+                        <label for="" class="name-title">Danh mục</label>
+                        <select name="category" id="folderSelectUser">
+                            <option value="">Chọn danh mục</option>
+                            <!--                            <option value="">Đại học</option>-->
+                            <!--                            <option value="">Trung học</option>-->
+                        </select>
+                    </div>
+                    <div class="error"></div>
+                    <div class="form-group2">
+                        <label for="" class="name-title">Phân loại</label>
+                        <select name="group" id="groupSelectUser">
+                            <option value="">Chọn phân loại</option>
+                            <!--                            <option value="">Công nghệ thông tin</option>-->
+                            <!--                            <option value="">Toán</option>-->
+                        </select>
+                        <div class="error"></div>
+                    </div>
+                    <div class="form-group1">
+                        <label for="describe">Mô tả</label>
+                        <textarea name="" id="describe" placeholder="Mô tả rõ ràng..."></textarea>
+                        <div class="error"></div>
+                    </div>
+                    <div class="form-group2">
+                        <label for="" class="name-title">Trả phí</label>
+                        <select name="pay" id="">
+                            <option value="0">Không</option>
+                            <option value="10">Có</option>
+                        </select>
+                    </div>
+                    <div class="error"></div>
+                    <!--                    <div class="form-group2">-->
+                    <!--                        <label for="" class="name-title">Phí tải về</label>-->
+                    <!--                        <div class="inputprice">-->
+                    <!--                            <input type="number" min="0" max="500" step="1" id="price" placeholder="0">-->
+                    <!--                            <div class="unit">Xu</div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <div class="submit" id="uploadFile">
+                        <!--                        <input type="submit" value="Đăng tải" onclick="uploadDocument()">-->
+                        <button type="button" onclick="uploadDocument()">Đăng tải</button>
+                    </div>
+                </form>
+                <div id="pdfview">
+                    <div class="center-text">PDF BẠN TẢI LÊN SẼ ĐƯỢC HIỂN THỊ Ở ĐÂY</div>
                 </div>
-                <div class="submit">
-                    <input type="submit" value="Đăng tải"></input>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </body>

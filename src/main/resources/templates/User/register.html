@@ -17,7 +17,7 @@
         <img src="../../static/images/pdfhub.png" alt="">
         <div class="formname">register</div>
     </div>
-    <form id="get-otp" onsubmit="sendOTP(event)">
+    <form id="get-otp" onsubmit="sendOTP(event, 'REGISTER')">
         <div class="form-group2">
             <label class="static">Email đăng ký</label>
             <input type="email" id="mail" placeholder="Nhập mail của bạn" autocomplete="off">
@@ -55,14 +55,47 @@
         <h3>Đăng ký</h3>
         <button class="close-btn" onclick="closeOTPPopup()">×</button>
     </div>
-    <form id="otp-form" class="form-group1" id="inputOTP" onsubmit="validateOTP(event)">
+    <form id="otp-form" class="form-group1" id="inputOTP" onsubmit="validateOTP(event, 'REGISTER')">
         <div id="OTP-title">
             Nhập mã OTP vừa được gửi về mail của bạn:
         </div>
         <input type="text" id="OTP" placeholder="">
-        <div class="error" style="text-align: center"></div>
-        <input type="submit" value="Xác nhận" id="OTP-submit">
-        <div id="otp-resend">Bạn không nhận được email? <a onclick="sendOTP(event)">Gửi lại</a></div>
+        <div class="error" style="text-align: center; margin-left: 0px"></div>
+<!--        <input type="submit" value="Xác nhận" id="OTP-submit">-->
+        <div class="submit" id="uploadFile">
+            <button type="button" id="OTP-submit" onclick="uploadDocument()">Xác nhận</button>
+        </div>
+        <div id="otp-resend">Bạn không nhận được email? <a onclick="sendOTP(event, 'REGISTER')">Gửi lại</a></div>
+    </form>
+</div>
+
+<div id="success-popup" style="display: ''">
+
+    <div class="welcome">
+        <div class="success-icon">
+            <div class="circle"></div>
+            <div class="checkmark"></div>
+        </div>
+        <div class="welcome-text">Chúc mừng bạn đã đăng ký thành công!</div>
+    </div>
+
+
+    <form id="info-form" class="form-group1" onsubmit="validateOTP(event, 'REGISTER')">
+        <div class="form-btitle">Trước khi bắt đầu, chúng tôi cần 1 vài thông tin của bạn!</div>
+        <div class="form-stitle">Vui lòng cho biết:</div>
+        <div class="form-group2">
+            <label class="static">Giới tính</label>
+            <select id="gender">
+                <option>Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+            </select>
+        </div>
+
+        <div class="form-group2">
+            <label class="static">Ngày sinh</label>
+            <input type="date" id="birthday" width="300px">
+        </div>
     </form>
 </div>
 

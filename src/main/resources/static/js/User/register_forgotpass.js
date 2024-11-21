@@ -1,4 +1,4 @@
-function sendOTP(e) {
+function sendOTP(e, type) {
     e.preventDefault();
 
     // Lấy email từ input field
@@ -12,6 +12,7 @@ function sendOTP(e) {
         return false; // Dừng form submission
     }
 
+    resetButtonText();
     openOTPPopup();
     // Hiển thị spinner
     document.querySelector('#OTP-title').innerHTML = '';
@@ -20,7 +21,7 @@ function sendOTP(e) {
     // Payload yêu cầu
     const requestPayload = {
         email: email,
-        emailType: "REGISTER",
+        emailType: type,
         subject: "Your OTP Code",
         body: "Here is your OTP code for registration.",
         createBy: "",
@@ -50,12 +51,12 @@ function sendOTP(e) {
         })
         .finally(() => {
             document.querySelector('#OTP-title').innerHTML = '';
-            document.querySelector('#OTP-title').innerHTML = '<img style="height: 30px;" src="../../static/images/icons/icons8-yes-48.png"><br>Mail đã được gửi thành công <br> Nhập mã OTP vừa được gửi về mail của bạn:'
+            document.querySelector('#OTP-title').innerHTML = '<img style="height: 35px; margin: -5px" src="../../static/images/icons/icons8-yes-48.png"><br>Mail đã được gửi thành công <br> Nhập mã OTP vừa được gửi về mail của bạn:'
             document.querySelector('#OTP-title').classList.add('animate-fadeInUp');
 
             setTimeout(() => {
                 document.querySelector('#OTP-title').classList.remove('animate-fadeInUp');
-            }, 300);
+            }, 500);
         });
 
     return false; // Dừng form submission
@@ -67,12 +68,9 @@ function openOTPPopup() {
     document.getElementById('overlay').style.display = '';
 }
 
-function openNextForm (){
-    document.getElementById("register").style.display = "";
-}
-
-function validateOTP(event) {
+function validateOTP(event, type) {
     event.preventDefault();
+
     // Lấy giá trị từ input
     const otp = document.getElementById("OTP").value.trim();
     const email = document.getElementById("mail").value.trim();
@@ -84,6 +82,8 @@ function validateOTP(event) {
         return false;
     }
 
+    changeButtonText();
+
     // Tạo dữ liệu request
     const otpRequest = {
         otp: otp,
@@ -91,20 +91,25 @@ function validateOTP(event) {
     };
 
     // Gửi yêu cầu đến API
-    fetch("http://localhost:8080/email/validOTP", {
+    fetch("http://localhost:8088/email/validOTP", { // Sửa lại URL khớp với Controller
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(otpRequest)
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // Chờ response JSON
+        })
         .then((data) => {
             if (data.code === 1000 && data.result) {
-                alert("OTP chính xác! Đang chuyển sang bước tiếp theo...");
-
+                afterCheckOTP(type);
             } else {
-                form.querySelector(".error").textContent = "OTP không đúng";
+                form.querySelector(".error").textContent = "OTP không đúng.";
+                resetButtonText();
             }
         })
         .catch((error) => {
@@ -114,3 +119,97 @@ function validateOTP(event) {
 
     return false;
 }
+
+function closeOTPPopup() {
+    document.getElementById('otp-popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+function changeButtonText() {
+    const button = document.getElementById('OTP-submit');
+    button.textContent = "Đang xác nhận..."; // Đổi text
+    button.classList.add('loading'); // Thêm class loading
+    button.disabled = true; // Vô hiệu hóa nút
+}
+
+function resetButtonText() {
+    const button = document.getElementById('OTP-submit');
+    button.textContent = 'Xác nhận'; // Đổi text
+    button.classList.remove('loading'); // Thêm class loading
+    button.disabled = false; // Vô hiệu hóa nút
+}
+
+function afterCheckOTP(type) {
+    resetButtonText()
+
+    document.querySelector('#OTP-title').innerHTML = '';
+    document.querySelector('#OTP-title').innerHTML = '<div class="spinner"></div><br>Xác nhận OTP thành công<br> Đang chuyển hướng...'
+    document.querySelector('#OTP-title').classList.add('animate-fadeInUp');
+
+    setTimeout(() => {
+        document.querySelector('#OTP-title').classList.remove('animate-fadeInUp');
+    }, 500);
+
+    setTimeout(closeOTPPopup, 5000);
+
+    document.querySelector('#get-otp').style.display = 'none';
+    if(type == "REGISTER"){
+        document.querySelector('#register').style.display = '';
+        document.querySelector('#register').classList.add('animate-fadeInUp');
+        setTimeout(() => {
+            document.querySelector('#register').classList.remove('animate-fadeInUp');
+        }, 500);
+    } else if (type == "FORGOT_PASSWORD") {
+        document.querySelector('#resetpass').style.display = '';
+        document.querySelector('#resetpass').classList.add('animate-fadeInUp');
+        setTimeout(() => {
+            document.querySelector('#resetpass').classList.remove('animate-fadeInUp');
+        }, 500);
+    }
+
+    setSession("nextform", "form2", 10);
+}
+
+// Hàm setSession với key và giá trị hết hạn trong 10 phút
+function setSession(key, value, ttlInMinutes) {
+    const now = new Date();
+    const item = {
+        value: value,
+        expiry: now.getTime() + ttlInMinutes * 60 * 1000 // 10 phút = 600000ms
+    };
+    sessionStorage.setItem(key, JSON.stringify(item));
+}
+
+// Hàm getSession để kiểm tra giá trị và thời gian hết hạn
+function getSession(key) {
+    const itemStr = sessionStorage.getItem(key);
+
+    if (!itemStr) {
+        return null; // Không tồn tại
+    }
+
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    // Nếu đã hết hạn, xóa key và trả về null
+    if (now.getTime() > item.expiry) {
+        sessionStorage.removeItem(key);
+        return null;
+    }
+    return item.value;
+}
+
+// Hàm kiểm tra và hiển thị form tương ứng khi tải trang
+function checkForm() {
+    const nextForm = getSession("nextform");
+
+    if (nextForm === "form2") {
+        document.getElementById("get-otp").style.display = "none"; // Ẩn form 1
+        document.getElementById("register").style.display = ''; // Hiển thị form 2
+    } else {
+        document.getElementById("get-otp").style.display = ''; // Hiển thị form 1
+        document.getElementById("register").style.display = "none"; // Ẩn form 2
+    }
+}
+
+window.onload = checkForm;

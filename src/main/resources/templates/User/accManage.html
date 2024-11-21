@@ -55,12 +55,15 @@
                         <div class="error"></div>
                         <div class="form-group2" id="read-class">
                             <div class="static">Giới tính</div>
-                            <input class="read" value="Nam" id="gender" readonly>
+                            <select class="read" value="Nam" id="gender" disabled>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
                         </div>
                         <div class="error"></div>
                         <div class="form-group2" id="read-class">
                             <div class="static">Sinh nhật</div>
-                            <input class="read" value="22/10/2001" id="birthday" readonly>
+                            <input type="date" class="read" value="2001-10-12" id="birthday" readonly>
                         </div>
                         <div class="error"></div>
                     </form>
