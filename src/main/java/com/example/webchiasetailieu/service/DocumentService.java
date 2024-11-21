@@ -23,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ public class DocumentService {
     MailService mailService;
     DownloadHistoryRepository downloadHistoryRepository;
     NotificationService notificationService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     //public
     public List<Documents> getAll(){

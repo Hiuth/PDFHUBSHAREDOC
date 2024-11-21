@@ -472,3 +472,64 @@ function displayErrorMessage(message) {
 
 // Call the function when the page loads
 document.addEventListener('DOMContentLoaded', fetchDetailsDocument);
+
+function searchDocument(Key, i = 0) {
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.connect({}, function (frame) {
+        client.debug = function (str) {}; // Tắt debug
+
+        client.send(`/app/findDoc/${Key}`, {}, JSON.stringify({Key}));
+
+        client.subscribe('/topic/findDocument', function (data) {
+            const response = JSON.parse(data.body);
+            const documents = response.result;
+            const docsGroup = document.querySelectorAll('.Docs-group')[i];
+            if (!docsGroup) {
+                console.error("Docs-group element not found");
+                return;
+            }
+
+            docsGroup.innerHTML = ''; // Xóa nội dung cũ
+
+            if (Array.isArray(documents) && documents.length > 0) {
+                documents.forEach((doc) => {
+                    const documentLink = document.createElement('a');
+                    documentLink.href = `docsDetail.html?docId=${doc.id}`;
+                    documentLink.classList.add('Docs');
+                    const imageUrl = `../../static/images/${doc.avatar}`;
+
+                    documentLink.innerHTML = `
+                        <img src="${imageUrl}" alt="">
+                        <div class="docTitle">${doc.name}</div>
+                        <div class="docInfor">
+                            <div class="uptime">
+                                <img src="../../static/images/icons/Clock.png" alt="">
+                                <div>${doc.createAt}</div>
+                            </div>
+                            <div class="downtime">
+                                <img src="../../static/images/icons/Downloading Updates.png" alt="">
+                                <div>${doc.downloadTimes}</div>
+                            </div>
+                            <div class="price">
+                                <img src="../../static/images/icons/icons8-coin-32.png" alt="">
+                                <div>${doc.point}</div>
+                            </div>
+                        </div>
+                    `;
+                    docsGroup.appendChild(documentLink);
+                });
+            } else {
+                // Hiển thị thông báo nếu không có kết quả nào phù hợp
+                const noResultsDiv = document.createElement('div');
+                noResultsDiv.classList.add('no-results');
+                noResultsDiv.innerHTML = `
+                <img src="../../static/images/icons/Box-Important.png">
+                <div>Không tìm thấy tài liệu phù hợp</div>`
+                docsGroup.appendChild(noResultsDiv);
+            }
+        });
+    }, function (error) {
+        console.error("Connection error: ", error);
+    });
+}
