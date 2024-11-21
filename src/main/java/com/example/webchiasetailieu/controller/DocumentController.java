@@ -208,4 +208,13 @@ public class DocumentController {
                 .result(documentService.getDocumentTypeCounts())
                 .build();
     }
+
+    @GetMapping("/upload/monthly")
+    ApiResponse<List<MonthlyUploadStatsResponse>> getMonthlyUploads(){
+        return ApiResponse.<List<MonthlyUploadStatsResponse>>builder()
+                .code(1000)
+                .message("Document type count:")
+                .result(documentService.getUploadsByMonth())
+                .build();
+    }
 }

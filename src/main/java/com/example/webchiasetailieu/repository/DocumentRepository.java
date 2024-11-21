@@ -28,4 +28,10 @@ public interface DocumentRepository extends JpaRepository<Documents, String> {
             "SUM(CASE WHEN d.type NOT IN ('pdf', 'docx') THEN 1 ELSE 0 END) " +
             "FROM Documents d")
     List<Object[]> countDocumentsByType();
+
+    @Query("SELECT MONTH(d.createdAt) AS month, COUNT(d) AS documentCount " +
+            "FROM Documents d " +
+            "WHERE YEAR(d.createdAt) = :currentYear " +
+            "GROUP BY MONTH(d.createdAt)")
+    List<Object[]> countDocumentsByMonth(int currentYear);
 }

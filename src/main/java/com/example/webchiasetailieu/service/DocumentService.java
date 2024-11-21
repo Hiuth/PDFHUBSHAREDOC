@@ -4,10 +4,7 @@ import com.example.webchiasetailieu.dto.request.DocumentCreationRequest;
 import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
 import com.example.webchiasetailieu.dto.request.UpdateDocumentRequest;
-import com.example.webchiasetailieu.dto.response.DocumentResponse;
-import com.example.webchiasetailieu.dto.response.DocumentTypeCountResponse;
-import com.example.webchiasetailieu.dto.response.DriveResponse;
-import com.example.webchiasetailieu.dto.response.MonthlyDownloadStatsResponse;
+import com.example.webchiasetailieu.dto.response.*;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.DocCategory;
 import com.example.webchiasetailieu.entity.Documents;
@@ -297,6 +294,20 @@ public class DocumentService {
                 new DocumentTypeCountResponse("Word", ((Number) countArray[1]).longValue()),
                 new DocumentTypeCountResponse("Other", ((Number) countArray[2]).longValue())
         );
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<MonthlyUploadStatsResponse> getUploadsByMonth() {
+        int currentYear = LocalDateTime.now().getYear();
+
+        List<Object[]> rawStats = documentRepository.countDocumentsByMonth(currentYear);
+
+        return rawStats.stream()
+                .map(record -> new MonthlyUploadStatsResponse(
+                        (int) record[0],
+                        (long) record[1]
+                ))
+                .toList();
     }
 
     private DocumentResponse convertToResponse(Documents documents) {
