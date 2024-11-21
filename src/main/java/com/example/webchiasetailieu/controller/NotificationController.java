@@ -28,8 +28,6 @@ public class NotificationController {
         ApiResponse<NotificationResponse> response = new ApiResponse<>();
         response.setMessage("Create notification: ");
         response.setResult(service.notify(request));
-//        ApiResponse<List<Notifications>> wsResponse = getMyNotification();
-//        messagingTemplate.convertAndSend("/topic/getNotification", wsResponse);
         return response;
     }
 

@@ -36,6 +36,7 @@ public class OTPService {
         return rawOtp;
     }
 
+    //public
     public boolean validateSecureOTP(ValidationOTPRequest request) {
         if (!otpStorage.containsKey(request.getEmail())) {
             return false;
