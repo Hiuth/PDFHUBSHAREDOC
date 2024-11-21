@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.controller;
 
 import com.example.webchiasetailieu.dto.request.CreateMyPerInfoRequest;
+import com.example.webchiasetailieu.dto.request.CreationInfoAfterRegisterRequest;
 import com.example.webchiasetailieu.dto.request.UpdatePerInfoRequest;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.dto.response.PerInfoResponse;
@@ -26,7 +27,6 @@ public class PersonalInformationController {
     PersonalInformationService service;
 
     @PostMapping
-
     ApiResponse<PerInfoResponse> addMyPersonalInformation(@RequestBody @Valid CreateMyPerInfoRequest request) {
         return ApiResponse.<PerInfoResponse>builder()
                 .code(1000)
@@ -63,6 +63,15 @@ public class PersonalInformationController {
                 .code(1000)
                 .message("Create my avatar")
                 .result(service.saveMyAvatar(file))
+                .build();
+    }
+
+    @PostMapping("/register/add-info")
+    ApiResponse<PerInfoResponse> addMyPersonalInformationAfterRegister(@RequestBody @Valid CreationInfoAfterRegisterRequest request) {
+        return ApiResponse.<PerInfoResponse>builder()
+                .code(1000)
+                .message("Create my personal information")
+                .result(service.createInfoAfterRegister(request))
                 .build();
     }
 }

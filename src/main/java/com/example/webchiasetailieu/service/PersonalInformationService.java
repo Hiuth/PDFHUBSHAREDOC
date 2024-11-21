@@ -1,6 +1,7 @@
 package com.example.webchiasetailieu.service;
 
 import com.example.webchiasetailieu.dto.request.CreateMyPerInfoRequest;
+import com.example.webchiasetailieu.dto.request.CreationInfoAfterRegisterRequest;
 import com.example.webchiasetailieu.dto.request.UpdatePerInfoRequest;
 import com.example.webchiasetailieu.dto.response.DriveResponse;
 import com.example.webchiasetailieu.dto.response.PerInfoResponse;
@@ -72,6 +73,22 @@ public class PersonalInformationService {
     public PerInfoResponse saveMyAvatar(MultipartFile file) throws IOException, GeneralSecurityException {
         PersonalInformation personalInformation = getPerInfoFromContext();
         personalInformation.setAvatar(upImage(file).getUrl());
+        return convertToResponse(repository.save(personalInformation));
+    }
+
+    //public
+    public PerInfoResponse createInfoAfterRegister(CreationInfoAfterRegisterRequest request) throws AppException {
+        Account account = accountRepository.findById(request.getAccountId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(repository.existsByAccount_Id(account.getId()))
+            throw new AppException(ErrorCode.PER_INFO_EXISTED);
+        PersonalInformation personalInformation = PersonalInformation.builder()
+                .fullName(request.getFullName())
+                .gender(request.getGender())
+                .birthday(request.getBirthday())
+                .account(account)
+                .build();
+
         return convertToResponse(repository.save(personalInformation));
     }
 

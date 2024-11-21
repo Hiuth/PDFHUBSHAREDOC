@@ -4,10 +4,14 @@ import com.example.webchiasetailieu.dto.request.PermissionRequest;
 import com.example.webchiasetailieu.dto.request.RoleRequest;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Permission;
+import com.example.webchiasetailieu.entity.PersonalInformation;
 import com.example.webchiasetailieu.entity.Role;
 import com.example.webchiasetailieu.enums.UserRole;
+import com.example.webchiasetailieu.exception.AppException;
+import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.PermissionRepository;
+import com.example.webchiasetailieu.repository.PersonalInformationRepository;
 import com.example.webchiasetailieu.repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -50,7 +54,7 @@ public class ApplicationInitConfig {
 
     @Bean
     @Transactional
-    ApplicationRunner applicationRunner(AccountRepository accountRepository) {
+    ApplicationRunner applicationRunner(AccountRepository accountRepository, PersonalInformationRepository personalInformationRepository) {
         return args -> {
 
             JsonEncryptorUtil jsonEncryptorUtil = new JsonEncryptorUtil();
@@ -119,7 +123,6 @@ public class ApplicationInitConfig {
                 }
             }
 
-
             if(accountRepository.findByEmail("pdfhubsharedoc@gmail.com").isEmpty()) {
                 Account account = Account.builder()
                         .email("pdfhubsharedoc@gmail.com")
@@ -128,6 +131,16 @@ public class ApplicationInitConfig {
                         .roles(new HashSet<>(roleRepository.findAllById(List.of(UserRole.ADMIN.name()))))
                         .build();
                 accountRepository.save(account);
+                log.warn("admin account created with default password : admin, please change it!");
+            }
+
+            Account account = accountRepository.findByEmail("pdfhubsharedoc@gmail.com")
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            if(personalInformationRepository.findByAccountId(account.getId()) == null) {
+                personalInformationRepository.save(PersonalInformation.builder()
+                                .account(account)
+                                .fullName("admin")
+                        .build());
                 log.warn("admin account created with default password : admin, please change it!");
             }
         };
