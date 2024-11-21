@@ -38,7 +38,6 @@
 }
 
 .form-group1 label, .form-group2 label{
-    padding-bottom: 2px;
     font-weight: bold;
     font-size: 18px;
     white-space: nowrap;
@@ -509,6 +508,9 @@ select[disabled] {
     font-size: 0.8em;
 }
 
+input[type='date']:read-only{
+    border: none;
+}
 
 .spinner {
     width: 20px;
@@ -571,13 +573,11 @@ button#OTP-submit.loading{
 
 #success-popup{
     position: fixed;
-    top: 60%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -60%);
-    width: 700px;
-    height: 300px;
-    background-color: rgba(255,255,255, 0.9);
-
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: rgba(255,255,255);
     border-radius: 8px;
     padding: 30px 40px;
     z-index: 2;
@@ -596,7 +596,25 @@ button#OTP-submit.loading{
 }
 
 #info-form .form-group2 .static{
-    min-width: 85px;
+    min-width: 88px;
+}
+
+.form-btitle{
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 5px;
+    color: #3b82f6;
+}
+
+.form-stitle{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#info-form {
+    margin: 0px auto;
+    margin-bottom: 20px;
 }
 
 .welcome{
@@ -607,12 +625,22 @@ button#OTP-submit.loading{
     justify-content: center;
 }
 
+.welcome-title{
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.welcome-text{
+    font-size: 15px;
+}
+
 .success-icon {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     margin-bottom: 20px;
-    margin-top: -100px;
+    margin-top: -90px;
 }
 
 .circle {
@@ -620,9 +648,9 @@ button#OTP-submit.loading{
     top: 50%; /* Đặt vị trí bắt đầu */
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    width: 150px;
-    height: 150px;
-    background-color: #4caf50;
+    width: 120px;
+    height: 120px;
+    background-color: #0074ed;
     border-radius: 50%;
     animation: circle-grow-move 0.6s ease-in-out forwards;
 }
@@ -632,10 +660,10 @@ button#OTP-submit.loading{
     top: 50%;
     left: 50%;
     width: 30px;
-    height: 80px;
+    height: 60px;
     transform: translate(-50%, -50%) rotate(45deg) scale(0);
-    border-right: 12px solid #fff;
-    border-bottom: 12px solid #fff;
+    border-right: 10px solid #fff;
+    border-bottom: 10px solid #fff;
     animation: checkmark-draw 0.4s ease-out 0.6s forwards;
 }
 
@@ -658,3 +686,4 @@ button#OTP-submit.loading{
         transform: translate(-50%, -50%) rotate(45deg) scale(1);
     }
 }
+

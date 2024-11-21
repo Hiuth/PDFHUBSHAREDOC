@@ -1,91 +1,83 @@
-table {
-    width: 100%;
-    box-sizing: border-box;
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: calc(100vh - 160px);
-    position: relative;
-}
-
-thead {
-    background-color: rgb(221, 73, 110);
-    color: white;
-}
-
-#BigHeader{
+#BigHeader {
     text-align: center;
     font-size: 30px;
     padding: 20px 0px;
-    z-index: 1;
     color: #D82B8A;
-    width: calc(100vw - 40px);
-    background-color: none;
-    margin-left: 0px;
     background: url('../../static/images/thumnail3.png') center center;
     background-size: cover;
-    width: 100%;
     position: sticky;
     top: 0;
-    
 }
-
-table, th{
-    border: 1px solid gainsboro;
+.container {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+.table-wrapper {
+    height: calc(100vh - 145px);
+    overflow-y: auto;
+}
+table {
+    width: 100%;
     border-collapse: collapse;
 }
-
-table{
-    border-left: none;
-    border-right: none;
+thead {
+    position: sticky;
+    top: 0;
+    background-color: rgb(221, 73, 110);
+    color: white;
+    z-index: 1;
 }
-
-.container{
-    box-sizing: border-box;
-}
-
-th{
-    padding: 15px 15px;
+th {
+    padding: 15px;
     text-align: left;
     text-transform: uppercase;
+    border: 1px solid gainsboro;
+    min-width: 100px;
 }
-
-td{
-    padding: 14px 14px;
-    background-color: #f1f1f1;
+td {
+    padding: 14px;
     background-color: white;
     border-bottom: 1px solid gainsboro;
-    max-height: 50px;
+    white-space: nowrap;
 }
-
-td a{
+td a {
     color: white;
     background-color: #166FF4;
     padding: 8px 10px;
     border-radius: 10px;
-    margin-right: 0px;
+    text-decoration: none;
 }
-
-/* Màu sắc cho các trạng thái phản hồi */
 .status-responded {
     color: green;
     font-weight: bold;
 }
-
 .status-not-responded {
     color: blue;
     font-weight: bold;
 }
 
-/* Cố định cột Chi tiết */
-th:nth-child(7),
-td:nth-child(7) {
-    position: sticky;
-    right: 0;
-    z-index: 5; /* Đảm bảo nó nằm trên các phần tử khác khi cuộn ngang */
-    background-color: white;
-    border-left: 1px solid gainsboro;
+.read{
+    flex-grow: 0;
+    border: none;
+    outline: none;
+    background-color: #e8e8e8;
 }
 
-th:nth-child(7) {
-   background-color: rgb(221, 73, 110);
+#problemDes, #reply{
+    padding-left: 20px;
+}
+
+.form-group2 label{
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.form-group1 label{
+    padding-bottom: 2px;
+    margin-bottom: 0px;
+}
+
+.form-group2 .DocsLink{
+    background-color: #155db3;
 }

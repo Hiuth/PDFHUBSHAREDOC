@@ -68,6 +68,15 @@ function openOTPPopup() {
     document.getElementById('overlay').style.display = '';
 }
 
+function nextFrame(){
+    document.querySelector('.welcome').style.display = 'none';
+    document.getElementById('info-form').style.display = '';
+    document.getElementById('info-form').classList.add('animate-fadeInUp');
+    setTimeout(() => {
+        document.querySelector('#info-form').classList.remove('animate-fadeInUp');
+    }, 500);
+}
+
 function validateOTP(event, type) {
     event.preventDefault();
 
@@ -78,7 +87,7 @@ function validateOTP(event, type) {
 
     // Kiểm tra input
     if (!otp || otp.length !== 6) {
-        document.querySelector(".error").textContent = "OTP phải có đúng 6 ký tự.";
+        form.textContent = "OTP phải có đúng 6 ký tự.";
         return false;
     }
 
@@ -142,6 +151,8 @@ function resetButtonText() {
 function afterCheckOTP(type) {
     resetButtonText()
 
+    setTimeout(closeOTPPopup, 5000);
+
     document.querySelector('#OTP-title').innerHTML = '';
     document.querySelector('#OTP-title').innerHTML = '<div class="spinner"></div><br>Xác nhận OTP thành công<br> Đang chuyển hướng...'
     document.querySelector('#OTP-title').classList.add('animate-fadeInUp');
@@ -149,8 +160,6 @@ function afterCheckOTP(type) {
     setTimeout(() => {
         document.querySelector('#OTP-title').classList.remove('animate-fadeInUp');
     }, 500);
-
-    setTimeout(closeOTPPopup, 5000);
 
     document.querySelector('#get-otp').style.display = 'none';
     if(type == "REGISTER"){
@@ -213,3 +222,167 @@ function checkForm() {
 }
 
 window.onload = checkForm;
+
+function register(e) {
+    e.preventDefault();
+
+    // Lấy giá trị từ các input field
+    const name = document.getElementById("name").value.trim();
+    const password = document.getElementById("npass").value.trim();
+    const confirmPassword = document.getElementById("repass").value.trim();
+
+    // Xóa lỗi cũ
+    const errorElements = document.querySelectorAll(".error");
+    errorElements.forEach(error => error.textContent = "");
+
+    let hasError = false;
+
+    // Kiểm tra rỗng và các điều kiện đầu vào
+    if (!name) {
+        document.querySelectorAll(".error")[1].textContent = "Họ và tên không được để trống.";
+        hasError = true;
+    } else if (name.length < 5) {
+        document.querySelectorAll(".error")[1].textContent = "Họ và tên phải có ít nhất 5 ký tự.";
+        hasError = true;
+    }
+
+    if (!password) {
+        document.querySelectorAll(".error")[2].textContent = "Mật khẩu không được để trống.";
+        hasError = true;
+    } else if (password.length < 6) {
+        document.querySelectorAll(".error")[2].textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
+        hasError = true;
+    }
+
+    if (!confirmPassword) {
+        document.querySelectorAll(".error")[3].textContent = "Vui lòng xác nhận mật khẩu.";
+        hasError = true;
+    } else if (password !== confirmPassword) {
+        document.querySelectorAll(".error")[3].textContent = "Mật khẩu xác nhận không khớp.";
+        hasError = true;
+    }
+
+    if (hasError) {
+        return false; // Dừng việc gửi form nếu có lỗi
+    }
+
+    const button = document.getElementById('register-submit');
+    button.textContent = "Đang xác nhận..."; // Đổi text
+    button.classList.add('loading'); // Thêm class loading
+    button.disabled = true; // Vô hiệu hóa nút
+
+    // Payload yêu cầu
+    const requestPayload = {
+        name: name,
+        password: password,
+        email: document.getElementById("mail").value.trim() // Thêm email nếu cần
+    };
+
+    // Gửi API
+    fetch("http://localhost:8088/account", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestPayload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Xử lý kết quả
+            if (data.code && data.code !== 1000) {
+                document.querySelectorAll(".error")[3].textContent = data.message || "Đăng ký không thành công."; // Thông báo lỗi từ API
+            } else {
+                document.querySelector('#success-popup').style.display = '';
+            }
+        })
+        .catch(error => {
+            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+            console.error("Register error:", error);
+        });
+
+    return false; // Dừng form submission
+}
+
+function createPerInfo(e) {
+    e.preventDefault();
+
+    // Lấy giá trị từ các input fields
+    const fullName = document.getElementById("fname").value.trim();
+    const gender = document.getElementById("gender").value.trim();
+    const birthday = document.getElementById("birthday").value;
+
+    // Xóa thông báo lỗi cũ
+    document.querySelectorAll(".error").forEach(errorDiv => errorDiv.textContent = "");
+
+    let hasError = false;
+
+    // Kiểm tra lỗi đầu vào và hiển thị lỗi
+    if (!fullName) {
+        setError("fname", "Họ tên không được để trống.");
+        hasError = true;
+    } else if (fullName.length < 5) {
+        setError("fname", "Họ tên phải có ít nhất 5 ký tự.");
+        hasError = true;
+    }
+
+    if (!gender || gender === "Chọn giới tính") {
+        setError("gender", "Vui lòng chọn giới tính.");
+        hasError = true;
+    }
+
+    if (!birthday) {
+        setError("birthday", "Vui lòng chọn ngày sinh.");
+        hasError = true;
+    } else if (new Date(birthday) >= new Date()) {
+        setError("birthday", "Ngày sinh không hợp lệ.");
+        hasError = true;
+    }
+
+    if (hasError) {
+        return false; // Dừng xử lý nếu có lỗi
+    }
+
+    // Payload yêu cầu
+    const requestPayload = {
+        fullName: fullName,
+        gender: gender === "Nam" ? "Male" : "Female",
+        birthday: birthday
+    };
+
+    // Gửi API
+    fetch("http://localhost:8088/perInfo", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestPayload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Xử lý kết quả từ API
+            if (data.code && data.code !== 1000) {
+                document.querySelector('.form-stitle').textContent = data.message || "Không thể tạo thông tin cá nhân.";
+            } else {
+                document.querySelector('.form-stitle').innerHTML = '<div class="spinner"></div><br>Đã tạo thông tin thành công, đang chuyển hướng về trang đăng nhập';
+                setTimeout(() => {
+                    window.location.href = "login.html"; // Đường dẫn tới trang login
+                }, 5000); // 5000ms = 5 giây
+            }
+        })
+        .catch(error => {
+            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+            console.error("Create PerInfo error:", error);
+        });
+
+    return false; // Dừng form submission
+}
+
+// Hàm đặt thông báo lỗi dưới input tương ứng
+function setError(fieldId, message) {
+    const inputField = document.getElementById(fieldId);
+    const errorDiv = inputField.parentElement.nextElementSibling; // Lấy div.error kế tiếp
+    if (errorDiv && errorDiv.classList.contains("error")) {
+        errorDiv.textContent = message;
+    }
+}
+

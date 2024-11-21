@@ -26,7 +26,7 @@
         <a href="login.html" class="redirect" id="redirect-login">Đã có tài khoản? Đăng nhập</a>
         <input type="submit" value="Tiếp theo">
     </form>
-    <form id="register" style="display: none">
+    <form id="register" style="display: none" onsubmit="register(event)">
         <div class="form-group2">
             <label class="static">Họ và tên</label>
             <input type="text" id="name" placeholder="Nhập họ và tên" autocomplete="off">
@@ -45,7 +45,7 @@
         <div class="error"></div>
         <a href="login.html" class="redirect" id="redirect-login">Đã có tài khoản? Đăng nhập</a>
 
-        <input type="submit" value="Đăng ký">
+        <input type="submit" value="Đăng ký" id="register-submit">
     </form>
 </div>
 
@@ -63,40 +63,27 @@
         <div class="error" style="text-align: center; margin-left: 0px"></div>
 <!--        <input type="submit" value="Xác nhận" id="OTP-submit">-->
         <div class="submit" id="uploadFile">
-            <button type="button" id="OTP-submit" onclick="uploadDocument()">Xác nhận</button>
+            <button type="submit" id="OTP-submit">Xác nhận</button>
         </div>
         <div id="otp-resend">Bạn không nhận được email? <a onclick="sendOTP(event, 'REGISTER')">Gửi lại</a></div>
     </form>
 </div>
 
-<div id="success-popup" style="display: ''">
+<div id="success-popup" style="display: none">
 
     <div class="welcome">
         <div class="success-icon">
             <div class="circle"></div>
             <div class="checkmark"></div>
         </div>
-        <div class="welcome-text">Chúc mừng bạn đã đăng ký thành công!</div>
+        <div class="welcome-title">Đăng ký thành công!</div>
+        <div class="welcome-text">Chúc mừng bạn đã đăng ký thành công và trở thành 1 thành viên của PDFHUB.
+            <br>Cùng đóng góp thật nhiều cho cộng đồng để có được những tài liệu quý giá
+        </div>
+        <div class="submit">
+            <button onclick="nextFrame1()">Tiếp theo</button>
+        </div>
     </div>
-
-
-    <form id="info-form" class="form-group1" onsubmit="validateOTP(event, 'REGISTER')">
-        <div class="form-btitle">Trước khi bắt đầu, chúng tôi cần 1 vài thông tin của bạn!</div>
-        <div class="form-stitle">Vui lòng cho biết:</div>
-        <div class="form-group2">
-            <label class="static">Giới tính</label>
-            <select id="gender">
-                <option>Chọn giới tính</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-            </select>
-        </div>
-
-        <div class="form-group2">
-            <label class="static">Ngày sinh</label>
-            <input type="date" id="birthday" width="300px">
-        </div>
-    </form>
 </div>
 
 </body>
