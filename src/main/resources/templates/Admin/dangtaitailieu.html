@@ -218,16 +218,14 @@
               </div>
 
               <div class="mb-3">
-                <label for="documentFile" class="form-label">Chọn ảnh bìa(tạm thời nếu nếu up bài test hàm thì đừng chọn cái này. vô trong file js mà đổi tên)</label>
-                <input
-                        type="file"
-                        class="form-control"
-                        id="documentAvatar"
-                        accept="image/*"
-                        required
-                />
+                <label for="documentAvatar" class="form-label">Chọn ảnh bìa</label>
+                <select class="form-control" id="documentAvatar" required>
+                  <option value="image1.jpg">Ảnh 1</option>
+                  <option value="image2.jpg">Ảnh 2</option>
+                  <option value="image3.jpg">Ảnh 3</option>
+                  <option value="image4.jpg">Ảnh 4</option>
+                </select>
               </div>
-
               <button type="button" class="btn btn-primary" onclick="upDocument()">Tải lên</button>
 
               <div class="progress mt-3" style="display: none">

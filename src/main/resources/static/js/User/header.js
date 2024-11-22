@@ -143,7 +143,7 @@ function setupEventListeners() {
 }
 
 // Hàm xử lý tìm kiếm
-export function searchRedirect(event) {
+ function searchRedirect(event) {
     event.preventDefault();
     const searchInput = document.getElementById('search-input');
     const searchQuery = searchInput?.value;
@@ -153,8 +153,13 @@ export function searchRedirect(event) {
     }
 }
 
+document.addEventListener('headerLoaded', function() {
+    initializeHeader();
+});
 // Khởi tạo khi DOM đã sẵn sàng
 document.addEventListener('DOMContentLoaded', initializeHeader);
 
 // Export các hàm cần thiết
-export { initializeHeader, searchRedirect };
+// export { initializeHeader, searchRedirect };
+window.initializeHeader = initializeHeader;
+window.searchRedirect = searchRedirect;

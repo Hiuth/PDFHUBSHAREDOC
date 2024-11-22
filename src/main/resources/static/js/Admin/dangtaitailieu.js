@@ -71,8 +71,8 @@ export function upDocument() {
     loadingElement.style.display = "flex";
     // Lấy giá trị từ form
     const documentFile = document.getElementById("documentFile").files[0];
-    //const documentAvatar = document.getElementById("documentAvatar").files[0];
-    const documentAvatar ="sachToan.jpg"
+    const documentAvatar = document.getElementById("documentAvatar").value;
+    // const documentAvatar ="sachToan.jpg"
     // Kiểm tra file bắt buộc
     if (!documentFile) {
         console.error("Vui lòng chọn file tài liệu");

@@ -8,6 +8,7 @@ fetch('header.html')
         // Sau khi header được tải, nạp và thực thi file header.js
         let script = document.createElement('script');
         script.src = '../../static/js/User/header.js';
+        script.type="module";
         script.onload = function() {
             // Kích hoạt một sự kiện tùy chỉnh để báo hiệu header đã sẵn sàng
             document.dispatchEvent(new Event('headerLoaded'));
