@@ -73,7 +73,7 @@ export function uploadDocument() {
     const documentDescription = document.getElementById("describe").value.trim();
     const docCategoryId = document.getElementById("groupSelectUser").value;
     const point = document.querySelector('select[name="pay"]').value;
-    const documentAvatar ="sachToan.jpg"
+    const documentAvatar = document.getElementById("documentAvatar").value;
     // Kiểm tra file tài liệu bắt buộc
     if (!documentFile) {
         alert("Vui lòng chọn tệp tài liệu!");
