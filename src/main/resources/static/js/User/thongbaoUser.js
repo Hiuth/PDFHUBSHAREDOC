@@ -1,63 +1,135 @@
-// Import các module cần thiết
+// Import necessary modules
 import { getToken } from '../Share/localStorageService.js';
 
-// Hàm tải thông báo
+// Function to request notification permission
+function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+        console.error("Browser does not support notifications");
+        return false;
+    }
+
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
+    return Notification.permission === "granted";
+}
+
+// Function to display browser notification
+function showBrowserNotification(title, body, link) {
+    if (requestNotificationPermission()) {
+        const notification = new Notification(title, {
+            body: body,
+            icon: '../../static/images/icons/logo.png'
+        });
+
+        if (link) {
+            notification.onclick = () => {
+                window.open(link, '_blank');
+            };
+        }
+    }
+}
+
+// Function to initialize notification count
+function initializeNotificationCount() {
+    const notiButton = document.querySelector('.noti-button');
+    if (notiButton) {
+        notiButton.style.display = 'flex'; // Show notification button
+    }
+}
+
+// Function to update notification count
+function updateNotificationCount(count, isNew = false) {
+    const notiCountElement = document.querySelector('.noti-count');
+    if (notiCountElement) {
+        notiCountElement.textContent = count;
+        notiCountElement.style.display = count > 0 ? 'block' : 'none';
+
+        if (isNew) {
+            notiCountElement.classList.add('new');
+            setTimeout(() => {
+                notiCountElement.classList.remove('new');
+            }, 3000); // Remove pulse effect after 3 seconds
+        }
+    }
+}
+
+// Function to load and render notifications
 export function loadNotifications() {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
-    const token = getToken(); // Lấy token từ localStorage
-    console.log("Token kết nối WebSocket:", token); // Debug token
+    const token = getToken();
+
     if (!token) {
-        console.error("Không tìm thấy token");
+        console.error("Token not found");
         return;
     }
 
+    // Initialize notification display
+    initializeNotificationCount();
+
     client.connect({ Authorization: `Bearer ${token}` }, () => {
+        // Initial request for notifications
         client.send('/app/getMyNoti', {}, JSON.stringify({}));
-        console.log("Yêu cầu nhận thông báo đã được gửi"); // Debug gửi yêu cầu
+
+        // Subscribe to real-time notifications
         client.subscribe('/topic/getNotification', (message) => {
-            console.log("Đã nhận thông báo:", message.body); // Debug thông báo nhận được
             const notifications = JSON.parse(message.body);
+
+            // Update notification count immediately
+            if (notifications.result) {
+                updateNotificationCount(notifications.result.length);
+            }
+
+            // Render notifications in the dropdown
             renderNotifications(notifications);
+
+            // Display the latest notification as a browser notification
+            if (notifications.result && notifications.result.length > 0) {
+                const latestNoti = notifications.result[0];
+                showBrowserNotification(latestNoti.title, latestNoti.content, latestNoti.link);
+            }
         });
     }, (error) => {
         console.error("WebSocket connection error:", error);
     });
 }
 
-// Hàm hiển thị thông báo
+// Function to render notifications
 function renderNotifications(notifications) {
-    console.log("Render thông báo:", notifications); // Debug thông báo sẽ được render
     const notiContainer = document.getElementById("notification-list");
-    notiContainer.innerHTML = ""; // Xóa nội dung cũ
+    notiContainer.innerHTML = ""; // Clear existing notifications
+
+    // Sort notifications by date in descending order
+    notifications.result.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
 
     notifications.result.forEach((noti) => {
         const oneNotiBox = document.createElement('div');
         oneNotiBox.className = 'oneNotiBox';
         oneNotiBox.setAttribute('data-id', noti.id);
 
-        // Nội dung thông báo
+        // Notification content
         oneNotiBox.innerHTML = `
-            <div class="h-group">
-                <img src="../../static/images/icons/Downloading%20Updates%20black.png" alt="">
-                <div class="noti-header">${noti.title}</div>
-            </div>
-            <div class="noti-body">${noti.content}</div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">${formatDateTime(noti.dateTime)}</div>
-                </div>
-                ${noti.link ? `<a href="${noti.link}" target="_blank">Xem thêm</a>` : ''}
-            </div>
-        `;
+      <div class="h-group">
+        <img src="../../static/images/icons/Downloading%20Updates%20black.png" alt="">
+        <div class="noti-header">${noti.title}</div>
+      </div>
+      <div class="noti-body">${noti.content}</div>
+      <div class="d-group">
+        <div class="i-group">
+          <img src="../../static/images/icons/Clock%20gray.png" alt="">
+          <div class="noti-time">${formatDateTime(noti.dateTime)}</div>
+        </div>
+        ${noti.link ? `<a href="${noti.link}" target="_blank">View more</a>` : ''}
+      </div>
+    `;
 
-        // Thêm thông báo vào container
+        // Add the notification to the container
         notiContainer.appendChild(oneNotiBox);
     });
 }
 
-// Hàm định dạng ngày giờ
+// Function to format date and time
 function formatDateTime(dateTimeString) {
     const date = new Date(dateTimeString);
     const hours = date.getHours().toString().padStart(2, '0');
@@ -69,8 +141,11 @@ function formatDateTime(dateTimeString) {
     return `${hours}:${minutes}PM ${day}/${month}/${year}`;
 }
 
-// Sự kiện khi trang được tải
+// Event listener when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Trang đã được tải xong"); // Debug khi trang tải xong
+    // Request notification permission
+    requestNotificationPermission();
+
+    // Load notifications
     loadNotifications();
 });
