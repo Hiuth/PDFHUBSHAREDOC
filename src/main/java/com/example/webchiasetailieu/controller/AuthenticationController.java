@@ -48,11 +48,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+    ApiResponse<Boolean> logout(@RequestBody LogoutRequest request)
             throws JOSEException, ParseException {
-        //var result = service.logout(request);
-        return ApiResponse.<Void>builder()
+        return ApiResponse.<Boolean>builder()
                 .code(1000)
+                .result(service.logout(request))
                 .build();
     }
 

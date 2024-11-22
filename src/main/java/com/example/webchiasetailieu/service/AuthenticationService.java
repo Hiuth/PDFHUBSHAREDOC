@@ -89,7 +89,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public void logout(LogoutRequest request) throws JOSEException, ParseException {
+    public boolean logout(LogoutRequest request) throws JOSEException, ParseException {
         try{
             var signToken = verifyToken(request.getToken(), false);
 
@@ -101,9 +101,11 @@ public class AuthenticationService {
                     .expiryTime(expiryTime)
                     .build();
             invalidatedTokenRepository.save(invalidatedToken);
+            return true;
         }
         catch (AppException e){
             log.info("Token already expired");
+            return false;
         }
     }
 
