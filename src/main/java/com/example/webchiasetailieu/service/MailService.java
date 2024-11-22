@@ -32,9 +32,6 @@ public class MailService{
         String body;
         String otp = otpService.generateSecureOTP(request.getEmail());
 
-        if(accountRepository.existsByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
-
         switch (request.getEmailType()) {
             case DOWNLOAD:
                 subject = "Tài liệu của bạn có một lượt tải";
@@ -60,6 +57,8 @@ public class MailService{
                 break;
 
             case REGISTER:
+                if(accountRepository.existsByEmail(request.getEmail()))
+                    throw new AppException(ErrorCode.EMAIL_EXISTED);
                 subject = "Mã đăng ký tài khoản";
                 body = String.format("""
                         <html>
@@ -77,6 +76,8 @@ public class MailService{
                 break;
 
             case FORGOT_PASSWORD:
+                Account account = accountRepository.findByEmail(request.getEmail())
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
                 subject = "Mã reset password";
                 body = String.format("""
                         <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0;">
@@ -109,7 +110,7 @@ public class MailService{
                                 </div>
                             </div>
                         </body>
-                        """,getEmailFromAuthentication().getName() , otp);
+                        """,account.getName(), otp);
                 break;
 
             default:

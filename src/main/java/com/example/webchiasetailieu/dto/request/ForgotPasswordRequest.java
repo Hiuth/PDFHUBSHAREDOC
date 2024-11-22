@@ -9,12 +9,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HandleFeedbackRequest {
+public class ForgotPasswordRequest {
     @NotBlank(message = "NOT_NULL")
-    String id;
+    String email;
 
     @NotBlank(message = "NOT_NULL")
-    String content;
-
-    String docId;
+    String newPass;
 }

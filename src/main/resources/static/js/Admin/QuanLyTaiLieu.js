@@ -19,12 +19,16 @@ function downloadDocument(documentId) {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
     client.debug = function (str) {};
+    const loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "flex";
     client.connect({Authorization: `Bearer ${token}`},function(frame){
+        client.send(`/app/downloadFile/${documentId}`,{},JSON.stringify(documentId));
         client.subscribe('/topic/downFile', function (message) {
             const result = JSON.parse(message.body);
-            alert(result.message);
+            loadingElement.style.display = "none";
+
         })
-        client.send(`/app/downloadFile/${documentId}`,{},JSON.stringify(documentId));
+
     })
 }
 

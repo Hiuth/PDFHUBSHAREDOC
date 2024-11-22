@@ -65,9 +65,10 @@ document.addEventListener("DOMContentLoaded", fetchCategories);
 
 
 export function upDocument() {
+    const loadingElement = document.getElementById("loading");
     const token = getToken();
     const formData = new FormData();
-
+    loadingElement.style.display = "flex";
     // Lấy giá trị từ form
     const documentFile = document.getElementById("documentFile").files[0];
     //const documentAvatar = document.getElementById("documentAvatar").files[0];
@@ -111,6 +112,7 @@ export function upDocument() {
             if (data.code === 9999) {
                 throw new Error(data.message);
             }
+            loadingElement.style.display = "none";
             console.log("Upload thành công:", data);
             window.location .reload();
             // Xử lý thành công - có thể hiển thị thông báo thành công hoặc chuyển hướng
