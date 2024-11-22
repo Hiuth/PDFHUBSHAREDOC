@@ -85,7 +85,7 @@ function fetchDocument(subCategory, i = 0) {
                     const documentLink = document.createElement('a');
                     documentLink.href = `docsDetail.html?docId=${doc.id}`;
                     documentLink.classList.add('Docs');
-                    const imageUrl = `../../static/images/${doc.avatar}`;
+                    const imageUrl = `../../static/images/Documents/${doc.avatar}`;
 
                     documentLink.innerHTML = `
                         <div class="docs-content">
@@ -474,7 +474,7 @@ function searchDocument(Key, i = 0) {
                     const documentLink = document.createElement('a');
                     documentLink.href = `docsDetail.html?docId=${doc.id}`;
                     documentLink.classList.add('Docs');
-                    const imageUrl = `../../static/images/${doc.avatar}`;
+                    const imageUrl = `../../static/images/Documents/${doc.avatar}`;
 
                     documentLink.innerHTML = `
                         <div class="docs-content">
