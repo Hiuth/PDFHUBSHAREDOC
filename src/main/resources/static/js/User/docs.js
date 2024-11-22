@@ -66,19 +66,23 @@ function submitReportPopup(event) {
 function fetchDocument(subCategory, i = 0) {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
+
     client.connect({}, function (frame) {
         client.debug = function (str) {}; // Tắt debug
 
-        client.send(`/app/DocumentsBySubCategory/${subCategory}`, {}, JSON.stringify({ subCategory }));
+        // Tạo một unique topic cho mỗi lớp
+        const uniqueTopic = `/topic/getDocumentsBySubCategory`;
 
-        client.subscribe('/topic/getDocumentsBySubCategory', function (data) {
+        client.subscribe(uniqueTopic, function (data) {
             const response = JSON.parse(data.body);
             const documents = response.result;
             const docsGroup = document.querySelectorAll('.Docs-group')[i];
+
             if (!docsGroup) {
                 console.error("Docs-group element not found");
                 return;
             }
+
             if (Array.isArray(documents) && documents.length > 0) {
                 docsGroup.innerHTML = ''; // Xóa nội dung cũ
                 documents.forEach((doc) => {
@@ -110,7 +114,13 @@ function fetchDocument(subCategory, i = 0) {
                     docsGroup.appendChild(documentLink);
                 });
             }
+
+            // Đóng kết nối sau khi xử lý xong
+            client.disconnect();
         });
+
+        // Gửi request với subCategory
+        client.send(`/app/DocumentsBySubCategory/${subCategory}`, {}, JSON.stringify({ subCategory }));
     }, function (error) {
         console.error("Connection error: ", error);
     });
