@@ -75,19 +75,8 @@ export function savePassword() {
 window.savePassword = savePassword;
 
 
-function changeAvatar() {
-  // Mở hộp thoại chọn ảnh
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.onchange = () => {
-    const file = input.files[0];
-    if (file) {
-      alert("Ảnh đại diện của bạn đã được đổi!");
-    }
-  };
-  input.click();
-}
+
+
 
 function convertISOToDateInput(isoString) {
   // Tạo đối tượng Date từ chuỗi ISO
@@ -104,11 +93,6 @@ function convertISOToDateInput(isoString) {
   return `${year}-${month}-${day}`;
 }
 
-function updatePassword(){
-
-}
-
-
 export function fetchPersonalInformation() {
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
@@ -121,6 +105,7 @@ export function fetchPersonalInformation() {
     client.subscribe("/topic/getInfo", function (data) {
       const response = JSON.parse(data.body);
       const perInfo = response.result;
+      const avatar = `../../static/images/User/${perInfo.avatar}`;
       const birthday =  convertISOToDateInput(perInfo.birthday);
       // Chuỗi HTML lưu trữ thông tin người dùng
       const userInfoHTML = `
@@ -230,17 +215,20 @@ export function fetchPersonalInformation() {
                   </div>
                 </div>
               </div>
+              
+
                 <!-- Profile Card Section -->
                 <div class="col-md-4">
                   <div class="card card-profile text-center">
                     <div class="card-body">
-                      <img src="../../static/images/icons/avatar.png" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
+                      <img src="../../static/images/User/gấu đánh đàn.jpg" class="rounded-circle mb-3" alt="Profile" width="120" height="120" />
                       <h5 class="card-title">${perInfo.fullName}</h5>
                       <p class="card-text">Tôi là người quản lý web</p>
 <!--                      <button type="button" class="btn btn-secondary mt-3" onclick="changeAvatar()">Đổi ảnh đại diện</button>-->
                     </div>
                   </div>
                 </div>
+                
       `;
 
       // Gán HTML vào phần tử với id 'perInfo'
