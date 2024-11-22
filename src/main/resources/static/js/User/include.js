@@ -30,7 +30,16 @@ fetch('footer.html')
 fetch('sidebar.html')
     .then(response => response.text())
     .then(data => {
-        // Chèn nội dung vào phần tử có id là footer
+        // Chèn nội dung vào phần tử có id là sidebar
         document.getElementById('sidebar-placeholder').innerHTML = data;
+
+        // Sau khi sidebar được tải, nạp và thực thi file sidebar.js
+        let script = document.createElement('script');
+        script.src = '../../static/js/User/sidebar.js';
+        script.type = "module";
+        script.onload = function() {
+            document.dispatchEvent(new Event('sidebarLoaded'));
+        };
+        document.body.appendChild(script);
     })
     .catch(error => console.error('Error:', error));

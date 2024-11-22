@@ -13,8 +13,6 @@ function checkLoginStatus() {
 
     const token = getToken();
 
-    alert(token);
-
     if (token) {
         // Có token - hiển thị các nút liên quan đến người dùng đã đăng nhập
         notiButton.style.display = "";

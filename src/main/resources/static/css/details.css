@@ -24,7 +24,8 @@
     padding-left: 50px;
     padding-right: 30px;
     gap: 20px;
-    width: 63vw;
+    width: calc(100vw - 35vw - 25px);
+    max-width: 1200px;
     background-color: white;
     box-sizing: border-box;
 }
@@ -46,7 +47,7 @@
     box-sizing: border-box;
     overflow-y: hidden;
     min-width: 150px;
-    height: 131vh;
+    min-height: 145vh;
 }
 
 .role{
@@ -116,6 +117,10 @@
     height: 25px;
 }
 
+.form-group2 {
+    width: fit-content;
+}
+
 .num {
     display: flex;
     column-gap: 20px;
@@ -134,7 +139,10 @@
     padding: 10px;
     background-color: white;
     border-top: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+    margin-bottom: 0px;
     padding-left: 35px;
+    margin: 0px;
     padding-right: 25px;
 }
 
@@ -163,7 +171,7 @@
 
 .download-button{
     background-color: #D82B8A;
-    padding: 8px 12px;
+    padding: 6px 12px;
     border-radius: 10px;
     color: white;
     display: flex;
@@ -202,8 +210,7 @@
 #cmt-time{
     font-size: 12px;
     font-weight: bold;
-    white-space: nowrap;       /* Không cho phép xuống dòng */       /* Ẩn nội dung vượt quá chiều rộng */
-    max-width: 12vw;             /* Đặt chiều rộng cố định */
+    white-space: nowrap;       /* Không cho phép xuống dòng */
     box-sizing: border-box;
 }
 
@@ -211,36 +218,34 @@
     display: flex;
     column-gap: 15px;
     padding-top: 10px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     row-gap: 10px;
-
     box-sizing: border-box;
+}
+
+#time{
+    margin-left: 40px;
 }
 
 #cmtAndTime .form-group2{
     padding-top: 0px;
     margin-top: 0px;
-    flex-wrap: nowrap;
-
+    max-width: 400px;
+    width: fit-content;
 }
 
 .cmt-content{
-    border: 1px solid black;
-    padding: 10px 12px;
-    border-radius: 20px;
+    padding: 5px 8px;
+    border-radius: 18px;
     font-weight: lighter;
     font-size: 14px;
     text-align: justify;
     box-sizing: border-box;
-    overflow: hidden;          /* Ẩn nội dung vượt quá chiều rộng */
-    text-overflow: ellipsis;   /* Thêm dấu "..." nếu vượt quá chiều rộng */
-    max-width: 400px;
-    white-space: wrap;
-
 }
 
 #comment-class .form-group2{
     flex-wrap: nowrap;
+    width: fit-content;
 }
 
 #upcomment{
@@ -249,12 +254,6 @@
     box-sizing: border-box;
     min-height: 80px;
     height: auto;
-}
-
-@media (max-width: 1200px) {
-    #cmtAndTime{
-        flex-wrap: wrap;
-    }
 }
 
 @media (max-width: 1000px) {
@@ -268,6 +267,21 @@
     .comment-part{
         display: none;
     }
+    .docInfo-part{
+        flex-grow: 1;
+    }
+    .docs-part{
+        flex-grow: 1;
+    }
+}
+
+#submitComment{
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+
 }
 
 #report-popup{
@@ -366,15 +380,28 @@
     border-radius: 4px;
 }
 
+#comment{
+    width: calc(30vw * 0.8);
+    border: 1px solid black;
+    padding: 5px 10px;
+    margin-top: -5px;
+    border-radius: 10px;
+    max-width: none;
+}
+
 #cmtAndTime {
     position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
+    max-width: 30vw;
+    width: 30vw;
+    justify-content: left;
+    flex-wrap: nowrap;
 }
 
 .cmt-content {
-    flex-grow: 1;
+    width: auto;
 }
 
 .edit-button-comment {
@@ -390,7 +417,7 @@
 }
 .comment-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     position: relative;
 }
 
@@ -472,10 +499,14 @@
 #pdfview{
     margin-top: 0px;
     padding-top: 0px;
-    height: 80vh;
-    margin-bottom: 15px;
-    width: 100%;
+    height: 90vh;
+    width: calc(100% - 80px);
+    margin: 10px 40px;
 }
 
+#cmt{
+    align-items: flex-start;
+    max-width: none;
+}
 
 

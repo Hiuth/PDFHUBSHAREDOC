@@ -1,9 +1,15 @@
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../static/css/sidebarNoti.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
+    <!-- Thêm thư viện SockJS và Stomp -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
+<body>
 <div class="sidebar">
     <b class="title">Tài khoản</b>
     <div class="accInfo">
@@ -45,9 +51,22 @@
     </div>
     <hr>
     <div class="logout">
-        <a onclick="return confirm('Xác nhận đăng xuất?')" href="" class="logout-button">
+        <a class="logout-button" onclick="window.logoutHandler()">
             <img src="../../static/images/icons/Logout.png" alt="">
             <div>Đăng xuất</div>
         </a>
     </div>
-</div>
+
+    <script type="module">
+        import { PersonalInfo, logout } from '../../static/js/User/sidebar.js';
+
+        // Khởi tạo thông tin cá nhân
+        document.addEventListener('DOMContentLoaded', function() {
+            PersonalInfo();
+
+            // Gắn hàm logout vào window object để có thể gọi từ onclick
+            window.logoutHandler = logout;
+        });
+    </script>
+</body>
+</html>

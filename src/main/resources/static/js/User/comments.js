@@ -114,7 +114,7 @@ export function fetchCommentsForDocument(documentId) {
 
                             comments.forEach((comment) => {
                                 const userName = comment.account ? comment.account.name : 'Anonymous';
-                                const commentText = comment.comText || 'No comment text provided';
+                                const commentText = comment.comText.replace(/\s+/g, " ").trim() || 'No comment text provided';
                                 const createdAt = new Date(comment.createdAt);
                                 const formattedDate = isNaN(createdAt) ? 'Invalid Date' : createdAt.toLocaleString();
 
@@ -125,29 +125,33 @@ export function fetchCommentsForDocument(documentId) {
 
                                 commentElement.innerHTML = `
                                     <div class="form-group1" id="comment-class">
-                                        <div class="form-group2">
+                                        <div class="form-group2" id="cmt">
+                                          
                                             <img id="cmt-ava" src="../../static/images/icons/avatar.png" alt="">
-                                            <div class="gray" id="nameUserComment">${userName}</div>
-                                        </div>
-                                        <div id="cmtAndTime">
-                                            <div class="cmt-content">${commentText}</div>
-                                            <div class="comment-actions">
-                                            <button
-                                                class="edit-button-comment"
-                                                onclick="openEditCommentPopup('${comment.id}')"
-                                            >
-                                                <img src="../../static/images/bxs-edit.svg" alt="Edit" />
-                                            </button>
-                                             <button
-                                                class="delete-button-comment"
-                                                onclick="openDeleteCommentPopup('${comment.id}')"
-                                                >
-                                                <img src="../../static/images/icons/delete-svgrepo-com.svg" alt="Delete" />
-                                             </button>
+                                            <div id="comment">
+                                                <div class="gray" id="nameUserComment">${userName}</div>
+                                                <hr style="margin-bottom: 0px">
+                                                <div class="cmt-content">${commentText}</div>
                                             </div>
-                                            <div class="form-group2">
+                                        </div>
+                                        <div class="group">
+                                            <div class="form-group2" id="time">
                                                 <img id="cmt-icon" src="../../static/images/icons/Clock black.png" alt="">
                                                 <div class="black" id="cmt-time">${formattedDate}</div>
+                                            </div>
+                                            <div class="comment-actions">
+                                                <button
+                                                    class="edit-button-comment"
+                                                    onclick="openEditCommentPopup('${comment.id}')"
+                                                >
+                                                    <img src="../../static/images/bxs-edit.svg" alt="Edit" />
+                                                </button>
+                                                 <button
+                                                    class="delete-button-comment"
+                                                    onclick="openDeleteCommentPopup('${comment.id}')"
+                                                    >
+                                                    <img src="../../static/images/icons/delete-svgrepo-com.svg" alt="Delete" />
+                                                 </button>
                                             </div>
                                         </div>
                                     </div>

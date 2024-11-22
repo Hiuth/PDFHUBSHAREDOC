@@ -426,18 +426,18 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                     </div>
                 </div>
             </div>
-            <div class="download-part">
+        </div>
+        <div class="download-part">
                 <div class="download-p">
                     <div class="form-group2">
                         <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
                         <a onclick="" id="share">Chia sẻ</a>
                     </div>
-                    <button type="button" class="download-button" onclick="downloadDocument()">
+                    <button type="button" class="download-button" onclick="downloadDocument()" style="border: none">
                     <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
                 </div>
             </div>
-            <iframe id="pdfview" src="${formattedLink}" class="docs-part"></iframe>
-        </div>
+           <iframe id="pdfview" src="${formattedLink}" class="docs-part"></iframe>
     `;
 }
 

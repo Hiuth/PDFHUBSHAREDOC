@@ -53,21 +53,40 @@ function displaySearchResult() {
     }
 }
 
-// Hàm mở menu
 function openMenu() {
     if (isNotiOpen) {
         closeNoti();
     }
     if (!isMenuOpen) {
-        fetch('sidebar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('popup-menu').innerHTML = data;
-                document.getElementById('popup-menu').style.display = '';
-                document.getElementById('overlay').style.display = '';
-                isMenuOpen = true;
-            })
-            .catch(error => console.error('Error:', error));
+        try {
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('popup-menu').innerHTML = data;
+                    document.getElementById('popup-menu').style.display = '';
+                    document.getElementById('overlay').style.display = '';
+
+                    // Create a new script element for sidebar.js
+                    const script = document.createElement('script');
+                    script.type = 'module';
+                    script.textContent = `
+                        import { PersonalInfo, logout } from '../../static/js/User/sidebar.js';
+                        
+                        // Immediately call PersonalInfo to update user data
+                        PersonalInfo();
+
+                        window.logoutHandler = logout;
+                    `;
+
+                    // Append the script to the body
+                    document.body.appendChild(script);
+
+                    isMenuOpen = true;
+                })
+                .catch(error => console.error('Error:', error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
     } else {
         closeMenu();
     }
