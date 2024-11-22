@@ -81,6 +81,8 @@ public class FeedBackController {
     }
 
     @PostMapping("/send-notification")
+    @MessageMapping("/adminSendNoti")
+    @SendTo("/topic/adminSendNotification")
     public ApiResponse<NotificationResponse> sendNotification(@RequestBody @Valid HandleFeedbackRequest request) {
         return ApiResponse.<NotificationResponse>builder()
                 .code(1000)

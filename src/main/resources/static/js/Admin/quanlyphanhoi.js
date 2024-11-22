@@ -31,7 +31,8 @@ function fetchAllFeedBack() {
                       <td>${feed.type}</td>
                       <td>${feed.feedback}</td>
                       <td>${feed.status}</td>
-                      <input type="hidden" id="feedId" value="${feed.id}"/>
+                         <input type="hidden" name="feedId" value="${feed.id}" />
+                        <input type="hidden" name="otherId" value="${feed.otherId}" />
                       <td><button class="btn-process">Xử lý</button></td>
                     </tr>
                 `;
@@ -60,6 +61,31 @@ function adminUpdateFeedBack(id,status, response) {
         client.send("/app/adminUpdateFeed",{},JSON.stringify(feedBacks));  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
         // Nhận danh sách tài khoản từ server và hiển thị trong bảng
         client.subscribe('/topic/adminUpdateFeedBack', function (data) {
+            window.location.reload();
+        });
+    });
+}
+
+function adminSendNotification(feedId,type,content,docId) {
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    let feedType="";
+    if(type==="Violating content of documents"){
+        feedType="REPORT_DOCUMENT";
+    }
+    const Notification ={
+        id: feedId,
+        type: feedType,
+        content:content,
+        docId: docId
+    }
+    console.log(Notification);
+    client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+        //console.log("Connected: " + frame);
+        client.send(`/app/adminSendNoti`,{},JSON.stringify(Notification));  // Gửi yêu cầu WebSocket để lấy danh sách tài khoản
+        // Nhận danh sách tài khoản từ server và hiển thị trong bảng
+        client.subscribe('/topic/adminSendNotification', function (data) {
             window.location.reload();
         });
     });
@@ -100,13 +126,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentRow.querySelector("td:nth-child(3)").textContent;
             const content = currentRow.querySelector("td:nth-child(5)").textContent;
             const status = currentRow.querySelector("td:nth-child(6)").textContent;
-            const feedId = currentRow.querySelector('input[type="hidden"]').value; // Lấy id chính xác từ hàng hiện tại
+            const feedType = currentRow.querySelector("td:nth-child(4)").textContent;
+            const feedId = currentRow.querySelector('input[name="feedId"]').value;
+            const otherId = currentRow.querySelector('input[name="otherId"]').value;
             // Điền nội dung động vào modal
             document.querySelector(".sender-name").textContent = senderName;
             document.querySelector(".sender-email").textContent = senderEmail;
             document.querySelector(".feedback-content").textContent = content;
             statusSelect.value = status;
             document.getElementById("feedbackId").value = feedId;
+            checkTypeAndToggleButton(feedType);
+            document.getElementById("docId").value = otherId;
             modal.style.display = "flex";
         }
     });
@@ -130,6 +160,16 @@ document.addEventListener("DOMContentLoaded", function () {
         resetModalFields();
     });
 
+    btnSendNoti.addEventListener("click", () => {
+        const docId = document.getElementById('docId').value;
+        const feedId = document.getElementById('feedbackId').value;
+        const content = currentRow.querySelector("td:nth-child(5)").textContent;
+        const feedType = currentRow.querySelector("td:nth-child(4)").textContent;
+        adminSendNotification(feedId, feedType,content ,docId);
+        modal.style.display = "none";
+        resetModalFields();
+    })
+
     // Cho phép đóng modal bằng cách nhấp bên ngoài hoặc nhấn phím 'Escape'
     window.addEventListener("click", (event) => {
         if (event.target === modal) {
@@ -150,5 +190,15 @@ document.addEventListener("DOMContentLoaded", function () {
         statusSelect.value = "Chưa xử lý";
         responseTextarea.value = "";
     }
+
+    function checkTypeAndToggleButton(feedType) {
+        const sendNotiButton = document.getElementById("btnSendNoti");
+        if (feedType === "Another problem") {
+            sendNotiButton.style.display = "none"; // Ẩn nút
+        } else {
+            sendNotiButton.style.display = "inline-block"; // Hiển thị nút
+        }
+    }
 });
+
 
