@@ -14,7 +14,9 @@
 .main-part{
     box-sizing: border-box;
     display: flex;
-    box-sizing: border-box;
+    margin: 0px -22px;
+    width: 100vw;
+    justify-content: center;
 }
 
 .Info-part{
@@ -24,8 +26,7 @@
     padding-left: 50px;
     padding-right: 30px;
     gap: 20px;
-    width: calc(100vw - 35vw - 25px);
-    max-width: 1200px;
+    width: calc(100vw - 35vw);
     background-color: white;
     box-sizing: border-box;
 }
@@ -33,13 +34,14 @@
 .docInfo-part{
     display: flex;
     float: left;
+    max-width: none;
 }
 .comment-part{
     float: right;
     border-left: 1px solid #a5a5a5;
     padding: 10px 20px;
     padding-top: 10vh;
-    padding-right: 0px;
+    padding-right: 20px;
     width: 35vw;
     margin-left: 0px;
     box-sizing: border-box;
@@ -115,6 +117,7 @@
 .form-group2 img{
     margin: -7px;
     height: 25px;
+    margin-left: 0px;
 }
 
 .form-group2 {
@@ -216,7 +219,6 @@
 
 #cmtAndTime{
     display: flex;
-    column-gap: 15px;
     padding-top: 10px;
     flex-wrap: wrap;
     row-gap: 10px;
@@ -230,7 +232,6 @@
 #cmtAndTime .form-group2{
     padding-top: 0px;
     margin-top: 0px;
-    max-width: 400px;
     width: fit-content;
 }
 
@@ -246,6 +247,19 @@
 #comment-class .form-group2{
     flex-wrap: nowrap;
     width: fit-content;
+}
+
+#comments-container{
+    margin: 0px auto;
+    width: fit-content;
+    padding-right: 0px;
+    max-height: 120vh;
+    overflow: auto;
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trong IE và Edge */
+}
+
+#comments-container::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trong trình duyệt WebKit (Chrome, Safari) */
 }
 
 #upcomment{
@@ -268,10 +282,10 @@
         display: none;
     }
     .docInfo-part{
-        flex-grow: 1;
+        width: 100%;
     }
     .docs-part{
-        flex-grow: 1;
+        width: 100%;
     }
 }
 
@@ -393,8 +407,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
-    max-width: 30vw;
     width: 30vw;
     justify-content: left;
     flex-wrap: nowrap;
@@ -440,16 +452,16 @@
 }
 
 .confirm-delete-popup {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 12px;
-    margin-top: 4px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .confirm-delete-content {

@@ -47,7 +47,7 @@ export function fetchreportDetails() {
                 document.querySelector(".form-group2:nth-child(2) input.read[readonly]").value =
                     feedBack.date ? new Date(feedBack.date).toLocaleDateString() : 'N/A';
                 document.querySelector("#problemDes").value = feedBack.feedback || 'N/A';
-                document.querySelector("#reply").value = feedBack.feedbackFromAdmin || 'N/A';
+                document.querySelector("#reply").value = feedBack.feedbackFromAdmin || 'Chưa có phản hồi';
             } else {
                 console.error("Feedback data is null or undefined");
             }

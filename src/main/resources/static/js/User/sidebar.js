@@ -14,8 +14,8 @@ export function PersonalInfo() {
             const perInfo = response.result;
 
             // Cập nhật thông tin vào sidebar
-            document.getElementById("username").innerText = perInfo.fullName || "Username";
-            document.getElementById("point").innerText = `${perInfo.coin || 0} xu`;
+            document.getElementById("username").innerText = perInfo.username || "Username";
+            document.getElementById("point").innerText = `${perInfo.points || 0} xu`;
         });
     });
 }

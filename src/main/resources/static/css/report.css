@@ -80,4 +80,24 @@ td a {
 
 .form-group2 .DocsLink{
     background-color: #155db3;
+    border-radius: 10px;
+    color: white;
+    padding: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.form-group2 input {
+    width: fit-content;
+    max-width: 300px;
+}
+
+.group{
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
+.form-group2 {
+    padding-right: 0px;
+    margin-right: 0px;
 }

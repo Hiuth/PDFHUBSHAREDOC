@@ -415,8 +415,8 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                     <div class="role">Tác giả</div>
                 </div>
                 <div class="form-group2 Category">
-                    <div class="gray">Thể loại</div>
-                    <a href="category.html?tab=${subCategory}">${category}</a>
+                    <div class="gray">Phân loại</div>
+                    <a href="category.html?tab=${subCategory}" id="sub-name">${category}</a>
                 </div>
             </div>
             <div class="caption">
@@ -449,7 +449,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                     <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
                 </div>
             </div>
-           <iframe id="pdfview" src="${formattedLink}" class="docs-part"></iframe>
+           <iframe id="pdfview" src="${formattedLink}" width="100%" height="100%" class="docs-part"></iframe>
     `;
 }
 

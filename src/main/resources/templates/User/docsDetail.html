@@ -138,7 +138,26 @@
         <div class="recommend">
             <div class="Group-title">Có thể bạn đang tìm kiếm</div>
             <div class="Docs-group">
+                <script>
+                    // Create a MutationObserver to watch for the #sub-name element
+                    const observer = new MutationObserver((mutations) => {
+                        const subNameElement = document.querySelector('#sub-name');
+                        if (subNameElement) {
+                            const sub = subNameElement.textContent.trim();
+                            console.log("Subcategory:", sub);
+                            fetchDocument(sub);
 
+                            // Stop observing once the element is found
+                            observer.disconnect();
+                        }
+                    });
+
+                    // Start observing the entire document with the specified configuration
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                </script>
             </div>
         </div>
     </div>

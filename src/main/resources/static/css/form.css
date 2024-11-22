@@ -176,7 +176,7 @@ input[type='submit'], .submit button{
 #ava img{
     height: 7vw;
     width: auto;
-    min-height: 80px;
+    min-height: 100px;
 }
 
 #read-class{
@@ -687,3 +687,45 @@ button#OTP-submit.loading{
     }
 }
 
+#avatarContain {
+    margin-top: 10px;
+}
+.avatar-options img {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+.avatar-options img:hover {
+    border-color: #007bff;
+}
+
+.avatar-options .selected {
+    border-color: #28a745 !important;
+}
+
+#changeAvatarButton{
+    background-color: #D82B8A;
+    padding: 10px 12px;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    max-width: 100px;
+    margin: 0px auto;
+}
+
+#outside {
+    justify-content: space-evenly;
+}
+
+#avatarContain{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+    background-color: #fbfbfb;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid gainsboro;
+}

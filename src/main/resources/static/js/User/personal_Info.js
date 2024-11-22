@@ -52,7 +52,7 @@ export function PersonalInfo() {
                         <div class="error"></div>
                         <div class="form-group2" id="read-class">
                             <div class="static">Sinh nhật</div>
-                            <input type="date" class="read" value="${birthday}" id="birthday" readonly>
+                            <input type="date" style="padding-left: 15px" class="read" value="${birthday}" id="birthday" readonly>
                         </div>
                         <div class="error"></div>
                     </form>
@@ -66,8 +66,8 @@ export function PersonalInfo() {
                             <div class="read" id="mail">${perInfo.email}</div>
                         </div>
                         <form class="form-group2" id="read-class passChange">
-                            <div class="static">Mật khẩu</div>
-                            <input type="password" class="read" id="pass" value="" readonly>
+                            <div class="static">Số xu</div>
+                            <input type="text" style="padding-left: 15px" class="read" id="pass" value="${perInfo.points}" readonly>
                             <a onclick="openChangePass()">Thay đổi</a>
                             <a onclick="ConfirmChangePass()" style="display: none;">Lưu</a>
                         </form>

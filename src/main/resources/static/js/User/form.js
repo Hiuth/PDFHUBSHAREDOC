@@ -137,3 +137,107 @@ function ChangePass(event) {
         document.querySelector("#inputOTP .error").textContent = "Mã OTP không đúng. Vui lòng thử lại.";
     }
 }
+
+function ChangeAvatar() {
+    const outsideDiv = document.getElementById('outside');
+    const avatarContain = document.getElementById('avatarContain');
+    const submitButton = document.getElementById('changeAvatarSubmit');
+
+    // Đổi class form-group1 -> form-group2
+    outsideDiv.classList.remove('form-group1');
+    outsideDiv.classList.add('form-group2');
+
+    // Hiển thị avatar contain
+    avatarContain.style.display = 'block';
+
+    // Hiển thị nút Lưu
+    submitButton.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    initializeAvatarEvents();
+});
+
+function initializeAvatarEvents() {
+    // Gắn sự kiện click
+    document.querySelectorAll('#avatarContain .avatar-options img').forEach(img => {
+        img.addEventListener('click', function () {
+            // Xử lý chọn avatar
+            document.querySelectorAll('#avatarContain .avatar-options img').forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            document.getElementById('selectedAvatar').value = this.dataset.avatar;
+        });
+    });
+}
+
+function updateAvatar(event) {
+    event.preventDefault(); // Ngăn reload trang
+
+    const selectedAvatar = document.getElementById('selectedAvatar').value;
+
+    if (!selectedAvatar) {
+        alert("Vui lòng chọn một ảnh!");
+        return false; // Ngăn việc tiếp tục thực hiện form submit
+    }
+
+    fetch(`/updateAvatar/${encodeURIComponent(selectedAvatar)}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            alert("Cập nhật ảnh hồ sơ thành công!");
+            document.querySelector('#ava img').src = `../../static/images/User/${selectedAvatar}`;
+        })
+        .catch(error => {
+            console.error('Lỗi khi cập nhật ảnh hồ sơ:', error);
+            alert("Đã xảy ra lỗi khi cập nhật ảnh hồ sơ!");
+        });
+
+    return false; // Ngăn hành động form mặc định
+}
+
+const AvatarManager = {
+    updateAvatar: function(event) {
+        event.preventDefault();
+
+        const selectedAvatar = document.getElementById('selectedAvatar').value;
+
+        if (!selectedAvatar) {
+            alert("Vui lòng chọn một ảnh!");
+            return false;
+        }
+
+        fetch(`/updateAvatar/${encodeURIComponent(selectedAvatar)}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                alert("Cập nhật ảnh hồ sơ thành công!");
+                document.querySelector('#ava img').src = `../../static/images/User/${selectedAvatar}`;
+            })
+            .catch(error => {
+                console.error('Lỗi khi cập nhật ảnh hồ sơ:', error);
+                alert("Đã xảy ra lỗi khi cập nhật ảnh hồ sơ!");
+            });
+
+        return false;
+    }
+};

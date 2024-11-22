@@ -239,6 +239,19 @@ function editComment(commentId, newText) {
 }
 
 function openEditCommentPopup(commentId) {
+    // Kiểm tra nếu đã tồn tại input edit trong DOM
+    const existingEditInput = document.querySelector('.edit-input');
+    if (existingEditInput) {
+        // Lấy lại nội dung cũ và hiển thị lại nó
+        const parent = existingEditInput.parentElement;
+        const hiddenCmtContent = parent.querySelector('.cmt-content.hidden');
+        if (hiddenCmtContent) {
+            hiddenCmtContent.classList.remove('hidden');
+        }
+        // Xóa input cũ
+        existingEditInput.remove();
+    }
+
     const cmtContent = document.querySelector(`[data-comment-id="${commentId}"] .cmt-content`);
     if (!cmtContent) {
         console.error("Comment content element not found");
@@ -253,8 +266,7 @@ function openEditCommentPopup(commentId) {
     editInput.value = commentText;
     editInput.className = 'edit-input';
 
-    const editButton = document.querySelector(`[data-comment-id="${commentId}"] .edit-button-comment`);
-    editButton.parentNode.insertBefore(editInput, editButton);
+    cmtContent.parentElement.appendChild(editInput);
 
     editInput.focus();
 
@@ -272,6 +284,7 @@ function openEditCommentPopup(commentId) {
         }
     });
 }
+
 window.openEditCommentPopup = openEditCommentPopup;
 function cancelEdit(commentId) {
     const cmtContent = document.querySelector(`[data-comment-id="${commentId}"] .cmt-content`);
@@ -389,6 +402,7 @@ function openDeleteCommentPopup(commentId) {
             </div>
         </div>
     `;
+    document.querySelector("#overlay").style.display = "";
 
     // Chèn popup vào sau nút delete
     const deleteButton = document.querySelector(`[data-comment-id="${commentId}"] .delete-button-comment`);
@@ -404,6 +418,7 @@ function openDeleteCommentPopup(commentId) {
 
     confirmNoButton.addEventListener('click', () => {
         confirmDeletePopup.remove();
+        document.querySelector("#overlay").style.display = "none";
     });
 
     // Đóng popup khi click ra ngoài
