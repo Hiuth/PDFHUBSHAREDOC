@@ -1,8 +1,6 @@
 package com.example.webchiasetailieu.dto.request;
 
-import com.example.webchiasetailieu.enums.FeedbackType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,9 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class HandleFeedbackRequest {
     @NotBlank(message = "NOT_NULL")
     String id;
-
-    @NotNull(message = "NOT_NULL")
-    FeedbackType type;
 
     @NotBlank(message = "NOT_NULL")
     String content;
