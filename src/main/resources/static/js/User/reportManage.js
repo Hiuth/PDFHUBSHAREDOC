@@ -30,19 +30,19 @@ export async function fetchMyReports() {
                             }
                             console.log("Processing report:", reports);
                             tbody.innerHTML = ''; // Clear existing rows
-                            let i =1;
+                            let i = 1;
                             reports.forEach(report => {
                                 // Log each report
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                 <tr>
-                                    <td>${i|| 'N/A'}</td>
+                                    <td>${i || 'N/A'}</td>
                                     <td>${report.type || 'N/A'}</td>
                                     <td>${report.feedback || 'N/A'}</td>
                                     <td>${report.status}</td>
                                     <td>${report.date ? new Date(report.date).toLocaleString('vi-VN') : 'N/A'}</td>
                                     <td>
-                                        <a href="reportDetails.html?id=${report.id}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                       <a href="#" class="btn btn-primary btn-sm" onclick="viewDetails('${report.id}')">Xem chi tiết</a>
                                     </td>
                                     </tr>
                                 `;
@@ -72,6 +72,11 @@ export async function fetchMyReports() {
             }
         );
     });
+}
+
+window.viewDetails = function(feedbackId) {
+    localStorage.setItem('feedbackId', feedbackId);
+    window.location.href = '../../templates/User/reportDetails.html';
 }
 
 // Fetch and display reports when the page loads

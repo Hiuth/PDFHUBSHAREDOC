@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="../../static/css/userManage.css">
     <link rel="stylesheet" href="../../static/css/form.css">
     <link rel="stylesheet" href="../../static/css/report.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -30,20 +31,20 @@
                 <div class="group">
                     <div class="form-group2">
                         <label>Loại báo cáo</label>
-                        <input type="text" class="read" value="Báo cáo tài liệu" readonly>
+                        <input type="text" class="read"  readonly>
                     </div>
                     <div class="form-group2">
                         <label>Ngày gửi</label>
-                        <input type="text" class="read" value="20/10/2024" readonly>
+                        <input type="text" class="read" readonly>
                     </div>
                 </div>
                 <div class="form-group2">
                     <label>Tài liệu bị báo cáo</label>
-                    <a class="DocsLink">Toán 3</a>
+                    <input class="DocsLink" readonly ></input>
                 </div>
                 <div class="form-group1">
                     <label>Mô tả</label>
-                    <textarea class="read" id="problemDes" readonly>nó đánh em</textarea>
+                    <textarea class="read" id="problemDes" readonly></textarea>
                 </div>
 
                 <hr style="color: black; margin-right: 30px; margin-bottom: 10px">
@@ -52,11 +53,16 @@
 
                 <div class="form-group1">
                     <label>Phản hồi từ Admin</label>
-                    <textarea class="read" id="reply" readonly style="height: 100px">anh xử nó rồi em</textarea>
+                    <textarea class="read" id="reply" readonly style="height: 100px"></textarea>
                 </div>
 
             </div>
         </div>
     </div>
+<script type="module" src="../../static/js/User/reportDetails.js"></script>
+<script type="module">
+    import {fetchreportDetails} from "../../static/js/User/reportDetails.js";
+    fetchreportDetails();
+</script>
 </body>
 </html>

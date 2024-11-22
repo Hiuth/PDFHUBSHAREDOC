@@ -7,6 +7,7 @@ import com.example.webchiasetailieu.repository.PermissionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class PermissionService {
 
     PermissionRepository repository;
-
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse create(PermissionRequest request) {
         return convertToResponse(repository.save(Permission.builder()
                 .name(request.getName())

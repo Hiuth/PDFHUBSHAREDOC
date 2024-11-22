@@ -92,7 +92,7 @@ public class FeedBackService {
         return repository.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('GET_FEEDBACK')")
     public FeedBackResponse getById(String id) {
         return convertToResponse(repository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED)));
@@ -112,6 +112,7 @@ public class FeedBackService {
                 .type(feedbacks.getType())
                 .status(feedbacks.getStatus())
                 .feedbackFromAdmin(feedbacks.getFeedbackFromAdmin())
+                .otherId(feedbacks.getOtherId())
                 .build();
     }
 

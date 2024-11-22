@@ -19,4 +19,5 @@ public class FeedBackResponse {
     String status;
     String feedbackFromAdmin;
     String email;
+    String otherId;
 }

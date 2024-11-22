@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,9 @@ public class FeedBackController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<FeedBackResponse> getFeedbackById(@PathVariable String id) {
+    @MessageMapping("/getFeedbackbyId/{id}")
+    @SendTo("/topic/getFeedbackbyId")
+    public ApiResponse<FeedBackResponse> getFeedbackById(@DestinationVariable String id) {
         ApiResponse<FeedBackResponse> response = new ApiResponse<>();
         response.setMessage("Get feedback: ");
         response.setResult(service.getById(id));

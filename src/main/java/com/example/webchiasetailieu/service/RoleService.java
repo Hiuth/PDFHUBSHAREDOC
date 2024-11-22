@@ -10,6 +10,7 @@ import com.example.webchiasetailieu.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class RoleService {
     RoleRepository repository;
     PermissionRepository permissionRepository;
-
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         Role role = Role.builder()
                 .name(request.getName())
