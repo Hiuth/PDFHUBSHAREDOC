@@ -197,6 +197,7 @@ public class DocumentService {
                 accountService.rewardPoint(account.getId(), - documents.getPoint());
 
             documents.setDownloadTimes(documents.getDownloadTimes() + 1);
+            documentRepository.save(documents);
             if(!mailService.classifyBeforeSendEmail(SendEmailRequest.builder()
                             .email(documents.getCreatedBy().getEmail())
                             .emailType(EmailType.DOWNLOAD)

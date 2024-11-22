@@ -40,8 +40,10 @@ function updateFileName() {
 
             // Tạo iframe để hiển thị PDF
             pdfViewDiv.innerHTML = `<iframe src="${fileURL}" width="100%" height="100%"></iframe>`;
+        } else if (file.type === "application/msword" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+
         } else {
-            fileNameDisplay.innerHTML = "Vui lòng chọn một tệp PDF.";
+            fileNameDisplay.innerHTML = "Vui lòng chọn một tệp PDF hoặc Word.";
         }
     } else {
         // Xóa nội dung nếu không có file

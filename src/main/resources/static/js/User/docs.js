@@ -274,6 +274,31 @@ function compareStringsWithNumbers(a, b) {
     return partsA.length - partsB.length;
 }
 
+function formatGoogleDriveLink(url) {
+    if (!url || typeof url !== "string") {
+        console.error("Invalid URL passed to formatGoogleDriveLink:", url);
+        return null;
+    }
+
+    let fileId = null;
+
+    const regexWithD = /https:\/\/drive\.google\.com\/.*?\/d\/([^\/]+)/;
+    const matchWithD = url.match(regexWithD);
+
+    if (matchWithD) {
+        fileId = matchWithD[1];
+    } else {
+        const regexWithId = /https:\/\/drive\.google\.com\/.*?[?&]id=([^&]+)/;
+        const matchWithId = url.match(regexWithId);
+
+        if (matchWithId) {
+            fileId = matchWithId[1];
+        }
+    }
+
+    return fileId ? `https://drive.google.com/file/d/${fileId}/preview` : null;
+}
+
 
 function fetchDetailsDocument(documentId) {
     // Configure WebSocket connection
@@ -359,10 +384,9 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
     const downloadTimes = documentData.downloadTimes || 0;
     const documentName = documentData.name || 'Tài liệu không có tiêu đề';
     //alert(documentData.url);
-    alert(documentData.url);
 
-    const link = formatGoogleDriveLink();
-    console.log(link);
+    const url = documentData.url;
+    const formattedLink = formatGoogleDriveLink(url);
 
 
     // Render document details HTML
@@ -407,15 +431,11 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                         <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
                         <a onclick="" id="share">Chia sẻ</a>
                     </div>
-                    <div class="form-group2">
-                        <input type="number" name="numPages" id="numPages" value="1">
-                        <div class="black"> / <div id="totalPages">50</div> trang</div>
-                    </div>
-                    <a class="download-button" onclick="downloadDocument(${documentID})">
-                    <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</a>
+                    <button class="download-button" onclick="downloadDocument(${documentID})">
+                    <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
                 </div>
             </div>
-            <iframe id="pdfview" src="${link}" class="docs-part"></iframe>
+            <iframe id="pdfview" src="${formattedLink}" class="docs-part"></iframe>
         </div>
     `;
 }
@@ -562,32 +582,4 @@ function searchDocument(Key, i = 0) {
         console.error("Connection error: ", error);
     });
 }
-
-function formatGoogleDriveLink(url) {
-    let fileId = null;
-
-    // Kiểm tra kiểu URL chứa `/d/<ID>`
-    const regexWithD = /https:\/\/drive\.google\.com\/.*?\/d\/([^\/]+)/;
-    const matchWithD = url.match(regexWithD);
-
-    if (matchWithD) {
-        fileId = matchWithD[1];
-    } else {
-        // Kiểm tra kiểu URL chứa `id=<ID>` (trường hợp của bạn)
-        const regexWithId = /https:\/\/drive\.google\.com\/.*?[?&]id=([^&]+)/;
-        const matchWithId = url.match(regexWithId);
-
-        if (matchWithId) {
-            fileId = matchWithId[1];
-        }
-    }
-
-    // Trả về đường dẫn đã được format nếu tìm thấy fileId, nếu không trả về null
-    return fileId ? `https://drive.google.com/file/d/${fileId}/preview` : null;
-}
-
-// Ví dụ sử dụng hàm
-const originalLink = "https://drive.google.com/uc?export=view&id=1bA8sCdZuY7VHFVQdJlhCt4XVMkIYsw_5";
-const formattedLink = formatGoogleDriveLink(originalLink);
-console.log(formattedLink); // In ra: https://drive.google.com/file/d/1bA8sCdZuY7VHFVQdJlhCt4XVMkIYsw_5/preview
 
