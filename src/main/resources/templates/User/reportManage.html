@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="../../static/css/docs.css">
     <link rel="stylesheet" href="../../static/css/userManage.css">
     <link rel="stylesheet" href="../../static/css/report.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -28,7 +29,7 @@
                         <tr>
                             <th style="min-width: 40px;">ID</th>
                             <th style="min-width: 120px;">Loại báo cáo</th>
-                            <th style="min-width: 120px;">Loại vấn đề</th>
+<!--                            <th style="min-width: 120px;">Loại vấn đề</th>-->
                             <th style="min-width: 250px;">Nội dung</th>
                             <th style="min-width: 60px;">Thời gian</th>
                             <th style="min-width: 120px;">Tình trạng</th>
@@ -36,29 +37,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>BC001</td>
-                            <td>Báo cáo vi phạm</td>
-                            <td>Vi phạm nội quy</td>
-                            <td>Người dùng vi phạm nội quy diễn đàn</td>
-                            <td>22/10/2024</td>
-                            <td class="status-responded">Đã phản hồi</td>
-                            <td><a href="reportDetails.html" class="btn btn-primary btn-sm">Xem chi tiết</a></td>
-                        </tr>
-                        <tr>
-                            <td>BC002</td>
-                            <td>Báo cáo sự cố</td>
-                            <td>Sự cố hệ thống</td>
-                            <td>Trang web bị lỗi khi truy cập</td>
-                            <td>21/10/2024</td>
-                            <td class="status-not-responded">Chưa phản hồi</td>
-                            <td><a href="reportDetails.html" class="btn btn-primary btn-sm">Xem chi tiết</a></td>
-                        </tr>
-                        <!-- Thêm các hàng khác nếu cần -->
+<!--                        <tr>-->
+<!--                            <td>1</td>-->
+<!--                            <td>Loại 1</td>-->
+<!--                            <td>Vấn đề 1</td>-->
+<!--                            <td>Nội dung 1</td>-->
+<!--                            <td>2021-05-01</td>-->
+<!--                            <td>Đã xử lý</td>-->
+<!--                            <td><a href="reportDetail.html">Xem chi tiết</a></td>-->
+<!--                        </tr>-->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+<script type="module" src="../../static/js/User/reportManage.js"></script>
+<script type="module">
+    import {fetchMyReports} from "../../static/js/User/reportManage.js";
+    fetchMyReports();
+</script>
 </body>
 </html>
