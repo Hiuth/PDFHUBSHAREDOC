@@ -71,12 +71,12 @@ function adminSendNotification(feedId,type,content,docId) {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
     let feedType="";
-    if(type==="Violating content of documents"){
-        feedType="REPORT_DOCUMENT";
-    }
+    // if(type==="Violating content of documents"){
+    //     feedType="REPORT_DOCUMENT";
+    // }
     const Notification ={
         id: feedId,
-        type: feedType,
+        type: type,
         content:content,
         docId: docId
     }

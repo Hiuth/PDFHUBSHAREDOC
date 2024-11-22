@@ -902,3 +902,37 @@ body {
 .notification-delete-btn:hover::after {
   background-color: #ff0000;
 }
+
+/* Nền overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ đen */
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container cho spinner và văn bản */
+.spinner-container {
+  text-align: center;
+  color: #fff;
+}
+
+/* Tăng kích thước spinner */
+.spinner-border {
+  width: 5rem;
+  height: 5rem;
+  border-width: 0.5rem;
+}
+
+/* Văn bản hiển thị khi loading */
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
