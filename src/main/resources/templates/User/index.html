@@ -42,30 +42,26 @@
     </div>
 
     <div class="recommend">
-        <div class="Group-title">Truyện hay cho bé</div>
+        <div class="Group-title">Tài liệu lớp 3</div>
         <div class="Docs-group">
             <div class="no-results">
                 <img src="../../static/images/icons/Box-Important.png">
                 <div>Không tìm thấy tài liệu phù hợp</div>`
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    fetchDocument("Lớp 3");
-                });
-            </script>
         </div>
 
-        <div class="Group-title">Truyện hay cho bé</div>
+        <div class="Group-title">Tài liệu lớp 4</div>
         <div class="Docs-group">
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    fetchDocument("Lớp 3",1);
-                });
-            </script>
+
         </div>
     </div>
 </div>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchDocument("Lớp 3",0)
+        fetchDocument("Lớp 4",1);
+    });
+</script>
 <div id="footer-placeholder"></div>
 </body>
 </html>
