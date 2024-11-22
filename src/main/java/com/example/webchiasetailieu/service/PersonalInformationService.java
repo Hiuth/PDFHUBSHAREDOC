@@ -76,6 +76,13 @@ public class PersonalInformationService {
         return convertToResponse(repository.save(personalInformation));
     }
 
+    @PreAuthorize("hasAuthority('UP_AVATAR')")
+    public PerInfoResponse updateMyAvatar(String fileName){
+        PersonalInformation personalInformation = getPerInfoFromContext();
+        personalInformation.setAvatar(fileName);
+        return convertToResponse(repository.save(personalInformation));
+    }
+
     //public
     public PerInfoResponse createInfoAfterRegister(CreationInfoAfterRegisterRequest request) throws AppException {
         Account account = accountRepository.findByEmail(request.getEmail())

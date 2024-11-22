@@ -46,6 +46,16 @@ public class PersonalInformationController {
                 .build();
     }
 
+    @PutMapping("/updateAvatar/{FileName}")
+    ApiResponse<PerInfoResponse> updateMyAvatar(@PathVariable String FileName) {
+        return ApiResponse.<PerInfoResponse>builder()
+                .code(1000)
+                .message("Update my avatar")
+                .result(service.updateMyAvatar(FileName))
+                .build();
+    }
+
+
     @GetMapping
     @MessageMapping("/getInfo")
     @SendTo("/topic/getInfo")
@@ -74,4 +84,6 @@ public class PersonalInformationController {
                 .result(service.createInfoAfterRegister(request))
                 .build();
     }
+
+
 }
