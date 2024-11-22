@@ -75,7 +75,7 @@ export function updateDocument() {
     const documentDescription = document.getElementById("describe").value.trim();
     const docCategoryId = document.getElementById("groupSelectUser").value;
     const point = document.querySelector('select[name="pay"]').value;
-    const documentAvatar = "sachToan.jpg"; // Default avatar
+    const documentAvatar = document.getElementById("documentAvatar").value;
 
     // Validate required fields
     if (!docId) {
@@ -87,13 +87,6 @@ export function updateDocument() {
     const docType = documentFile
         ? documentFile.name.substring(documentFile.name.lastIndexOf('.') + 1)
         : null;
-
-    // Validate other fields
-    if (!documentTitle || !docCategoryId) {
-        alert("Vui lòng điền đầy đủ thông tin!");
-        return;
-    }
-
     // Append data to FormData
     if (documentFile) {
         formData.append('file', documentFile);
@@ -123,9 +116,9 @@ export function updateDocument() {
             return response.json();
         })
         .then(data => {
-            if (data.code === 9999) {
-                throw new Error(data.message);
-            }
+            // if (data.code === 9999) {
+            //     throw new Error(data.message);
+            // }
             console.log("Cập nhật thành công:", data);
             alert("Cập nhật tài liệu thành công!");
             window.location.reload(); // Redirect to my documents page

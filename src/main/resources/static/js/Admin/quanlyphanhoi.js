@@ -170,6 +170,12 @@ document.addEventListener("DOMContentLoaded", function () {
         resetModalFields();
     })
 
+    btnToDoc.addEventListener("click", ()=>{
+        const docId = document.getElementById('docId').value;
+        const url = `http://localhost:63342/webchiasetailieu/templates/User/docsDetail.html?docId=${docId}`;
+        window.location.href = url;
+    })
+
     // Cho phép đóng modal bằng cách nhấp bên ngoài hoặc nhấn phím 'Escape'
     window.addEventListener("click", (event) => {
         if (event.target === modal) {
@@ -193,10 +199,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function checkTypeAndToggleButton(feedType) {
         const sendNotiButton = document.getElementById("btnSendNoti");
+        const toDoc =document.getElementById("btnToDoc")
         if (feedType === "Another problem") {
-            sendNotiButton.style.display = "none"; // Ẩn nút
+            sendNotiButton.style.display = "none";// Ẩn nút
+            toDoc.style.display="none";
         } else {
             sendNotiButton.style.display = "inline-block"; // Hiển thị nút
+            toDoc.style.display = "inline-block"
         }
     }
 });
