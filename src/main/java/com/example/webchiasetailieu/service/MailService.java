@@ -32,6 +32,9 @@ public class MailService{
         String body;
         String otp = otpService.generateSecureOTP(request.getEmail());
 
+        if(accountRepository.existsByEmail(request.getEmail()))
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+
         switch (request.getEmailType()) {
             case DOWNLOAD:
                 subject = "Tài liệu của bạn có một lượt tải";
