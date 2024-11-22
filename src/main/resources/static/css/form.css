@@ -470,7 +470,7 @@ select[disabled] {
     text-transform: uppercase;
 }
 
-#otp-popup{
+#otp-popup, #pass-popup{
     position: fixed;
     top: 50%;
     left: 50%;

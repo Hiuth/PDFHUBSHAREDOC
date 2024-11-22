@@ -50,67 +50,23 @@ function updateFileName() {
     }
 }
 
-function ChangeInfo() {
-    // Ẩn nút 'Thay đổi' và hiển thị nút 'Lưu'
-    document.querySelector("a[onclick='ChangeInfo()']").style.display = 'none';
-    document.querySelector("a[onclick='ConfirmChangeInfo()']").style.display = '';
+// function ChangeInfo() {
+//     // Ẩn nút 'Thay đổi' và hiển thị nút 'Lưu'
+//     document.querySelector("a[onclick='ChangeInfo()']").style.display = 'none';
+//     document.querySelector("a[onclick='ConfirmChangeInfo()']").style.display = '';
+//
+//     // Hiển thị thông báo thay đổi
+//     document.querySelector(".ChangeTitle").style.display = '';
+//
+//     // Lấy tất cả các input có class 'read' trong form với id 'infoChange'
+//     document.querySelectorAll("#infoChange .read").forEach(input => {
+//         input.removeAttribute("readonly");
+//         input.removeAttribute("disabled")
+//         input.style.pointerEvents = "auto"; // Cho phép click vào
+//         input.style.border = "1px solid #ccc"; // Đặt viền khi có thể chỉnh sửa
+//     });
+// }
 
-    // Hiển thị thông báo thay đổi
-    document.querySelector(".ChangeTitle").style.display = '';
-
-    // Lấy tất cả các input có class 'read' trong form với id 'infoChange'
-    document.querySelectorAll("#infoChange .read").forEach(input => {
-        input.removeAttribute("readonly");
-        input.removeAttribute("disabled")
-        input.style.pointerEvents = "auto"; // Cho phép click vào
-        input.style.border = "1px solid #ccc"; // Đặt viền khi có thể chỉnh sửa
-    });
-}
-
-function ConfirmChangeInfo() {
-    let isValid = true;
-    const infoChange = document.forms["infoChange"]; // Reference to the form
-
-    // Get input values using the form reference
-    const fullname = infoChange.elements["fullname"].value.trim();
-    const gender = infoChange.elements["gender"].value.trim();
-    const birthday = infoChange.elements["birthday"].value.trim();
-
-    // Error elements within the form
-    const errorElements = infoChange.querySelectorAll(".error");
-
-    // Check if fullname is not empty
-    if (fullname === "") {
-        errorElements[0].textContent = "Họ và tên không được để trống.";
-        isValid = false;
-    } else {
-        errorElements[0].textContent = "";
-    }
-
-    // Check if gender is not empty and is valid
-    if (gender === "") {
-        errorElements[1].textContent = "Giới tính không được để trống.";
-        isValid = false;
-    } else if (gender !== "Nam" && gender !== "Nữ") {
-        errorElements[1].textContent = "Giới tính chỉ có thể là Nam hoặc Nữ";
-        isValid = false;
-    } else {
-        errorElements[1].textContent = "";
-    }
-
-    // Check if birthday is not empty and in the correct format
-    if (birthday === "") {
-        errorElements[2].textContent = "Ngày sinh không được để trống.";
-        isValid = false;
-    } else {
-        errorElements[2].textContent = "";
-    }
-
-    // If all fields are valid, submit the form
-    if (isValid) {
-        infoChange.submit();
-    }
-}
 
 
 function isValidDate(dateString) {
@@ -142,6 +98,15 @@ function openOTPPopup() {
 function closeOTPPopup() {
     document.getElementById('otp-popup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
+}
+
+function closePassPopup() {
+    document.getElementById('pass-popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+function openChangePass() {
+    document.getElementById('pass-popup').style.display = '';
+    document.getElementById('overlay').style.display = '';
 }
 
 function ChangePass(event) {
