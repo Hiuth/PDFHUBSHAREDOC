@@ -95,12 +95,12 @@ public class AccountService {
         return convertToResponse(accountRepository.save(account));
     }
 
-    @PreAuthorize("hasRole('USER')")
-    public String forgetPassword(String newPass, String otp){
-        Account account = getAccountFromAuthentication();
-        account.setPassword(passwordEncoder.encode(newPass));
+    //public
+    public String forgetPassword(ForgotPasswordRequest request){
+        Account account = accountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        account.setPassword(passwordEncoder.encode(request.getNewPass()));
         accountRepository.save(account);
-
         return "Reset password successfully!";
     }
 

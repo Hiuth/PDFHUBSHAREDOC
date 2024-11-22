@@ -2,6 +2,7 @@ package com.example.webchiasetailieu.controller;
 
 import com.example.webchiasetailieu.dto.request.AccountCreationRequest;
 import com.example.webchiasetailieu.dto.request.AccountUpdateRequest;
+import com.example.webchiasetailieu.dto.request.ForgotPasswordRequest;
 import com.example.webchiasetailieu.dto.request.UpdatePassword;
 import com.example.webchiasetailieu.dto.response.AccountResponse;
 import com.example.webchiasetailieu.dto.response.ApiResponse;
@@ -130,10 +131,10 @@ public class AccountController {
     }
 
     @PostMapping("/forgetPassword")
-    ApiResponse<String> resetPassword(@RequestBody String newPass, @RequestBody String otp){
+    ApiResponse<String> resetPassword(@RequestBody @Valid ForgotPasswordRequest request){
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Forget password");
-        response.setResult(accountService.forgetPassword(newPass, otp));
+        response.setResult(accountService.forgetPassword(request));
         return response;
     }
 
