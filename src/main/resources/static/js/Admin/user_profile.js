@@ -53,7 +53,7 @@ export function savePassword() {
   const token = getToken();
   const socket = new SockJS("http://localhost:8088/ws");
   const client = Stomp.over(socket);
-  if ( newPassword.length >= 8) {
+  if ( newPassword.length >= 6) {
 
     let modal = bootstrap.Modal.getInstance(document.getElementById("changePasswordModal"));
     modal.hide();

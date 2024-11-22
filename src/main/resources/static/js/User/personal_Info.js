@@ -166,3 +166,32 @@ export function ConfirmChangeInfo() {
 }
 window.ConfirmChangeInfo=ConfirmChangeInfo;
 
+export function updatePassWord(event){
+    event.preventDefault();
+    const form = event.target;
+    const oldPassword = form.querySelector('#oldPass').value;
+    const newPassword = form.querySelector('#newPass').value;
+    const password = {
+        oldPassword: oldPassword,
+        newPassword: newPassword
+    }
+    console.log(password);
+
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    if ( newPassword.length >= 6) {
+        client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+            client.send("/app/updatePass",{},JSON.stringify(password));
+            client.subscribe('/topic/updatePassword',function (data) {
+                // const result = JSON.parse(data);
+                // const message = result.message;
+                window.location.reload();
+            })
+        })
+    } else {
+        alert("Mật khẩu không hợp lệ. Vui lòng thử lại.");
+    }
+}
+
+window.updatePassWord=updatePassWord;

@@ -100,7 +100,7 @@
                         <h3>Đổi mật khẩu</h3>
                         <button class="close-btn" onclick="closePassPopup()">×</button>
                     </div>
-                    <form class="form-group1" id="inputOTP" onsubmit="">
+                    <form class="form-group1" id="inputOTP" onsubmit="updatePassWord(event)">
                         <div class="form-group2">
                             <label >Mật khẩu cũ</label>
                             <input type="text" name="oldPass" id="oldPass" required/>
@@ -110,7 +110,7 @@
                             <input type="text" name="newPass" id="newPass" required/>
                         </div>
                         <div class="error" style="text-align: center"></div>
-                        <input type="submit" value="Xác nhận"  id="OTP-submit">
+                        <input type="submit" value="Xác nhận"  id="pass-submit">
                     </form>
                 </div>
             </div>
