@@ -303,7 +303,7 @@ function fetchDetailsDocument(documentId) {
                     }
 
                     // Handle document data rendering
-                    renderDocumentDetails(docDetailElement, documentData);
+                    renderDocumentDetails(docDetailElement, documentData, documentId);
 
                     // Unsubscribe after receiving data
                     detailsSubscription.unsubscribe();
@@ -347,8 +347,9 @@ function fetchDetailsDocument(documentId) {
 }
 
 // Helper function to render document details
-function renderDocumentDetails(containerElement, documentData) {
+function renderDocumentDetails(containerElement, documentData, documentID) {
     // Safely extract and format data
+    console.log(documentData);
     const username = getUsername(documentData);
     const formattedDate = documentData.createdAt
         ? formatDate(documentData.createdAt)
@@ -357,6 +358,11 @@ function renderDocumentDetails(containerElement, documentData) {
     const description = documentData.description || 'Không có mô tả';
     const downloadTimes = documentData.downloadTimes || 0;
     const documentName = documentData.name || 'Tài liệu không có tiêu đề';
+    //alert(documentData.url);
+    alert(documentData.url);
+
+    const link = formatGoogleDriveLink();
+    console.log(link);
 
 
     // Render document details HTML
@@ -395,9 +401,61 @@ function renderDocumentDetails(containerElement, documentData) {
                     </div>
                 </div>
             </div>
+            <div class="download-part">
+                <div class="download-p">
+                    <div class="form-group2">
+                        <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
+                        <a onclick="" id="share">Chia sẻ</a>
+                    </div>
+                    <div class="form-group2">
+                        <input type="number" name="numPages" id="numPages" value="1">
+                        <div class="black"> / <div id="totalPages">50</div> trang</div>
+                    </div>
+                    <a class="download-button" onclick="downloadDocument(${documentID})">
+                    <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</a>
+                </div>
+            </div>
+            <iframe id="pdfview" src="${link}" class="docs-part"></iframe>
         </div>
     `;
 }
+
+function downloadDocument(docId) {
+    // Prevent any default navigation
+    event.preventDefault();
+
+    fetch(`http://localhost:8088/doc/download/${docId}`, {
+        method: 'GET',
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            }
+            throw new Error("Tải xuống thất bại!");
+        })
+        .then(blob => {
+            // Tạo URL cho blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Tạo link tải file
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Document-${docId}.pdf`;
+
+            // Thêm link vào DOM, click, và xóa
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Giải phóng URL blob
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error("Lỗi khi tải xuống:", error);
+            alert("Không thể tải xuống tài liệu.");
+        });
+}
+
 
 // Utility function to get username safely
 function getUsername(documentData) {
@@ -484,7 +542,7 @@ function searchDocument(Key, i = 0) {
                         <div class="docInfor">
                             <div class="uptime">
                                 <img src="../../static/images/icons/Clock.png" alt="">
-                                <div>${doc.createAt}</div>
+                                <div>${formatDate(doc.createdAt)}</div>
                             </div>
                             <div class="downtime">
                                 <img src="../../static/images/icons/Downloading Updates.png" alt="">
@@ -504,3 +562,32 @@ function searchDocument(Key, i = 0) {
         console.error("Connection error: ", error);
     });
 }
+
+function formatGoogleDriveLink(url) {
+    let fileId = null;
+
+    // Kiểm tra kiểu URL chứa `/d/<ID>`
+    const regexWithD = /https:\/\/drive\.google\.com\/.*?\/d\/([^\/]+)/;
+    const matchWithD = url.match(regexWithD);
+
+    if (matchWithD) {
+        fileId = matchWithD[1];
+    } else {
+        // Kiểm tra kiểu URL chứa `id=<ID>` (trường hợp của bạn)
+        const regexWithId = /https:\/\/drive\.google\.com\/.*?[?&]id=([^&]+)/;
+        const matchWithId = url.match(regexWithId);
+
+        if (matchWithId) {
+            fileId = matchWithId[1];
+        }
+    }
+
+    // Trả về đường dẫn đã được format nếu tìm thấy fileId, nếu không trả về null
+    return fileId ? `https://drive.google.com/file/d/${fileId}/preview` : null;
+}
+
+// Ví dụ sử dụng hàm
+const originalLink = "https://drive.google.com/uc?export=view&id=1bA8sCdZuY7VHFVQdJlhCt4XVMkIYsw_5";
+const formattedLink = formatGoogleDriveLink(originalLink);
+console.log(formattedLink); // In ra: https://drive.google.com/file/d/1bA8sCdZuY7VHFVQdJlhCt4XVMkIYsw_5/preview
+

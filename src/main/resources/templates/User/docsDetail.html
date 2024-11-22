@@ -8,6 +8,7 @@
     <script defer src="../../static/js/User/include.js"></script>
 
     <script src="../../static/js/User/docs.js"></script>
+    <script src="../../static/js/User/readPdf.js"></script>
 
     <link rel="icon" href="../../static/images/favicon.png" type="image/x-icon">
 
@@ -24,14 +25,17 @@
 
 <div class="main-content">
     <div class="main-part">
-        <script>
-            // Lấy URL hiện tại
-            const urlParams = new URLSearchParams(window.location.search);
+        <div class="docsInfo-part">
+            <script>
+                // Lấy URL hiện tại
+                const urlParams = new URLSearchParams(window.location.search);
 
-            // Gán giá trị của 'tab' vào biến nếu nó tồn tại, nếu không thì gán giá trị mặc định
-            const tab = urlParams.get('docId');
-            fetchDetailsDocument(tab);
-        </script>
+                // Gán giá trị của 'tab' vào biến nếu nó tồn tại, nếu không thì gán giá trị mặc định
+                const tab = urlParams.get('docId');
+                fetchDetailsDocument(tab);
+            </script>
+        </div>
+
 
 <!--        <div class="docsInfo-part">-->
 <!--            <div class="Info-part">-->
@@ -74,28 +78,10 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
-        <div class="docsInfo-part">
+
 <!--            <div class="Info-part">-->
             <!-- The content will be dynamically inserted here by fetchDetailsDocument() -->
 <!--            </div>-->
-            <div class="download-part">
-                <div class="download-p">
-                    <div class="form-group2">
-                        <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
-                        <!--                        <a onclick="" id="share">Chia sẻ</a>-->
-                    </div>
-                    <div class="form-group2">
-                        <input type="number" name="numPages" id="numPages" value="1">
-                        <div class="black"> / <div id="totalPages">50</div> trang</div>
-                    </div>
-                    <a class="download-button"><img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</a>
-                </div>
-            </div>
-            <iframe src="https://www.orimi.com/pdf-test.pdf" class="docs-part">
-            </iframe>
-        </div>
-
-
 
 <!--                <div class="comment-part">-->
 <!--                    <div class="form-group1">-->
