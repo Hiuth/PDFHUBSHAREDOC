@@ -1,128 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../static/css/sidebarNoti.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">
-
+    <title >Thông Báo</title>
 </head>
-<div class="sidebar">
-    <div class="title" id="pink">Thông báo</div>
-    <div class="noti">
-        <div class="oneNotiBox" id="new-downloads">
-            <div class="h-group">
-                <img src="../../static/images/icons/Downloading%20Updates%20black.png" alt="">
-                <div class="noti-title">Bạn có lượt tải tài liệu mới</div>
-            </div>
-            <div class="noti-content">
-                Tài liệu “Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM” của bạn vừa được tải xuống!
-                Tổng lượt tải tài liệu hiện tại là: <b>20,001 lượt</b>
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-                <a href="" id="noti-link">Ấn để xem tài liệu</a>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="new-comments">
-            <div class="h-group">
-                <img src="../../static/images/icons/QuoteBlack.png" alt="">
-                <div class="noti-title">Bình luận mới trên tài liệu của bạn</div>
-            </div>
-            <div class="noti-content">
-                <b>Nguyễn Văn ABC</b> đã bình luận: <i><b>“10 điểm cho chủ thớt!”</b></i> trên tài liệu
-                “Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM” của bạn!
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-                <a href="" id="noti-link">Ấn để xem tài liệu</a>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="more-coin">
-            <div class="h-group">
-                <img src="../../static/images/icons/Cash.png" alt="">
-                <div class="noti-title">Số dư tăng</div>
-            </div>
-            <div class="noti-content">
-                Bạn được nhận thêm <b>2000 xu</b> từ 100 lượt tải trong tài liệu <b>"Toán rời rạc"</b>
-                Tổng lượt tải tài liệu hiện tại là: <b>20,001 lượt</b>
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-                <a href="" id="noti-link">Ấn để xem tài liệu</a>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="alert-comments">
-            <div class="h-group">
-                <img src="../../static/images/icons/High%20Priority%20Message.png" alt="">
-                <div class="noti-title">Bình luận của bạn vừa bị xóa</div>
-            </div>
-            <div class="noti-content">
-                Bình luận của bạn trên tài liệu <b>"Toán rời rạc"</b> vừa bị xóa vì phản cảm.
-                Nếu còn tiếp tục vi phạm thêm 2 lần nữa, tài khoản của bạn có thể bị cấm vĩnh viễn!
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-                <a href="" id="noti-link">Ấn để xem tài liệu</a>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="alert-pdf">
-            <div class="h-group">
-                <img src="../../static/images/icons/Error.png" alt="">
-                <div class="noti-title">Bài đăng của bạn vừa bị xóa</div>
-            </div>
-            <div class="noti-content">
-                Tài liệu <b>“Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM”</b> của bạn vừa bị xóa bởi nội dung phản cảm
-                Nếu còn tiếp tục vi phạm, tài khoản của bạn sẽ bị cấm vĩnh viễn
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="block">
-            <div class="h-group">
-                <img src="../../static/images/icons/So%20So.png" alt="">
-                <div class="noti-title">Lời tạm biệt</div>
-            </div>
-            <div class="noti-content">
-                Vì vi phạm quá nhiều lần, tài khoản của bạn sẽ bị cấm vĩnh viễn
-                Lệnh cấm sẽ được thực thi vào ngày <b>10/11/2024</b>. Hãy đảm bảo đã tải hết các tài liệu bạn cần!
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-            </div>
-        </div>
-        <div class="oneNotiBox" id="respone">
-            <div class="h-group">
-                <img src="../../static/images/icons/Response.png" alt="">
-                <div class="noti-title">Phản hồi từ Admin</div>
-            </div>
-            <div class="noti-content">
-                Báo cáo mã <b>ABCDS231</b> của bạn đã nhận được phản hồi từ Admin
-            </div>
-            <div class="d-group">
-                <div class="i-group">
-                    <img src="../../static/images/icons/Clock%20gray.png" alt="">
-                    <div class="noti-time">10:00PM 5/10/2024</div>
-                </div>
-                <a href="" id="noti-link">Ấn để xem báo cáo</a>
-            </div>
-        </div>
+<body>
+<!-- Nút để hiển thị/tắt panel thông báo -->
+<!--<button id="notification-toggle" class="toggle-button">Hiển thị thông báo</button>-->
+
+<div class="sidebar" >
+    <div class="title" id="pink">
+        Thông báo
+    </div>
+    <div class="noti" id="notification-list">
+        <!-- Notification items will be dynamically added here by JavaScript -->
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="module" src="../../static/js/User/thongbaoUser.js"></script>
+<script type="module">
+    import {loadNotifications} from "../../static/js/User/thongbaoUser.js";
+    loadNotifications();
+</script>
+</body>
+</html>
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <link rel="stylesheet" href="../../static/css/sidebarNoti.css">-->
+<!--    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&display=swap">-->
+
+<!--</head>-->
+<!--<div class="sidebar">-->
+<!--    <div class="title" id="pink">Thông báo</div>-->
+<!--    <div class="noti">-->
+<!--        <div class="oneNotiBox" id="new-downloads">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/Downloading%20Updates%20black.png" alt="">-->
+<!--                <div class="noti-title">Bạn có lượt tải tài liệu mới</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Tài liệu “Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM” của bạn vừa được tải xuống!-->
+<!--                Tổng lượt tải tài liệu hiện tại là: <b>20,001 lượt</b>-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--                <a href="" id="noti-link">Ấn để xem tài liệu</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="new-comments">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/QuoteBlack.png" alt="">-->
+<!--                <div class="noti-title">Bình luận mới trên tài liệu của bạn</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                <b>Nguyễn Văn ABC</b> đã bình luận: <i><b>“10 điểm cho chủ thớt!”</b></i> trên tài liệu-->
+<!--                “Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM” của bạn!-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--                <a href="" id="noti-link">Ấn để xem tài liệu</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="more-coin">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/Cash.png" alt="">-->
+<!--                <div class="noti-title">Số dư tăng</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Bạn được nhận thêm <b>2000 xu</b> từ 100 lượt tải trong tài liệu <b>"Toán rời rạc"</b>-->
+<!--                Tổng lượt tải tài liệu hiện tại là: <b>20,001 lượt</b>-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--                <a href="" id="noti-link">Ấn để xem tài liệu</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="alert-comments">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/High%20Priority%20Message.png" alt="">-->
+<!--                <div class="noti-title">Bình luận của bạn vừa bị xóa</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Bình luận của bạn trên tài liệu <b>"Toán rời rạc"</b> vừa bị xóa vì phản cảm.-->
+<!--                Nếu còn tiếp tục vi phạm thêm 2 lần nữa, tài khoản của bạn có thể bị cấm vĩnh viễn!-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--                <a href="" id="noti-link">Ấn để xem tài liệu</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="alert-pdf">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/Error.png" alt="">-->
+<!--                <div class="noti-title">Bài đăng của bạn vừa bị xóa</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Tài liệu <b>“Toán rời rạc - ĐH Giao Thông Vận Tải TPHCM”</b> của bạn vừa bị xóa bởi nội dung phản cảm-->
+<!--                Nếu còn tiếp tục vi phạm, tài khoản của bạn sẽ bị cấm vĩnh viễn-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="block">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/So%20So.png" alt="">-->
+<!--                <div class="noti-title">Lời tạm biệt</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Vì vi phạm quá nhiều lần, tài khoản của bạn sẽ bị cấm vĩnh viễn-->
+<!--                Lệnh cấm sẽ được thực thi vào ngày <b>10/11/2024</b>. Hãy đảm bảo đã tải hết các tài liệu bạn cần!-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="oneNotiBox" id="respone">-->
+<!--            <div class="h-group">-->
+<!--                <img src="../../static/images/icons/Response.png" alt="">-->
+<!--                <div class="noti-title">Phản hồi từ Admin</div>-->
+<!--            </div>-->
+<!--            <div class="noti-content">-->
+<!--                Báo cáo mã <b>ABCDS231</b> của bạn đã nhận được phản hồi từ Admin-->
+<!--            </div>-->
+<!--            <div class="d-group">-->
+<!--                <div class="i-group">-->
+<!--                    <img src="../../static/images/icons/Clock%20gray.png" alt="">-->
+<!--                    <div class="noti-time">10:00PM 5/10/2024</div>-->
+<!--                </div>-->
+<!--                <a href="" id="noti-link">Ấn để xem báo cáo</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->

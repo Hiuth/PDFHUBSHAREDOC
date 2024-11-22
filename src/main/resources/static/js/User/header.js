@@ -92,25 +92,51 @@ function openMenu() {
     }
 }
 
+// header.js
+
 // Hàm mở thông báo
 function openNoti() {
     if (isMenuOpen) {
         closeMenu();
     }
+
     if (!isNotiOpen) {
-        fetch('noti.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('popup-noti').innerHTML = data;
-                document.getElementById('popup-noti').style.display = '';
-                document.getElementById('overlay').style.display = '';
-                isNotiOpen = true;
-            })
-            .catch(error => console.error('Error:', error));
+        try {
+            fetch('noti.html')
+                .then(response => response.text())
+                .then(data => {
+                    // Thêm nội dung vào popup-noti
+                    document.getElementById('popup-noti').innerHTML = data;
+                    document.getElementById('popup-noti').style.display = '';
+                    document.getElementById('overlay').style.display = '';
+
+                    // Tạo phần tử script mới cho thongbaoUser.js
+                    const script = document.createElement('script');
+                    script.src = '../../static/js/User/thongbaoUser.js'; // Đường dẫn đến file JavaScript cho thông báo
+                    script.type = 'module';
+
+                    // Sau khi script tải xong, gọi loadNotifications
+                    script.onload = () => {
+                        import('../../js/User/thongbaoUser.js').then(module => {
+                            module.loadNotifications();  // Gọi hàm loadNotifications từ module đã import
+                        }).catch(err => console.error("Không thể import thongbaoUser.js:", err));
+                    };
+
+                    // Thêm script vào body
+                    document.body.appendChild(script);
+
+                    isNotiOpen = true;
+                })
+                .catch(error => console.error('Error loading noti.html:', error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
     } else {
         closeNoti();
     }
 }
+
+
 
 // Hàm đóng menu
 function closeMenu() {
