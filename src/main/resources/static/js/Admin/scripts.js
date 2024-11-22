@@ -46,7 +46,7 @@ function showDocumentDetails(documentId) {
 }
 
 // Hàm tải xuống tài liệu
-function downloadDocument(documentId) {
+function download(documentId) {
   // Giả lập việc tải xuống tài liệu
   alert("Đang tải xuống tài liệu " + documentId);
 }

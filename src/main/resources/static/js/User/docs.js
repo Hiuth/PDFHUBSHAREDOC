@@ -395,6 +395,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
             <div class="DocTitle">
                 ${documentData.name || 'Tài liệu không có tiêu đề'}
             </div>
+            <input type="hidden" id="documentIdforDownload" value="${documentID}"/>
             <div class="UserAndCategory">
                 <div class="form-group2 admin">
                     <img src="../../static/images/icons/avatar.png" alt="Avatar">
@@ -431,7 +432,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                         <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
                         <a onclick="" id="share">Chia sẻ</a>
                     </div>
-                    <button class="download-button" onclick="downloadDocument(${documentID})">
+                    <button type="button" class="download-button" onclick="downloadDocument()">
                     <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
                 </div>
             </div>
@@ -440,41 +441,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
     `;
 }
 
-function downloadDocument(docId) {
-    // Prevent any default navigation
-    event.preventDefault();
 
-    fetch(`http://localhost:8088/doc/download/${docId}`, {
-        method: 'GET',
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.blob();
-            }
-            throw new Error("Tải xuống thất bại!");
-        })
-        .then(blob => {
-            // Tạo URL cho blob
-            const url = window.URL.createObjectURL(blob);
-
-            // Tạo link tải file
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Document-${docId}.pdf`;
-
-            // Thêm link vào DOM, click, và xóa
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // Giải phóng URL blob
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error("Lỗi khi tải xuống:", error);
-            alert("Không thể tải xuống tài liệu.");
-        });
-}
 
 
 // Utility function to get username safely
