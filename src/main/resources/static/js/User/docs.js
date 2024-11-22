@@ -380,6 +380,8 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
         ? formatDate(documentData.createdAt)
         : 'Ngày không xác định';
     const category = getCategory(documentData);
+    const subCategory = documentData.category ? `${documentData.category?.subCategory}` : '';
+    console.log("Sub category:", documentData.category?.subCategory);
     const description = documentData.description || 'Không có mô tả';
     const downloadTimes = documentData.downloadTimes || 0;
     const documentName = documentData.name || 'Tài liệu không có tiêu đề';
@@ -404,7 +406,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
                 </div>
                 <div class="form-group2 Category">
                     <div class="gray">Thể loại</div>
-                    <a>${category}</a>
+                    <a href="category.html?tab=${subCategory}">${category}</a>
                 </div>
             </div>
             <div class="caption">
@@ -478,7 +480,7 @@ function formatDate(dateString) {
 
 // Utility function to get category safely
 function getCategory(documentData) {
-    return documentData?.category?.mainCategory
+    return documentData?.category?.subCategory
         || documentData?.category
         || 'Chưa phân loại';
 }
