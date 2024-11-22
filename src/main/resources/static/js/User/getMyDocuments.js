@@ -28,7 +28,7 @@ function renderMyDocuments(documents) {
         <div class="Docs" data-doc-id="${doc.id}">
             <div class="docs-content">
                 <a href="docsDetail.html?docId=${doc.id}">
-                    <img src="../../static/images/Documents/${doc.avatar}" alt="">
+                    <img id="avt" src="../../static/images/Documents/${doc.avatar}" alt="">
                 </a>
                 <a class="docsbutton" id="edit" href="editPdf.html?docId=${doc.id}">
                     <img src="../../static/images/icons/Pencil.png" alt="">

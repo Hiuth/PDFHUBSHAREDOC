@@ -20,8 +20,48 @@ export function PersonalInfo() {
     });
 }
 
+function logoutUser() {
+    const token = getToken(); // Lấy token từ hàm getToken()
+
+    // Dữ liệu gửi trong body của yêu cầu
+    const logoutRequest = {
+        token: token,
+    };
+
+    // Gửi yêu cầu POST đến API /logout
+    fetch("http://localhost:8088/auth/logout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token qua header Authorization
+        },
+        body: JSON.stringify(logoutRequest), // Chuyển đổi request thành chuỗi JSON
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse dữ liệu JSON từ phản hồi
+        })
+        .then((data) => {
+            console.log("Logout response:", data);
+            if (data.code === 1000) {
+                console.log("Logout successful:", data.result);
+                // Xử lý sau khi logout thành công (ví dụ: chuyển hướng đến trang đăng nhập)
+                window.location.href = "/login"; // Thay đổi URL tùy theo ứng dụng của bạn
+            } else {
+                console.error("Logout failed with code:", data.code);
+            }
+        })
+        .catch((error) => {
+            console.error("Error during logout:", error); // Xử lý lỗi nếu xảy ra
+        });
+}
+
+
 export function logout() {
     if (confirm('Xác nhận đăng xuất?')) {
+        logoutUser();
         removeToken();
         window.location.href = 'index.html';
     }

@@ -27,7 +27,7 @@ function renderDownloadHistory(downloadHistory) {
 
     docsGroup.innerHTML = downloadHistory.length > 0 ? downloadHistory.map(doc => `
         <a href="docsDetail.html?docId=${doc.documentId}" class="Docs">
-            <img src="../../static/images/${doc.documentAvatar}" alt="">
+            <img src="../../static/images/Documents/${doc.documentAvatar}" alt="">
             <div class="docTitle">${doc.documentName}</div>
             <div class="docInfor">
                 <div class="uptime"><img src="../../static/images/icons/Clock.png" alt=""><div>${doc.downloadDate}</div></div>
