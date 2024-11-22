@@ -116,6 +116,7 @@ button > img {
     border-radius: 10px;
     font-weight: 200;
     margin-left: 10px;
+    padding: 8px 20px   ;
 }
 
 .login-button {

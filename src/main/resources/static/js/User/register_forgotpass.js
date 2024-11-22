@@ -3,6 +3,7 @@ function sendOTP(e, type) {
 
     // Lấy email từ input field
     const email = document.getElementById("mail").value;
+    document.querySelector('.error').textContent = "";
 
     // Kiểm tra email đầu vào
     if (!email) {
@@ -14,9 +15,11 @@ function sendOTP(e, type) {
 
     resetButtonText();
     openOTPPopup();
+
     // Hiển thị spinner
     document.querySelector('#OTP-title').innerHTML = '';
     document.querySelector('#OTP-title').innerHTML = '<div class="spinner"></div> Đang gửi mail cho bạn...';
+
 
     // Payload yêu cầu
     const requestPayload = {
@@ -41,6 +44,7 @@ function sendOTP(e, type) {
             // Xử lý kết quả
             if (data.code && data.code !== 1000) {
                 document.querySelector('.error').textContent = data.message || "Không thể gửi OTP";
+                closeOTPPopup();
             } else {
                 document.querySelector('.error').textContent = ""; // Xóa lỗi nếu gửi thành công
             }
@@ -151,7 +155,7 @@ function resetButtonText() {
 function afterCheckOTP(type) {
     resetButtonText()
 
-    setTimeout(closeOTPPopup, 5000);
+    closeOTPPopup()
 
     document.querySelector('#OTP-title').innerHTML = '';
     document.querySelector('#OTP-title').innerHTML = '<div class="spinner"></div><br>Xác nhận OTP thành công<br> Đang chuyển hướng...'
@@ -214,10 +218,18 @@ function checkForm() {
 
     if (nextForm === "form2") {
         document.getElementById("get-otp").style.display = "none"; // Ẩn form 1
-        document.getElementById("register").style.display = ''; // Hiển thị form 2
+        if(document.getElementById("register")) {
+            document.getElementById("register").style.display = ''; // Hiển thị form
+        }else{
+            document.getElementById("resetpass").style.display = ''; // Hiển thị form
+        }
     } else {
         document.getElementById("get-otp").style.display = ''; // Hiển thị form 1
-        document.getElementById("register").style.display = "none"; // Ẩn form 2
+        if(document.getElementById("register")) {
+            document.getElementById("register").style.display = 'none'; // Hiển thị form
+        }else{
+            document.getElementById("resetpass").style.display = 'none'; // Hiển thị form
+        }
     }
 }
 
@@ -258,7 +270,7 @@ function register(e) {
         document.querySelectorAll(".error")[3].textContent = "Vui lòng xác nhận mật khẩu.";
         hasError = true;
     } else if (password !== confirmPassword) {
-        document.querySelectorAll(".error")[3].textContent = "Mật khẩu xác nhận không khớp.";
+        document.querySelectorAll(".error")[4].textContent = "Mật khẩu xác nhận không khớp.";
         hasError = true;
     }
 
@@ -292,6 +304,7 @@ function register(e) {
             if (data.code && data.code !== 1000) {
                 document.querySelectorAll(".error")[3].textContent = data.message || "Đăng ký không thành công."; // Thông báo lỗi từ API
             } else {
+                document.querySelector('#overlay').style.display = ''
                 document.querySelector('#success-popup').style.display = '';
             }
         })
@@ -310,6 +323,7 @@ function createPerInfo(e) {
     const fullName = document.getElementById("fname").value.trim();
     const gender = document.getElementById("gender").value.trim();
     const birthday = document.getElementById("birthday").value;
+    const email = document.getElementById("mail").value.trim();
 
     // Xóa thông báo lỗi cũ
     document.querySelectorAll(".error").forEach(errorDiv => errorDiv.textContent = "");
@@ -345,12 +359,13 @@ function createPerInfo(e) {
     // Payload yêu cầu
     const requestPayload = {
         fullName: fullName,
-        gender: gender === "Nam" ? "Male" : "Female",
-        birthday: birthday
+        gender: gender,
+        birthday: birthday,
+        email: email
     };
 
     // Gửi API
-    fetch("http://localhost:8088/perInfo", {
+    fetch("http://localhost:8088/perInfo/register/add-info", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -385,4 +400,65 @@ function setError(fieldId, message) {
         errorDiv.textContent = message;
     }
 }
+
+function respass(event) {
+    event.preventDefault(); // Ngăn chặn reload trang khi submit form
+
+    const newPassword = document.getElementById('npass').value;
+    const confirmPassword = document.getElementById('repass').value;
+    const email = document.getElementById("mail").value.trim();
+    document.querySelector("#otp-resend").style.display = "none";
+
+    // Kiểm tra các điều kiện
+    if (!newPassword || !confirmPassword) {
+        document.querySelectorAll(".error")[1].textContent = "Vui lòng nhập mật khẩu";
+        return false;
+    }
+
+    if (newPassword !== confirmPassword) {
+        document.querySelectorAll(".error")[1].textContent = "Mật khẩu xác nhận không khớp";
+        return false;
+    }
+
+    // Tạo payload
+    const payload = {
+        newPass: newPassword,
+        email: email
+    };
+
+    // Gọi API bằng Fetch
+    fetch('http://localhost:8088/account/forgetPassword', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            // Xử lý phản hồi từ API
+            if (!response.ok) {
+                // Nếu response không thành công
+                return response.json().then(err => {
+                    throw new Error(err.message || "Đã xảy ra lỗi từ server");
+                });
+            }
+            return response.json();
+        })
+        .then(result => {
+            // Nếu thành công
+            document.querySelector("#otp-resend").style.display = "";
+            setTimeout(() => {
+                window.location.href = "login.html"; // Đường dẫn tới trang login
+            }, 5000);
+        })
+        .catch(error => {
+            // Xử lý lỗi
+            console.error("Lỗi khi gọi API:", error);
+            document.querySelectorAll(".error")[1].textContent = error.message || "Đã xảy ra lỗi khi đổi mật khẩu.";
+        });
+
+    return false;
+}
+
+
 

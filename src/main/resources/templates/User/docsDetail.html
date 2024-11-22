@@ -24,6 +24,15 @@
 
 <div class="main-content">
     <div class="main-part">
+        <script>
+            // Lấy URL hiện tại
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Gán giá trị của 'tab' vào biến nếu nó tồn tại, nếu không thì gán giá trị mặc định
+            const tab = urlParams.get('docId');
+            fetchDetailsDocument(tab);
+        </script>
+
 <!--        <div class="docsInfo-part">-->
 <!--            <div class="Info-part">-->
 <!--                <div class="DocTitle">-->

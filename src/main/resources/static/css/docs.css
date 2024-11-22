@@ -120,6 +120,14 @@
     margin: 25vh auto;
 }
 
+.no-results img{
+    height: 50px;
+}
+
+.no-results div{
+    font-size: 20px;
+}
+
 /* Delete Popup Styles */
 .popup {
     display: none;

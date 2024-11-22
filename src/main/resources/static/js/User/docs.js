@@ -79,10 +79,8 @@ function fetchDocument(subCategory, i = 0) {
                 console.error("Docs-group element not found");
                 return;
             }
-
-            docsGroup.innerHTML = ''; // Xóa nội dung cũ
-
             if (Array.isArray(documents) && documents.length > 0) {
+                docsGroup.innerHTML = ''; // Xóa nội dung cũ
                 documents.forEach((doc) => {
                     const documentLink = document.createElement('a');
                     documentLink.href = `docsDetail.html?docId=${doc.id}`;
@@ -90,12 +88,14 @@ function fetchDocument(subCategory, i = 0) {
                     const imageUrl = `../../static/images/${doc.avatar}`;
 
                     documentLink.innerHTML = `
-                        <img src="${imageUrl}" alt="">
-                        <div class="docTitle">${doc.name}</div>
+                        <div class="docs-content">
+                            <img src="${imageUrl}" alt="">
+                            <div class="docTitle">${doc.name}</div>
+                        </div>
                         <div class="docInfor">
                             <div class="uptime">
                                 <img src="../../static/images/icons/Clock.png" alt="">
-                                <div>${doc.createAt}</div>
+                                <div>${formatDate(doc.createdAt)}</div>
                             </div>
                             <div class="downtime">
                                 <img src="../../static/images/icons/Downloading Updates.png" alt="">
@@ -109,14 +109,6 @@ function fetchDocument(subCategory, i = 0) {
                     `;
                     docsGroup.appendChild(documentLink);
                 });
-            } else {
-                // Hiển thị thông báo nếu không có kết quả nào phù hợp
-                const noResultsDiv = document.createElement('div');
-                noResultsDiv.classList.add('no-results');
-                noResultsDiv.innerHTML = `
-                <img src="../../static/images/icons/Box-Important.png">
-                <div>Không tìm thấy tài liệu phù hợp</div>`
-                docsGroup.appendChild(noResultsDiv);
             }
         });
     }, function (error) {
@@ -283,18 +275,7 @@ function compareStringsWithNumbers(a, b) {
 }
 
 
-function fetchDetailsDocument() {
-    // Extract document ID from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const documentId = urlParams.get('docId');
-
-    // Validate document ID
-    if (!documentId) {
-        console.error("Document ID is required");
-        displayErrorMessage("Không tìm thấy mã tài liệu");
-        return;
-    }
-
+function fetchDetailsDocument(documentId) {
     // Configure WebSocket connection
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
@@ -470,9 +451,6 @@ function displayErrorMessage(message) {
     }
 }
 
-// Call the function when the page loads
-document.addEventListener('DOMContentLoaded', fetchDetailsDocument);
-
 function searchDocument(Key, i = 0) {
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
@@ -490,9 +468,8 @@ function searchDocument(Key, i = 0) {
                 return;
             }
 
-            docsGroup.innerHTML = ''; // Xóa nội dung cũ
-
             if (Array.isArray(documents) && documents.length > 0) {
+                docsGroup.innerHTML = ''; // Xóa nội dung cũ
                 documents.forEach((doc) => {
                     const documentLink = document.createElement('a');
                     documentLink.href = `docsDetail.html?docId=${doc.id}`;
@@ -500,8 +477,10 @@ function searchDocument(Key, i = 0) {
                     const imageUrl = `../../static/images/${doc.avatar}`;
 
                     documentLink.innerHTML = `
+                        <div class="docs-content">
                         <img src="${imageUrl}" alt="">
                         <div class="docTitle">${doc.name}</div>
+                        </div>
                         <div class="docInfor">
                             <div class="uptime">
                                 <img src="../../static/images/icons/Clock.png" alt="">
@@ -519,14 +498,6 @@ function searchDocument(Key, i = 0) {
                     `;
                     docsGroup.appendChild(documentLink);
                 });
-            } else {
-                // Hiển thị thông báo nếu không có kết quả nào phù hợp
-                const noResultsDiv = document.createElement('div');
-                noResultsDiv.classList.add('no-results');
-                noResultsDiv.innerHTML = `
-                <img src="../../static/images/icons/Box-Important.png">
-                <div>Không tìm thấy tài liệu phù hợp</div>`
-                docsGroup.appendChild(noResultsDiv);
             }
         });
     }, function (error) {

@@ -28,7 +28,7 @@
     </form>
     <form id="register" style="display: none" onsubmit="register(event)">
         <div class="form-group2">
-            <label class="static">Họ và tên</label>
+            <label class="static">Tên tài khoản</label>
             <input type="text" id="name" placeholder="Nhập họ và tên" autocomplete="off">
         </div>
         <div class="error"></div>
@@ -81,9 +81,39 @@
             <br>Cùng đóng góp thật nhiều cho cộng đồng để có được những tài liệu quý giá
         </div>
         <div class="submit">
-            <button onclick="nextFrame1()">Tiếp theo</button>
+            <button onclick="nextFrame()">Tiếp theo</button>
         </div>
     </div>
+
+    <form id="info-form" class="form-group1" onsubmit="createPerInfo(event)" style="display: none">
+        <div class="form-btitle">Trước khi bắt đầu, chúng tôi cần 1 vài thông tin của bạn!</div>
+        <div class="form-stitle">Vui lòng cho biết:</div>
+        <div class="form-group1" style="margin: 0px 100px; border: 1px solid gainsboro; padding: 15px; border-radius: 10px">
+            <div class="form-group2">
+                <label class="static">Họ tên</label>
+                <input type="text" id="fname">
+            </div>
+            <div class="error"></div>
+
+            <div class="form-group2">
+                <label class="static">Giới tính</label>
+                <select id="gender">
+                    <option>Chọn giới tính</option>
+                    <option value="Male">Nam</option>
+                    <option value="Female">Nữ</option>
+                </select>
+            </div>
+            <div class="error"></div>
+
+            <div class="form-group2">
+                <label class="static">Ngày sinh</label>
+                <input type="date" id="birthday">
+            </div>
+            <div class="error"></div>
+            <input type="submit" value="Xác nhận">
+        </div>
+
+    </form>
 </div>
 
 </body>

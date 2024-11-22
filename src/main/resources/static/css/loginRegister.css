@@ -46,7 +46,7 @@ body{
     margin-bottom: -10px;
 }
 
-#login, #register, #get-otp{
+#login, #register, #get-otp, #resetpass{
     display: flex;
     flex-direction: column;
 }
@@ -63,6 +63,12 @@ body{
     font-weight: normal;
 }
 
+#resetpass .form-group2 .static{
+    min-width: 80px;
+    width: 35%;
+    font-weight: normal;
+}
+
 #get-otp .form-group2 .static{
     min-width: 70px;
     padding-left: 10px;
@@ -72,6 +78,11 @@ body{
 
 #register .form-group2 input, #get-otp .form-group2 input{
     width: 70%;
+}
+
+
+#resetpass .form-group2 input{
+    flex-grow: 1;
 }
 
 #register .form-group2, #get-otp .form-group2{
