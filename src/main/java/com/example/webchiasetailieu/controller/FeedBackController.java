@@ -64,6 +64,8 @@ public class FeedBackController {
     }
 
     @GetMapping("/my-feedback")
+    @MessageMapping("/myFeedback")
+    @SendTo("/topic/myFeedBack")
     public ApiResponse<List<Feedbacks>> getMyFeedback() {
         ApiResponse<List<Feedbacks>> response = new ApiResponse<>();
         response.setMessage("My feedbacks: ");
