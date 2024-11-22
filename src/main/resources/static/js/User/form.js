@@ -102,9 +102,6 @@ function ConfirmChangeInfo() {
     if (birthday === "") {
         errorElements[2].textContent = "Ngày sinh không được để trống.";
         isValid = false;
-    } else if (!isValidDate(birthday)) {
-        errorElements[2].textContent = "Nhập ngày theo đúng định dạng dd/mm/yyyy";
-        isValid = false;
     } else {
         errorElements[2].textContent = "";
     }
