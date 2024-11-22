@@ -316,6 +316,7 @@ public class DocumentService {
                 .avatar(documents.getAvatar())
                 .description(documents.getDescription())
                 .type(documents.getType())
+                .url(documents.getUrl())
                 .category(documents.getCategory())
                 .accountName(documents.getCreatedBy().getName())
                 .downloadTimes(documents.getDownloadTimes())

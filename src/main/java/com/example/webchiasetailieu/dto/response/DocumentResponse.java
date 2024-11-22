@@ -17,6 +17,7 @@ public class DocumentResponse {
     String accountName;
     String description;
     String type;
+    String url;
     int point;
     LocalDateTime createdAt;
     String avatar;
