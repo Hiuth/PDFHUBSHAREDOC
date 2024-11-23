@@ -19,12 +19,12 @@ public enum NotificationType {
     ),
     DOWNLOAD(
             "Lượt tải xuống",
-            "Tài liệu của bạn đã được tải xuống [số lượt tải] lần trong ngày hôm nay. " +
+            "Tài liệu của bạn đã được tải xuống lần trong ngày hôm nay. " +
                     "Cảm ơn bạn đã đóng góp cho cộng đồng!"
     ),
     COMMENT(
             "Bình luận",
-            "Bài viết của bạn đã nhận được một bình luận mới từ %s. " +
+            "Bài viết của bạn đã nhận được một bình luận mới. " +
                     "Hãy xem và phản hồi để giữ cho cuộc thảo luận sôi nổi!"
     ),
     POST_VIOLATION(
@@ -39,7 +39,7 @@ public enum NotificationType {
     ),
     ADMIN_FEEDBACK(
             "Phản hồi từ quản trị viên",
-            "Quản trị viên đã phản hồi yêu cầu của bạn: %s. " +
+            "Quản trị viên đã phản hồi yêu cầu của bạn: " +
                     "Hãy kiểm tra và cập nhật thông tin kịp thời."
     ),
     COMMENT_VIOLATION(
@@ -49,7 +49,7 @@ public enum NotificationType {
     ),
     RECEIVE_POINTS(
             "Nhận xu khi đăng bài",
-            "Chúc mừng! Bạn đã nhận được %d xu cho bài viết mới của mình. " +
+            "Chúc mừng! Bạn đã nhận được xu cho bài viết mới của mình. " +
                     "Tiếp tục chia sẻ nhiều tài liệu hơn để nhận thêm!"
     ),
     COMMENT_ACCOUNT_LOCKED(
