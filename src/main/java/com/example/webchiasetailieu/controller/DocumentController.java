@@ -88,7 +88,7 @@ public class DocumentController {
 
     @GetMapping("/findBySubCategory/{key}")
     @MessageMapping("/DocumentsBySubCategory/{key}")
-    @SendTo("/topic/getDocumentsBySubCategory")
+    @SendTo("/topic/getDocumentsBySubCategory/{key}")
     ApiResponse<List<Documents>> findDocumentsBySubCategory(@DestinationVariable String key){
         return ApiResponse.<List<Documents>>builder()
                 .message("List of documents:")

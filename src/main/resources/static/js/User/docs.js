@@ -71,8 +71,8 @@ function fetchDocument(subCategory, i = 0) {
         client.debug = function (str) {}; // Tắt debug
 
         // Tạo một unique topic cho mỗi lớp
-        const uniqueTopic = `/topic/getDocumentsBySubCategory`;
-
+        const uniqueTopic = `/topic/getDocumentsBySubCategory/${subCategory}`;
+        client.send(`/app/DocumentsBySubCategory/${subCategory}`, {}, JSON.stringify({ subCategory }));
         client.subscribe(uniqueTopic, function (data) {
             const response = JSON.parse(data.body);
             const documents = response.result;
@@ -120,7 +120,7 @@ function fetchDocument(subCategory, i = 0) {
         });
 
         // Gửi request với subCategory
-        client.send(`/app/DocumentsBySubCategory/${subCategory}`, {}, JSON.stringify({ subCategory }));
+
     }, function (error) {
         console.error("Connection error: ", error);
     });
