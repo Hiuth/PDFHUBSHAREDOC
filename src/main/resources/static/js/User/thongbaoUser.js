@@ -111,7 +111,7 @@ function renderNotifications(notifications) {
         // Notification content
         oneNotiBox.innerHTML = `
       <div class="h-group">
-        <img src="../../static/images/icons/Downloading%20Updates%20black.png" alt="">
+        <img src="../../static/images/icons/QuoteBlack.png" alt="">
         <div class="noti-header">${noti.title}</div>
       </div>
       <div class="noti-body">${noti.content}</div>
