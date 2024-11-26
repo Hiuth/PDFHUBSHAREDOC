@@ -91,7 +91,7 @@ function validateOTP(event, type) {
 
     // Kiểm tra input
     if (!otp || otp.length !== 6) {
-        form.textContent = "OTP phải có đúng 6 ký tự.";
+        form.querySelector('.error').textContent = "OTP phải có đúng 6 ký tự.";
         return false;
     }
 
@@ -156,9 +156,6 @@ function afterCheckOTP(type) {
     resetButtonText()
 
     closeOTPPopup()
-
-    document.querySelector('#OTP-title').innerHTML = '';
-    document.querySelector('#OTP-title').innerHTML = '<div class="spinner"></div><br>Xác nhận OTP thành công<br> Đang chuyển hướng...'
     document.querySelector('#OTP-title').classList.add('animate-fadeInUp');
 
     setTimeout(() => {

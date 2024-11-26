@@ -90,7 +90,7 @@ body{
 }
 
 
-#login input[type="submit"], #register input[type="submit"], #get-otp input[type="submit"]{
+#login input[type="submit"], #register input[type="submit"], #get-otp input[type="submit"], #resetpass input[type="submit"]{
     background-color: #D82B8A;
     margin-top: 8px;
 }

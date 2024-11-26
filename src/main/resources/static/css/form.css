@@ -690,6 +690,16 @@ button#OTP-submit.loading{
 #avatarContain {
     margin-top: 10px;
 }
+
+#center{
+    justify-content: center;
+    align-items: center;
+}
+
+#in-ava{
+    margin-bottom: 10px;
+}
+
 .avatar-options img {
     width: 100px;
     height: 100px;

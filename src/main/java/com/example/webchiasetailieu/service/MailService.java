@@ -17,6 +17,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
+import org.springframework.core.io.FileSystemResource;
+
+import java.io.File;
 
 @Service
 @Slf4j
@@ -34,25 +37,31 @@ public class MailService{
 
         switch (request.getEmailType()) {
             case DOWNLOAD:
-                subject = "Tài liệu của bạn có một lượt tải";
+                subject = "Tài liệu của bạn có lượt tải mới";
                 body = String.format("""
-                        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333;">
-                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; margin: 20px auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                                <tr>
-                                    <td align="center" bgcolor="#4CAF50" style="padding: 20px; color: #ffffff;">
-                                        <h1>PDF Hub</h1>
-                                        <p>Thông báo lượt tải tài liệu</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 20px;">
-                                        <p>Xin chào <strong style="color: #4CAF50;">%s</strong>,</p>
-                                        <p>Tài liệu của bạn với tiêu đề <strong>%s</strong> vừa nhận được một lượt tải xuống mới!</p>
-                                        <p>Cảm ơn bạn đã đóng góp tài liệu cho cộng đồng. Tiếp tục chia sẻ thêm nhiều tài liệu hữu ích nhé!</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </body>
+                        <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+                                               <div style="max-width: 620px; margin: 0 auto; background-color: #fff; border: 1px solid #D82B8A; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                                   <!-- Header -->
+                                                   <div style="background: #D82B8A; color: #fff; text-align: center; padding: 20px;">
+                                                       <img src="cid:logoImage" alt="PDF Hub Logo" style="max-width: 150px; margin-bottom: 10px; background-color: #ececec; padding: 8px 10px; border-radius: 10px;">
+                                                       <h1 style="margin: 0; font-size: 24px;">Thông báo về lượt tải</h1>
+                                                   </div>
+                        
+                                                   <!-- Body -->
+                                                   <div style="padding: 20px; text-align: center;">
+                                                       <p style="color: #333; font-size: 16px; margin-bottom: 10px">Chào <strong>%s</strong>,</p>
+                                                       <p style="color: #333; font-size: 14px; margin-bottom: 20px;">
+                                                           Tài liệu <strong>%s</strong> của bạn vừa nhận được lượt tải mới, nhờ đó bạn được thưởng thêm xu! <br>Hãy truy cập web để xem ngay!
+                                                       </p>
+                                                   </div>
+                        
+                                                   <!-- Footer -->
+                                                   <div style="background-color: #f9f9f9; color: #555; text-align: center; padding: 15px; font-size: 12px; border-top: 1px solid #D82B8A;">
+                                                       Nếu bạn cần hỗ trợ, vui lòng liên hệ <a href="mailto:pdfHub5shareDoc@gmail.com" style="color: #D82B8A;">pdfHub5shareDoc@gmail.com</a>.
+                                                       <br>© 2024 SOSGROUP. Tất cả các quyền được bảo lưu.
+                                                   </div>
+                                               </div>
+                                           </body>
             """, request.getCreateBy(), request.getDocName());
                 break;
 
@@ -61,17 +70,35 @@ public class MailService{
                     throw new AppException(ErrorCode.EMAIL_EXISTED);
                 subject = "Mã đăng ký tài khoản";
                 body = String.format("""
-                        <html>
-                        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                            <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-                                <h1 style="color: #4CAF50; text-align: center;">Account Verification</h1>
-                                <p>Dear Customer,</p>
-                                <p>Thank you for registering for an account with us. To complete your registration, please use the following OTP:</p>
-                                <p style="font-size: 24px; font-weight: bold; text-align: center; color: #4CAF50;">%s</p>
-                                <p>This OTP is valid for the next 10 minutes. Please do not share it with anyone.</p>
-                            </div>
-                        </body>
-                        </html>
+                        <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+                                <div style="max-width: 620px; margin: 0 auto; background-color: #fff; border: 1px solid #D82B8A; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <!-- Header -->
+                                    <div style="background: #D82B8A; color: #fff; text-align: center; padding: 20px;">
+                                        <img src="cid:logoImage" alt="PDF Hub Logo" style="max-width: 150px; margin-bottom: 10px; background-color: #ececec; padding: 8px 10px; border-radius: 10px;">
+                                        <h1 style="margin: 0; font-size: 24px;">Xác nhận tài khoản</h1>
+                                    </div>
+                        
+                                    <!-- Body -->
+                                    <div style="padding: 20px; text-align: center;">
+                                        <p style="color: #333; font-size: 16px;">Chào khách hàng mới,</p>
+                                        <p style="color: #333; font-size: 14px; margin-bottom: 20px;">
+                                            Cảm ơn bạn đã đăng ký tài khoản trên hệ thống của chúng tôi. Vui lòng sử dụng mã OTP dưới đây để xác nhận tài khoản:
+                                        </p>
+                                        <div style="background-color: #f9f9f9; border: 2px dashed #D82B8A; display: inline-block; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px;">
+                                            <span style="font-size: 24px; font-weight: bold; color: #D82B8A;">%s</span>
+                                        </div>
+                                        <p style="color: #333; font-size: 14px; margin-bottom: 20px;">
+                                            Mã OTP này có hiệu lực trong <strong>10 phút</strong>. Nếu bạn không yêu cầu, vui lòng bỏ qua email này.
+                                        </p>
+                                    </div>
+                        
+                                    <!-- Footer -->
+                                    <div style="background-color: #f9f9f9; color: #555; text-align: center; padding: 15px; font-size: 12px; border-top: 1px solid #D82B8A;">
+                                        Nếu bạn cần hỗ trợ, vui lòng liên hệ <a href="mailto:pdfHub5shareDoc@gmail.com" style="color: #D82B8A;">pdfHub5shareDoc@gmail.com</a>.
+                                        <br>© 2024 SOSGROUP. Tất cả các quyền được bảo lưu.
+                                    </div>
+                                </div>
+                            </body>
                     """, otp);
                 break;
 
@@ -80,33 +107,32 @@ public class MailService{
                         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
                 subject = "Mã reset password";
                 body = String.format("""
-                        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0;">
-                            <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-                                <div style="text-align: center; background-color: #4CAF50; color: #ffffff; padding: 20px; border-radius: 10px 10px 0 0;">
-                                    <h1 style="margin: 0; font-size: 24px;">Reset Password</h1>
-                                    <p style="margin: 5px 0 0; font-size: 16px;">Your request to reset your password</p>
+                        <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+                            <div style="max-width: 620px; margin: 0 auto; background-color: #fff; border: 1px solid #D82B8A; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <!-- Header -->
+                                <div style="background: #D82B8A; color: #fff; text-align: center; padding: 20px;">
+                                    <img src="cid:logoImage" alt="PDF Hub Logo" style="max-width: 150px; margin-bottom: 10px; background-color: #ececec; padding: 8px 10px; border-radius: 10px;">
+                                    <h1 style="margin: 0; font-size: 24px;">Đặt lại mật khẩu</h1>
                                 </div>
+                        
+                                <!-- Body -->
                                 <div style="padding: 20px; text-align: center;">
-                                    <p style="font-size: 16px; line-height: 1.6; margin: 0 0 15px;">
-                                    Hello <strong style="color: #4CAF50;">%s</strong>,
+                                    <p style="color: #333; font-size: 16px;">Chào <strong>%s</strong>,</p>
+                                    <p style="color: #333; font-size: 14px; margin-bottom: 20px;">
+                                        Bạn đã gửi yêu cầu đặt lại mật khẩu cho hệ thống của chúng tôi, đây là mã OTP dùng để xác thực yêu cầu của bạn
                                     </p>
-                                    <p style="font-size: 16px; line-height: 1.6; margin: 0 0 15px;">
-                                    You recently requested to reset your password. Please use the OTP below to complete the process:
-                                    </p>
-                                    <div style="font-size: 24px; font-weight: bold; color: #4CAF50; margin: 20px 0;">%s</div>
-                                    <p style="font-size: 16px; line-height: 1.6; margin: 0 0 15px;">
-                                    This OTP is valid for the next <strong>10 minutes</strong>. Please do not share it with anyone.
-                                    </p>
-                                    <p style="font-size: 16px; line-height: 1.6; margin: 0;">
-                                    If you did not request a password reset, please ignore this email or contact our support team.
+                                    <div style="background-color: #f9f9f9; border: 2px dashed #D82B8A; display: inline-block; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px;">
+                                        <span style="font-size: 24px; font-weight: bold; color: #D82B8A;">%s</span>
+                                    </div>
+                                    <p style="color: #333; font-size: 14px; margin-bottom: 20px;">
+                                        Mã OTP này có hiệu lực trong <strong>10 phút</strong>. Nếu bạn không yêu cầu, vui lòng bỏ qua email này.
                                     </p>
                                 </div>
-                                <div style="text-align: center; font-size: 12px; color: #777; padding: 15px; border-top: 1px solid #ddd;">
-                                    <p style="margin: 0;">
-                                    If you have any questions, feel free to contact us at
-                                    <a href="mailto:support@example.com" style="color: #4CAF50; text-decoration: none;">support@example.com</a>.
-                                    </p>
-                                    <p style="margin: 0;">&copy; 2024 PDF Hub. All rights reserved.</p>
+                        
+                                <!-- Footer -->
+                                <div style="background-color: #f9f9f9; color: #555; text-align: center; padding: 15px; font-size: 12px; border-top: 1px solid #D82B8A;">
+                                    Nếu bạn cần hỗ trợ, vui lòng liên hệ <a href="mailto:pdfHub5shareDoc@gmail.com" style="color: #D82B8A;">pdfHub5shareDoc@gmail.com</a>.
+                                    <br>© 2024 SOSGROUP. Tất cả các quyền được bảo lưu.
                                 </div>
                             </div>
                         </body>
@@ -135,6 +161,11 @@ public class MailService{
             helper.setFrom("pdfHub5shareDoc@gmail.com");
             helper.setSubject(request.getSubject());
             helper.setText(request.getBody(), true);
+
+            // Đính kèm ảnh vào email bằng CID
+            String logoPath = "src/main/resources/static/images/pdfhub.png"; // Đường dẫn ảnh
+            FileSystemResource res = new FileSystemResource(new File(logoPath));
+            helper.addInline("logoImage", res); // CID là 'logoImage'
 
             mailSender.send(message);
             log.info("Email sent successfully to '{}', subject: '{}'", request.getEmail(), request.getSubject());
