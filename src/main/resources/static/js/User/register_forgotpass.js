@@ -169,15 +169,15 @@ function afterCheckOTP(type) {
         setTimeout(() => {
             document.querySelector('#register').classList.remove('animate-fadeInUp');
         }, 500);
+        setSession("nextform", type, 10);
     } else if (type == "FORGOT_PASSWORD") {
         document.querySelector('#resetpass').style.display = '';
         document.querySelector('#resetpass').classList.add('animate-fadeInUp');
         setTimeout(() => {
             document.querySelector('#resetpass').classList.remove('animate-fadeInUp');
         }, 500);
+        setSession("nextform", type, 10);
     }
-
-    setSession("nextform", "form2", 10);
 }
 
 // Hàm setSession với key và giá trị hết hạn trong 10 phút
@@ -213,12 +213,19 @@ function getSession(key) {
 function checkForm() {
     const nextForm = getSession("nextform");
 
-    if (nextForm === "form2") {
+     if (nextForm === "REGISTER") {
         document.getElementById("get-otp").style.display = "none"; // Ẩn form 1
         if(document.getElementById("register")) {
             document.getElementById("register").style.display = ''; // Hiển thị form
-        }else{
+        } else {
+            document.getElementById("get-otp").style.display = ""; // Ẩn form 1
+        }
+    } else if (nextForm === "FORGOT_PASSWORD") {
+        document.getElementById("get-otp").style.display = "none"; // Ẩn form 1
+        if(document.getElementById("resetpass")) {
             document.getElementById("resetpass").style.display = ''; // Hiển thị form
+        }else {
+            document.getElementById("get-otp").style.display = ""; // Ẩn form 1
         }
     } else {
         document.getElementById("get-otp").style.display = ''; // Hiển thị form 1
