@@ -5,18 +5,12 @@ import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.SendEmailRequest;
 import com.example.webchiasetailieu.dto.request.UpdateDocumentRequest;
 import com.example.webchiasetailieu.dto.response.*;
-import com.example.webchiasetailieu.entity.Account;
-import com.example.webchiasetailieu.entity.DocCategory;
-import com.example.webchiasetailieu.entity.Documents;
-import com.example.webchiasetailieu.entity.DownloadHistory;
+import com.example.webchiasetailieu.entity.*;
 import com.example.webchiasetailieu.enums.EmailType;
 import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
-import com.example.webchiasetailieu.repository.AccountRepository;
-import com.example.webchiasetailieu.repository.DocCategoryRepository;
-import com.example.webchiasetailieu.repository.DocumentRepository;
-import com.example.webchiasetailieu.repository.DownloadHistoryRepository;
+import com.example.webchiasetailieu.repository.*;
 import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +48,7 @@ public class DocumentService {
     DownloadHistoryRepository downloadHistoryRepository;
     NotificationService notificationService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final PersonalInformationRepository personalInformationRepository;
 
     //public
     public List<Documents> getAll(){
@@ -85,6 +80,15 @@ public class DocumentService {
     public DocumentResponse getById(String id){
         return convertToResponse(documentRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.DOC_NOT_EXIST)));
+    }
+
+    //public
+    public String getDocAvatar(String id){
+        Documents doc = documentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
+        PersonalInformation personalInformation = personalInformationRepository
+                .findByAccountId(doc.getCreatedBy().getId());
+        return personalInformation.getAvatar();
     }
 
     @PreAuthorize("hasAuthority('MY_DOC')")

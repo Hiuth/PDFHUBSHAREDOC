@@ -61,6 +61,11 @@ public enum NotificationType {
             "Cảnh cáo về bình luận phản cảm",
             "Bạn đã nhận được cảnh cáo vì bình luận không phù hợp. " +
                     "Vui lòng tuân thủ quy định khi tham gia thảo luận để tránh bị xử phạt."
+    ),
+    FEEDBACK(
+            "Báo cáo từ người dùng",
+            "Bạn đã nhận được báo cáo từ người dùng. " +
+                    "Hãy xử nó lí sớm nhất có thể."
     );
     String title;
     String description;

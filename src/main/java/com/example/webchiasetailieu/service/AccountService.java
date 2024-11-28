@@ -146,7 +146,8 @@ public class AccountService {
     @PreAuthorize("hasRole('ADMIN')")
     public AccountResponse getAccountById(String id) {
         log.info("Get account by id: {}", id);
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return convertToResponse(account);
     }
 

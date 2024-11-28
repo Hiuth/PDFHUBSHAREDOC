@@ -14,6 +14,7 @@ import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.enums.StatusFeedbackType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
+import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
 import com.example.webchiasetailieu.repository.NotificationRepository;
@@ -32,8 +33,8 @@ public class FeedBackService {
     FeedBackRepository repository;
     AccountService accountService;
     NotificationService notificationService;
-    private final DocumentRepository documentRepository;
-    private final NotificationRepository notificationRepository;
+    DocumentRepository documentRepository;
+    AccountRepository accountRepository;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
@@ -55,6 +56,14 @@ public class FeedBackService {
                 .account(account)
                 .otherId(request.getOtherId())
                 .build();
+
+        Account account1 = accountRepository.findByEmail("pdfhubsharedoc@gmail.com")
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        notificationService.notify(NotificationCreationRequest.builder()
+                .type(NotificationType.FEEDBACK)
+                .accountId(account1.getId())
+                .build());
+
         return convertToResponse(repository.save(feedbacks));
     }
 

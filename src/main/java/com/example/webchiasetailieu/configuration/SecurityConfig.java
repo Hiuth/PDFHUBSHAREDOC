@@ -37,7 +37,6 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -51,7 +50,6 @@ public class SecurityConfig {
                                 .jwtAuthenticationConverter(jwtConverter())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                //.csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/topic/**", "/app/**"))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return httpSecurity.build();

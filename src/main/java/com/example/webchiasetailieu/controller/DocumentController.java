@@ -217,4 +217,13 @@ public class DocumentController {
                 .result(documentService.getUploadsByMonth())
                 .build();
     }
+
+    @GetMapping("/avatar/{id}")
+    ApiResponse<String> getAvatar(@PathVariable String id){
+        return ApiResponse.<String>builder()
+                .code(1000)
+                .message("Get doc avatar:")
+                .result(documentService.getDocAvatar(id))
+                .build();
+    }
 }
