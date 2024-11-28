@@ -55,7 +55,7 @@ a{
     flex-direction: column;
     justify-content: space-between;
     height: 55vh;
-    max-height: 900px;
+    max-height: 500px;
 }
 .menu-row img{
     padding-right: 2.5%;
