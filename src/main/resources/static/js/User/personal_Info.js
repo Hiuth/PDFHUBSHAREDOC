@@ -27,7 +27,13 @@ export function PersonalInfo() {
         client.subscribe("/topic/getInfo", function (data) {
             const response = JSON.parse(data.body);
             const perInfo = response.result
-            const birthday =convertISOToDateInput(perInfo.birthday)
+            const birthday =convertISOToDateInput(perInfo.birthday);
+
+            const avatarElement = document.getElementById("avatar2");
+            if (perInfo.avatar && perInfo.avatar.trim() !== "") {
+                avatarElement.src = `../../static/images/User/${perInfo.avatar}`;
+            }
+
             const innerHTML =`
              <form class="form-group1" id="infoChange">
                         <input type="hidden" id="accountId" value="${perInfo.accountId}"/>

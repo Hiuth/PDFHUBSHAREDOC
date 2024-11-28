@@ -204,6 +204,7 @@
 
 #cmt-ava{
     height: 40px;
+    border-radius: 50%;
 }
 
 #cmt-icon{
@@ -296,6 +297,11 @@
     border-radius: 5px;
     border: 1px solid black;
 
+}
+
+#avatar4{
+    border-radius: 50%;
+    padding-right: 3px;
 }
 
 #report-popup{

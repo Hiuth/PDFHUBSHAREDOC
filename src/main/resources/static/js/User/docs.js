@@ -381,8 +381,7 @@ function fetchDetailsDocument(documentId) {
     );
 }
 
-// Helper function to render document details
-function renderDocumentDetails(containerElement, documentData, documentID) {
+async function renderDocumentDetails(containerElement, documentData, documentID) {
     // Safely extract and format data
     console.log(documentData);
     const username = getUsername(documentData);
@@ -400,6 +399,9 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
     const url = documentData.url;
     const formattedLink = formatGoogleDriveLink(url);
 
+    // Gọi fetchAvatar và đợi kết quả
+    const avatar = await fetchAvatar(documentID);
+    console.log(`Avatar filename: ${avatar}`); // In ra tên file avatar
 
     // Render document details HTML
     containerElement.innerHTML = `
@@ -410,7 +412,7 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
             <input type="hidden" id="documentIdforDownload" value="${documentID}"/>
             <div class="UserAndCategory">
                 <div class="form-group2 admin">
-                    <img src="../../static/images/icons/avatar.png" alt="Avatar">
+                    <img src="../../static/images/User/${avatar}" alt="Avatar" id="avatar4">
                     <div class="gray" id="userName">${username}</div>
                     <div class="role">Tác giả</div>
                 </div>
@@ -440,17 +442,39 @@ function renderDocumentDetails(containerElement, documentData, documentID) {
             </div>
         </div>
         <div class="download-part">
-                <div class="download-p">
-                    <div class="form-group2">
-                        <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
-                        <a onclick="" id="share">Chia sẻ</a>
-                    </div>
-                    <button type="button" class="download-button" onclick="downloadDocument()" style="border: none">
-                    <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
+            <div class="download-p">
+                <div class="form-group2">
+                    <a onclick="openReportPopup()" id="report-btn">Báo cáo vi phạm</a>
+                    <a onclick="" id="share">Chia sẻ</a>
                 </div>
+                <button type="button" class="download-button" onclick="downloadDocument()" style="border: none">
+                    <img src="../../static/images/icons/Downloading Updates White.png" alt="">Tải xuống bản đầy đủ</button>
             </div>
-           <iframe id="pdfview" src="${formattedLink}" width="100%" height="100%" class="docs-part"></iframe>
+        </div>
+        <iframe id="pdfview" src="${formattedLink}" width="100%" height="100%" class="docs-part"></iframe>
     `;
+}
+
+function fetchAvatar(documentID) {
+    return fetch(`http://localhost:8088/doc/avatar/${documentID}`, {
+        method: 'GET', // Phương thức GET vì chỉ lấy dữ liệu
+        headers: {
+            // Nếu cần thêm header, có thể thêm vào đây
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json(); // Chuyển phản hồi sang đối tượng JSON
+        })
+        .then(data => {
+            return data.result || "avatar.png"; // Trả về giá trị của result, nếu không có thì trả về "avatar.png"
+        })
+        .catch(error => {
+            console.error("Avatar fetch error:", error.message);
+            return "avatar.png";  // Trả về avatar mặc định nếu có lỗi
+        });
 }
 
 

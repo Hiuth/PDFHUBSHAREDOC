@@ -83,7 +83,7 @@ function sendComment(documentId, commentText) {
 }
 
 // Hàm lấy danh sách bình luận cho tài liệu
-export function fetchCommentsForDocument(documentId) {
+export async function fetchCommentsForDocument(documentId) {
     if (!documentId) {
         console.error("Document ID is required");
         return;
@@ -98,11 +98,11 @@ export function fetchCommentsForDocument(documentId) {
 
     client.connect(
         {},
-        function (frame) {
+        async function (frame) { // Đảm bảo function là async để sử dụng await
             console.log("WebSocket connected. Fetching comments.");
             client.send(`/app/comments/${documentId}`, {}, JSON.stringify({ documentId }));
 
-            const subscription = client.subscribe('/topic/getComments', function (data) {
+            const subscription = client.subscribe('/topic/getComments', async function (data) { // async ở đây để dùng await
                 try {
                     const response = JSON.parse(data.body);
                     const comments = response.result;
@@ -112,7 +112,7 @@ export function fetchCommentsForDocument(documentId) {
                         if (commentsContainer) {
                             commentsContainer.innerHTML = '';
 
-                            comments.forEach((comment) => {
+                            for (const comment of comments) {
                                 const userName = comment.account ? comment.account.name : 'Anonymous';
                                 const commentText = comment.comText.replace(/\s+/g, " ").trim() || 'No comment text provided';
                                 const createdAt = new Date(comment.createdAt);
@@ -120,14 +120,17 @@ export function fetchCommentsForDocument(documentId) {
 
                                 const commentElement = document.createElement('div');
                                 commentElement.id = 'cmtAndTime';
-                                // Add this line to set the comment ID
                                 commentElement.setAttribute('data-comment-id', comment.id);
+
+                                // Gọi hàm fetchAvatar2 để lấy tên avatar và đợi kết quả
+                                const avatar = await fetchAvatar2(comment.id);
+                                console.log(`Avatar filename: ${avatar}`); // In ra tên file avatar
 
                                 commentElement.innerHTML = `
                                     <div class="form-group1" id="comment-class">
                                         <div class="form-group2" id="cmt">
                                           
-                                            <img id="cmt-ava" src="../../static/images/icons/avatar.png" alt="">
+                                            <img id="cmt-ava" src="../../static/images/User/${avatar}" alt="Avatar">
                                             <div id="comment">
                                                 <div class="gray" id="nameUserComment">${userName}</div>
                                                 <hr style="margin-bottom: 0px">
@@ -157,7 +160,7 @@ export function fetchCommentsForDocument(documentId) {
                                     </div>
                                 `;
                                 commentsContainer.appendChild(commentElement);
-                            });
+                            }
                         } else {
                             console.error("Element with ID 'comments-container' not found");
                         }
@@ -178,6 +181,7 @@ export function fetchCommentsForDocument(documentId) {
         }
     );
 }
+
 
 function editComment(commentId, newText) {
     if (!commentId || !newText) {
@@ -433,3 +437,24 @@ function openDeleteCommentPopup(commentId) {
 
 window.openDeleteCommentPopup = openDeleteCommentPopup;
 
+function fetchAvatar2(CommentID) {
+    return fetch(`http://localhost:8088/comment/avatar/${CommentID}`, {
+        method: 'GET', // Phương thức GET vì chỉ lấy dữ liệu
+        headers: {
+            // Nếu cần thêm header, có thể thêm vào đây
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json(); // Chuyển phản hồi sang đối tượng JSON
+        })
+        .then(data => {
+            return data.result || "avatar.png"; // Trả về giá trị của result, nếu không có thì trả về "avatar.png"
+        })
+        .catch(error => {
+            console.error("Avatar fetch error:", error.message);
+            return "avatar.png";  // Trả về avatar mặc định nếu có lỗi
+        });
+}
