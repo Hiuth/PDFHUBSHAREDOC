@@ -7,12 +7,14 @@ import com.example.webchiasetailieu.dto.response.NotificationResponse;
 import com.example.webchiasetailieu.entity.Account;
 import com.example.webchiasetailieu.entity.Comment;
 import com.example.webchiasetailieu.entity.Documents;
+import com.example.webchiasetailieu.entity.PersonalInformation;
 import com.example.webchiasetailieu.enums.NotificationType;
 import com.example.webchiasetailieu.exception.AppException;
 import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.CommentRepository;
 import com.example.webchiasetailieu.repository.DocumentRepository;
+import com.example.webchiasetailieu.repository.PersonalInformationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +34,9 @@ public class CommentService {
     DocumentRepository documentRepository;
     NotificationService notificationService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final PersonalInformationRepository personalInformationRepository;
+    private final CommentRepository commentRepository;
+
     @PreAuthorize("hasAuthority('COMMENT')")
     public CommentRequest addComment(CommentRequest commentRequest) {
         Account account = getAccountFromAuthentication();
@@ -57,6 +62,14 @@ public class CommentService {
                         .comText(commentRequest.getComText())
                         .document(documents)
                 .build()));
+    }
+
+    public String getCommentAvatar(String id){
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXIST));
+        PersonalInformation personalInformation = personalInformationRepository
+                .findByAccountId(comment.getAccount().getId());
+        return personalInformation.getAvatar();
     }
 
     @PreAuthorize("hasAuthority('EDIT_COMMENT')")
@@ -98,4 +111,6 @@ public class CommentService {
                         SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
+
+
 }

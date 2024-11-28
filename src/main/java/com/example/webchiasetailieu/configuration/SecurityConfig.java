@@ -28,7 +28,7 @@ public class SecurityConfig {
             "/auth/refresh","/email/send/otp","/email/validOTP","/perInfo/register/add-info","/account/forgetPassword"};
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {"/comment/doc/*", "/docCategory/get-all", "/doc/get-all",
-            "/doc/get-id/*","/doc/find/*","/doc/findBySubCategory/*","/get/my-notification"};
+            "/doc/get-id/*","/doc/find/*","/doc/findBySubCategory/*","/get/my-notification","/comment/avatar/*","/doc/avatar/*"};
 
     private final CustomJwtDecoder jwtDecoder;
 
