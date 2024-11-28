@@ -310,7 +310,7 @@ function formatGoogleDriveLink(url) {
 }
 
 
-function fetchDetailsDocument(documentId) {
+async function fetchDetailsDocument(documentId) {
     // Configure WebSocket connection
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
@@ -318,14 +318,14 @@ function fetchDetailsDocument(documentId) {
 
     // Establish connection
     client.connect({},
-        function onSuccess(frame) {
+        async function onSuccess(frame) {
             console.log("WebSocket connected successfully. Fetching document details.");
 
             // Send request to fetch document details
             client.send(`/app/getDocById/${documentId}`, {}, JSON.stringify({ documentId }));
 
             // Subscribe to document details response
-            const detailsSubscription = client.subscribe('/topic/getDocById', function(data) {
+            const detailsSubscription = client.subscribe('/topic/getDocById', async function(data) {
                 try {
                     const response = JSON.parse(data.body);
                     const documentData = response.result;
@@ -337,10 +337,35 @@ function fetchDetailsDocument(documentId) {
                         return;
                     }
 
-                    // Handle document data rendering
-                    renderDocumentDetails(docDetailElement, documentData, documentId);
+                    // Chờ render tài liệu trước khi tiếp tục
+                    await renderDocumentDetails(docDetailElement, documentData, documentId);
 
-                    // Unsubscribe after receiving data
+                    // Sau khi render xong, tiếp tục xử lý bình luận
+                    // Send request to fetch comments
+                    client.send(`/app/comments/${documentId}`, {}, JSON.stringify({}));
+
+                    // Subscribe to comments and process the result
+                    const commentsSubscription = client.subscribe('/topic/getComments', function(data) {
+                        try {
+                            const response = JSON.parse(data.body);
+                            console.log("Received comments data:", response); // Kiểm tra dữ liệu trả về
+
+                            const allComments = response.result || [];
+                            const commentCount = Array.isArray(allComments) ? allComments.length : 0;
+
+                            const commentCountElement = document.getElementById('numComment');
+                            if (commentCountElement) {
+                                commentCountElement.textContent = commentCount;
+                            } else {
+                                console.error("Element for comment count not found!");
+                            }
+
+                            commentsSubscription.unsubscribe();
+                        } catch (error) {
+                            console.error("Error processing comments:", error);
+                        }
+                    });
+
                     detailsSubscription.unsubscribe();
                 } catch (error) {
                     console.error("Error processing document details:", error);
@@ -348,31 +373,10 @@ function fetchDetailsDocument(documentId) {
                 }
             });
 
-            // Send request to fetch comments
-            client.send(`/app/comments/${documentId}`, {}, JSON.stringify({}));
-
-            // Subscribe to comments
-            const commentsSubscription = client.subscribe('/topic/getComments', function(data) {
-                try {
-                    const response = JSON.parse(data.body);
-                    const allComments = response.result || [];
-                    const commentCount = Array.isArray(allComments) ? allComments.length : 0;
-
-                    const commentCountElement = document.getElementById('numComment');
-                    if (commentCountElement) {
-                        commentCountElement.textContent = commentCount;
-                    }
-
-                    commentsSubscription.unsubscribe();
-                } catch (error) {
-                    console.error("Error processing comments:", error);
-                }
-            });
-
             // Disconnect after a short timeout
             setTimeout(() => {
                 client.disconnect();
-            }, 5000);
+            }, 20000);
         },
         function onError(error) {
             console.error("WebSocket connection error:", error);
@@ -380,6 +384,7 @@ function fetchDetailsDocument(documentId) {
         }
     );
 }
+
 
 async function renderDocumentDetails(containerElement, documentData, documentID) {
     // Safely extract and format data
@@ -454,6 +459,7 @@ async function renderDocumentDetails(containerElement, documentData, documentID)
         <iframe id="pdfview" src="${formattedLink}" width="100%" height="100%" class="docs-part"></iframe>
     `;
 }
+
 
 function fetchAvatar(documentID) {
     return fetch(`http://localhost:8088/doc/avatar/${documentID}`, {
