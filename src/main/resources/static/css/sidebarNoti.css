@@ -31,6 +31,11 @@ a{
     min-width: 35px;
     max-width: 70px;
 }
+.accName>img{
+    border-radius: 50%;
+    padding-right: 5px;
+
+}
 .accName>div, .coin>div{
     font-weight: bold;
     color: #585858;

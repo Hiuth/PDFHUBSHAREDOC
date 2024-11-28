@@ -217,6 +217,7 @@ input[type='submit'], .submit button{
 
 #changeAvatarSubmit{
     margin: 0px;
+    background-color: #D82B8A;
 }
 
 input[type="text"], input[type="password"], input[type="email"], input[type="date"]{

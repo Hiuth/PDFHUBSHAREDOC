@@ -195,3 +195,40 @@ export function updatePassWord(event){
 }
 
 window.updatePassWord=updatePassWord;
+
+export function updateAvatar(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    const form = event.target;
+
+    // Get the selected avatar
+    const selectedAvatar = form.querySelector('#selectedAvatar').value;
+
+    const token = getToken(); // Get the token for authorization (assuming you have a getToken function)
+    const socket = new SockJS("http://localhost:8088/ws"); // Create a WebSocket connection
+    const client = Stomp.over(socket); // Initialize Stomp client
+
+    console.log(selectedAvatar);
+
+    if (selectedAvatar) {
+        client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+            // Send the avatar data to the server via WebSocket
+            client.send(`/app/updateAvatar/${selectedAvatar}`, {}, JSON.stringify());
+
+            // Subscribe to the response channel for update completion
+            client.subscribe('/topic/updateAvatar', function (data) {
+                // Handle the server response (e.g., reload the page or update the avatar)
+                const result = JSON.parse(data.body); // Parse the server response
+                if (result.code === 1000) {
+                    alert("Cập nhật ảnh đại diện thành công!");
+                    window.location.reload(); // Reload the page to show the updated avatar
+                } else {
+                    alert("Có lỗi xảy ra khi cập nhật ảnh đại diện. Vui lòng thử lại.");
+                }
+            });
+        });
+    } else {
+        alert("Vui lòng chọn ảnh đại diện.");
+    }
+}
+
+window.updateAvatar=updateAvatar;

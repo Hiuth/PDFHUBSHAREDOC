@@ -14,6 +14,11 @@ export function PersonalInfo() {
             const perInfo = response.result;
 
             // Cập nhật thông tin vào sidebar
+            // Cập nhật avatar nếu không rỗng
+            const avatarElement = document.getElementById("avatar1");
+            if (perInfo.avatar && perInfo.avatar.trim() !== "") {
+                avatarElement.src = `../../static/images/User/${perInfo.avatar}`;
+            }
             document.getElementById("username").innerText = perInfo.username || "Username";
             document.getElementById("point").innerText = `${perInfo.points || 0} xu`;
         });

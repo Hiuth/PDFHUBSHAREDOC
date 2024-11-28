@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,9 @@ public class PersonalInformationController {
     }
 
     @PutMapping("/updateAvatar/{FileName}")
-    ApiResponse<PerInfoResponse> updateMyAvatar(@PathVariable String FileName) {
+    @MessageMapping("/updateAvatar/{FileName}")
+    @SendTo("/topic/updateAvatar")
+    ApiResponse<PerInfoResponse> updateMyAvatar(@DestinationVariable String FileName) {
         return ApiResponse.<PerInfoResponse>builder()
                 .code(1000)
                 .message("Update my avatar")

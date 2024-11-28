@@ -200,6 +200,7 @@ function setupEventListeners() {
 
 document.addEventListener('headerLoaded', function() {
     initializeHeader();
+    PersonalInfo1();
 });
 // Khởi tạo khi DOM đã sẵn sàng
 document.addEventListener('DOMContentLoaded', initializeHeader);
@@ -208,3 +209,25 @@ document.addEventListener('DOMContentLoaded', initializeHeader);
 // export { initializeHeader, searchRedirect };
 window.initializeHeader = initializeHeader;
 window.searchRedirect = searchRedirect;
+
+export function PersonalInfo1() {
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+
+    client.connect({Authorization: `Bearer ${token}`}, function (frame) {
+        client.send("/app/getInfo");
+        client.subscribe("/topic/getInfo", function (data) {
+            const response = JSON.parse(data.body);
+            const perInfo = response.result;
+
+            // Cập nhật thông tin vào sidebar
+            // Cập nhật avatar nếu không rỗng
+            const avatarElement = document.getElementById("avatar");
+            if (perInfo.avatar && perInfo.avatar.trim() !== "") {
+                avatarElement.src = `../../static/images/User/${perInfo.avatar}`;
+            }
+        });
+    });
+}
