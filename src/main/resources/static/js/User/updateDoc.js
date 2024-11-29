@@ -82,6 +82,8 @@ export function updateDocument() {
         alert("Không tìm thấy ID tài liệu!");
         return;
     }
+    const loadingElement = document.getElementById("loading2");
+    loadingElement.style.display = "flex";
 
     // Optional file upload check
     const docType = documentFile
@@ -119,12 +121,14 @@ export function updateDocument() {
             // if (data.code === 9999) {
             //     throw new Error(data.message);
             // }
-            console.log("Cập nhật thành công:", data);
-            alert("Cập nhật tài liệu thành công!");
-            window.location.reload(); // Redirect to my documents page
+            loadingElement.style.display = "none";
+            console.log("Upload thành công:", data);
+            //alert("Đăng tải thành công!");
+            window.location.reload();
         })
         .catch(error => {
             console.error("Cập nhật thất bại:", error.message);
+            loadingElement.style.display = "none";
             alert("Cập nhật thất bại! Vui lòng thử lại.");
         });
 }

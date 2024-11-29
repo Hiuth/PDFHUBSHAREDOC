@@ -16,41 +16,41 @@ function updateFileName2() {
 function updateFileName() {
     const fileInput = document.getElementById('file');
     var fileNameDisplay = document.getElementById('fileName');
-
-    if (fileInput.files.length > 0) {
-        const fileName = fileInput.files[0].name; // Lấy tên tệp
-        fileNameDisplay.textContent = fileName; // Cập nhật nội dung thẻ hiển thị
-    } else {
-        fileNameDisplay.textContent = 'Chưa chọn tệp'; // Thông báo nếu không có tệp nào được chọn
-    }
-
     const fileNameDiv = document.getElementById("fileName");
     const pdfViewDiv = document.getElementById("pdfview");
 
-    // Lấy file từ input
-    const file = fileInput.files[0];
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
 
-    if (file) {
-        // Hiển thị tên file
-        fileNameDiv.textContent = file.name;
+        // Kiểm tra dung lượng tệp (5MB = 5 * 1024 * 1024 bytes)
+        if (file.size > 5 * 1024 * 1024) {
+            fileInput.value = ''; // Reset giá trị input
+            fileNameDisplay.textContent = 'Tệp vượt quá 5MB. Vui lòng chọn tệp nhỏ hơn.'; // Hiển thị thông báo
+            pdfViewDiv.innerHTML = "<div class='center-text'>PDF BẠN TẢI LÊN SẼ ĐƯỢC HIỂN THỊ Ở ĐÂY</div>";
+            return; // Dừng xử lý tiếp
+        }
 
-        // Kiểm tra xem file có phải là PDF không
+        const fileName = file.name; // Lấy tên tệp
+        fileNameDisplay.textContent = fileName; // Cập nhật nội dung thẻ hiển thị
+
+        // Kiểm tra loại tệp
         if (file.type === "application/pdf") {
             const fileURL = URL.createObjectURL(file);
 
             // Tạo iframe để hiển thị PDF
             pdfViewDiv.innerHTML = `<iframe src="${fileURL}" width="100%" height="100%"></iframe>`;
         } else if (file.type === "application/msword" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-
+            pdfViewDiv.innerHTML = "<div class='center-text'>Hiển thị tệp Word không được hỗ trợ trong trình duyệt.</div>";
         } else {
-            fileNameDisplay.innerHTML = "Vui lòng chọn một tệp PDF hoặc Word.";
+            fileNameDisplay.textContent = "Vui lòng chọn một tệp PDF hoặc Word.";
+            pdfViewDiv.innerHTML = "<div class='center-text'>PDF BẠN TẢI LÊN SẼ ĐƯỢC HIỂN THỊ Ở ĐÂY</div>";
         }
     } else {
-        // Xóa nội dung nếu không có file
-        fileNameDiv.textContent = "";
-        pdfViewDiv.innerHTML = "";
+        fileNameDisplay.textContent = 'Chưa chọn tệp'; // Thông báo nếu không có tệp nào được chọn
+        pdfViewDiv.innerHTML = ''; // Xóa nội dung nếu không có tệp
     }
 }
+
 
 // function ChangeInfo() {
 //     // Ẩn nút 'Thay đổi' và hiển thị nút 'Lưu'

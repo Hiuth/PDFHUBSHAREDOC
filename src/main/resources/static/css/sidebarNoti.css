@@ -122,14 +122,14 @@ hr{
 }
 
 .h-group img{
-    height: 30px;
+    height: 24px;
     margin-right: -3px;
 }
 
 .noti-title{
     font-size: large;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .noti-content{
@@ -195,4 +195,12 @@ hr{
 
 #reManage:hover img{
     content: url('../../static/images/icons/Activity-History-pink.png');
+}
+
+#noti-link{
+    color: #D82B8A;
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-family: Inter, sans-serif;
 }

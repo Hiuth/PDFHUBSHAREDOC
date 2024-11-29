@@ -112,15 +112,15 @@ function renderNotifications(notifications) {
         oneNotiBox.innerHTML = `
       <div class="h-group">
         <img src="../../static/images/icons/QuoteBlack.png" alt="">
-        <div class="noti-header">${noti.title}</div>
+        <div class="noti-title">${noti.title}</div>
       </div>
-      <div class="noti-body">${noti.content}</div>
+      <div class="noti-content">${noti.content}</div>
       <div class="d-group">
         <div class="i-group">
           <img src="../../static/images/icons/Clock%20gray.png" alt="">
           <div class="noti-time">${formatDateTime(noti.dateTime)}</div>
         </div>
-        ${noti.link ? `<a href="${noti.link}" target="_blank">View more</a>` : ''}
+        <button id="noti-link">Xóa thông báo</button> 
       </div>
     `;
 
