@@ -67,4 +67,14 @@ public class NotificationController {
         response.setResult(service.delete(id));
         return response;
     }
+
+    @MessageMapping("/deleteMyNoti/{id}")
+    @SendTo("/topic/deleteMyNotification")
+    ApiResponse<Boolean> deleteMyNotification(@DestinationVariable String id) {
+        return ApiResponse.<Boolean>builder()
+                .code(1000)
+                .message("Delete my notification: ")
+                .result(service.deleteMyNotification(id))
+                .build();
+    }
 }

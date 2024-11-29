@@ -46,6 +46,7 @@ public enum ErrorCode {
     PER_INFO_EXISTED(1038, "Per-info already exists", HttpStatus.CONFLICT),
     DRIVE_UPLOAD_FAILED(1039, "Drive upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
     FEEDBACK_TYPE_INCORRECT(1040,"Incorrect feedback type", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_INVALID(1041,"Notification invalid", HttpStatus.BAD_REQUEST),
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.SERVICE_UNAVAILABLE),
     INVALID_KEY(8888, "Invalid key", HttpStatus.BAD_REQUEST),

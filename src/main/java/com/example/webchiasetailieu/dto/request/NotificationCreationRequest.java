@@ -1,6 +1,5 @@
 package com.example.webchiasetailieu.dto.request;
 
-import com.example.webchiasetailieu.entity.Documents;
 import com.example.webchiasetailieu.enums.NotificationType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

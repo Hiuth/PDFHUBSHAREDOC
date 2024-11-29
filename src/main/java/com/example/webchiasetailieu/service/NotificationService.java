@@ -115,6 +115,17 @@ public class NotificationService {
         return notifications;
     }
 
+    //public
+    public boolean deleteMyNotification(String id){
+        Account account = getAccountFromAuthentication();
+        Notifications notification = repository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED));
+        if(!notification.getAccount().getId().equals(account.getId()))
+            throw new AppException(ErrorCode.NOTIFICATION_INVALID);
+        repository.deleteById(id);
+        return true;
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     public List<Notifications> getAll() {
         if(repository.findAll().isEmpty())
