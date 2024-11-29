@@ -83,7 +83,6 @@ function sendComment(documentId, commentText) {
 }
 
 let socketClient = null; // Biến toàn cục để quản lý kết nối
-
 export async function fetchCommentsForDocument(documentId) {
     // Ngắt kết nối WebSocket cũ nếu tồn tại
     if (socketClient && socketClient.connected) {
