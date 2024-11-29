@@ -41,9 +41,9 @@ public class NotificationController {
     }
 
     @GetMapping("/get/my-notification")
-    @MessageMapping("/getMyNoti/{token}")
-    @SendTo("/topic/getNotification/{token}")
-    public ApiResponse<List<Notifications>> getMyNotification(@DestinationVariable String token) {
+    @MessageMapping("/getMyNoti/{id}")
+    @SendTo("/topic/getNotification/{id}")
+    public ApiResponse<List<Notifications>> getMyNotification(@DestinationVariable String id) {
         ApiResponse<List<Notifications>> response = new ApiResponse<>();
         response.setMessage("Get all notification: ");
         response.setResult(service.getMyNotifications());

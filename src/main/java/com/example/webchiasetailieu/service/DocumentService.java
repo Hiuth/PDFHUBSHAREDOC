@@ -210,6 +210,21 @@ public class DocumentService {
                     .build()))
                 throw new AppException(ErrorCode.SEND_EMAIL_FAILED);
 
+            NotificationResponse notification =  notificationService.notify(NotificationCreationRequest.builder()
+                    .type(NotificationType.DOWNLOAD)
+                    .accountId(documents.getCreatedBy().getId())
+                    .accountName(account.getName())
+                    .docName(documents.getName())
+                    .build());
+
+            String destination = String.format("/topic/getNotification/%s", documents.getCreatedBy().getId());
+            messagingTemplate.convertAndSend(destination,
+                    ApiResponse.<NotificationResponse>builder()
+                            .result(notification)
+                            .message("Thông báo mới")
+                            .build());
+
+
             DownloadHistory downloadHistory = DownloadHistory.builder()
                     .account(account)
                     .document(documents)
@@ -217,12 +232,7 @@ public class DocumentService {
                     .build();
             downloadHistoryRepository.save(downloadHistory);
 
-            notificationService.notify(NotificationCreationRequest.builder()
-                            .type(NotificationType.DOWNLOAD)
-                            .accountId(documents.getCreatedBy().getId())
-                            .accountName(account.getName())
-                            .docName(documents.getName())
-                    .build());
+
 
             return "Successfully downloaded file";
         }

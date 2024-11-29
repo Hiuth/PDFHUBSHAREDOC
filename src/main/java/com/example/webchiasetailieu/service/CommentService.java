@@ -52,7 +52,8 @@ public class CommentService {
                         .build());
 
         // Gửi thông báo đến client qua WebSocket
-        messagingTemplate.convertAndSend("/topic/getNotification",
+        String destination = String.format("/topic/getNotification/%s",documents.getCreatedBy().getId());
+        messagingTemplate.convertAndSend(destination,
                 ApiResponse.<NotificationResponse>builder()
                         .result(notification)
                         .message("Thông báo mới")

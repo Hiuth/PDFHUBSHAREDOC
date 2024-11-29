@@ -66,7 +66,8 @@ public class FeedBackService {
                 .accountId(account1.getId())
                 .build());
 
-        messagingTemplate.convertAndSend("/topic/getNotification",
+        String destination = String.format("/topic/getNotification/%s",account1.getId());
+        messagingTemplate.convertAndSend(destination,
                 ApiResponse.<NotificationResponse>builder()
                         .result(notification)
                         .message("Thông báo mới")

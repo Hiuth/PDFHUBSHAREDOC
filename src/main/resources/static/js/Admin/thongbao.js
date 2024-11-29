@@ -28,24 +28,103 @@ export function toggleNotificationPanel() {
 window.toggleNotificationPanel=toggleNotificationPanel;
 // Tải danh sách thông báo
 
-export function loadNotifications() {
-    const token = getToken();
-    const socket = new SockJS("http://localhost:8088/ws");
-    const client = Stomp.over(socket);
+function waitForConnection(client, callback) {
+    const checkInterval = setInterval(() => {
+        if (client.connected) {
+            clearInterval(checkInterval);
+            callback();
+        }
+    }, 100); // Kiểm tra trạng thái mỗi 100ms
+}
 
-    client.debug = function (str) {}; // Tắt log debug
 
-    client.connect({ Authorization: `Bearer ${token}` }, function () {
-        // Yêu cầu danh sách thông báo ban đầu
-        client.send(`/app/getMyNoti/${token}`, {}, JSON.stringify({token}));
+export function loadNotifications(onNotificationReceived) {
+    return new Promise((resolve, reject) => {
+        const token = getToken();
+        const socket = new SockJS("http://localhost:8088/ws");
+        const client = Stomp.over(socket);
+        client.debug = null; // Tắt debug hoàn toàn
 
-        // Lắng nghe các thông báo mới từ server
-        client.subscribe(`/topic/getNotification/${token}`, function (data) {
-            const response = JSON.parse(data.body);
-            handleNotifications(response.result); // Xử lý thông báo
+        // Hàm để lấy thông tin cá nhân
+        const getPersonalInfo = () => {
+            return new Promise((infoResolve, infoReject) => {
+                client.send(`/app/getInfo/${token}`, {}, JSON.stringify({ token }));
+
+                const infoSubscription = client.subscribe(`/topic/getInfo/${token}`, function (data) {
+                    try {
+                        const response = JSON.parse(data.body);
+                        const info = response.result;
+                        infoSubscription.unsubscribe();
+                        infoResolve(info.accountId);
+                    } catch (error) {
+                        infoSubscription.unsubscribe();
+                        infoReject(error);
+                    }
+                });
+            });
+        };
+
+        // Kết nối và thiết lập việc nhận thông báo
+        client.connect({ Authorization: `Bearer ${token}` }, async function () {
+            try {
+                // Lấy accountId
+                const accountId = await getPersonalInfo();
+                // Đăng ký nhận thông báo liên tục
+                const notificationSubscription = client.subscribe(`/topic/getNotification/${accountId}`, function (data) {
+                    try {
+                        const response = JSON.parse(data.body);
+                        // Gọi callback để xử lý thông báo
+                        if (onNotificationReceived && typeof onNotificationReceived === 'function') {
+                            onNotificationReceived(response.result);
+                        }
+
+                        // Nếu muốn xử lý theo cách cũ
+                        handleNotifications(response.result);
+                    } catch (error) {
+                        console.error("Error processing notification:", error);
+                    }
+                });
+
+                // Gửi yêu cầu lấy thông báo ban đầu
+                client.send(`/app/getMyNoti/${accountId}`, {}, JSON.stringify({ accountId }));
+
+                // Resolve promise để cho biết đã kết nối thành công
+                resolve({
+                    accountId,
+                    disconnect: () => {
+                        notificationSubscription.unsubscribe();
+                        client.disconnect();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error setting up notifications:", error);
+                reject(error);
+            }
+        }, function (error) {
+            // Xử lý lỗi kết nối
+            console.error("Connection error:", error);
+            reject(error);
         });
     });
 }
+
+// Cách sử dụng
+async function setupNotificationListener() {
+    try {
+        const { accountId, disconnect } = await loadNotifications((notification) => {
+        });
+
+        // Nếu muốn ngắt kết nối sau này
+        // disconnect();
+    } catch (error) {
+        console.error("Failed to setup notification listener:", error);
+    }
+}
+
+// Gọi hàm setup
+setupNotificationListener();
+
 
 function handleNotifications(result) {
     let notifications = [];
@@ -141,12 +220,10 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Gọi hàm khi trang được tải
-document.addEventListener("DOMContentLoaded", loadNotifications);
+
 // Hiển thị số lượng thông báo chưa đọc
 const notificationCount = document.getElementById("notificationCount");
 notificationCount.textContent = notifications.length;
-
-// Gọi hàm khi trang được tải
 document.addEventListener("DOMContentLoaded", loadNotifications);
 
 

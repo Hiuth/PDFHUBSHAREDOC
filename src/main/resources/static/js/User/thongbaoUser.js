@@ -56,44 +56,111 @@ function updateNotificationCount(count, isNew = false) {
 
 // Function to load and render notifications
 export function loadNotifications() {
-    const socket = new SockJS("http://localhost:8088/ws");
-    const client = Stomp.over(socket);
-    const token = getToken();
+    return new Promise((resolve, reject) => {
+        const token = getToken();
+        const socket = new SockJS("http://localhost:8088/ws");
+        const client = Stomp.over(socket);
+        client.debug = null; // Tắt debug hoàn toàn
 
-    if (!token) {
-        console.error("Token not found");
-        return;
-    }
+        // Kiểm tra token
+        if (!token) {
+            reject(new Error("Token not found"));
+            return;
+        }
 
-    // Initialize notification display
-    initializeNotificationCount();
-    client.debug = function (str) {};
-    client.connect({ Authorization: `Bearer ${token}` }, () => {
-        // Initial request for notifications
-        client.send(`/app/getMyNoti/${token}`, {}, JSON.stringify({token}));
+        // Hàm để lấy thông tin cá nhân
+        const getPersonalInfo = () => {
+            return new Promise((infoResolve, infoReject) => {
+                client.send(`/app/getInfo/${token}`, {}, JSON.stringify({ token }));
 
-        // Subscribe to real-time notifications
-        client.subscribe(`/topic/getNotification/${token}`, (message) => {
-            const notifications = JSON.parse(message.body);
+                const infoSubscription = client.subscribe(`/topic/getInfo/${token}`, function (data) {
+                    try {
+                        const response = JSON.parse(data.body);
+                        const info = response.result;
+                        infoSubscription.unsubscribe();
+                        infoResolve(info.accountId);
+                    } catch (error) {
+                        infoSubscription.unsubscribe();
+                        infoReject(error);
+                    }
+                });
+            });
+        };
 
-            // Update notification count immediately
-            if (notifications.result) {
-                updateNotificationCount(notifications.result.length);
+        // Kết nối và thiết lập việc nhận thông báo
+        client.connect({ Authorization: `Bearer ${token}` }, async function () {
+            try {
+                // Khởi tạo số lượng thông báo
+                initializeNotificationCount();
+
+                // Lấy accountId
+                const accountId = await getPersonalInfo();
+
+                // Đăng ký nhận thông báo liên tục
+                const notificationSubscription = client.subscribe(`/topic/getNotification/${accountId}`, function (data) {
+                    try {
+                        const notifications = JSON.parse(data.body);
+
+                        // Cập nhật số lượng thông báo ngay lập tức
+                        if (notifications.result) {
+                            updateNotificationCount(notifications.result.length);
+                        }
+
+                        // Render thông báo trong dropdown
+                        renderNotifications(notifications);
+
+                        // Hiển thị thông báo mới nhất dưới dạng browser notification
+                        if (notifications.result && notifications.result.length > 0) {
+                            const latestNoti = notifications.result[0];
+                            showBrowserNotification(latestNoti.title, latestNoti.content, latestNoti.link);
+                        }
+
+                        // Xử lý thông báo theo cách cũ
+                        handleNotifications(notifications.result);
+                    } catch (error) {
+                        console.error("Error processing notification:", error);
+                    }
+                });
+
+                // Gửi yêu cầu lấy thông báo ban đầu
+                client.send(`/app/getMyNoti/${accountId}`, {}, JSON.stringify({ accountId }));
+
+                // Resolve promise để cho biết đã kết nối thành công
+                resolve({
+                    accountId,
+                    disconnect: () => {
+                        notificationSubscription.unsubscribe();
+                        client.disconnect();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error setting up notifications:", error);
+                reject(error);
             }
-
-            // Render notifications in the dropdown
-            renderNotifications(notifications);
-
-            // Display the latest notification as a browser notification
-            if (notifications.result && notifications.result.length > 0) {
-                const latestNoti = notifications.result[0];
-                showBrowserNotification(latestNoti.title, latestNoti.content, latestNoti.link);
-            }
+        }, function (error) {
+            // Xử lý lỗi kết nối
+            console.error("Connection error:", error);
+            reject(error);
         });
-    }, (error) => {
-        console.error("WebSocket connection error:", error);
     });
 }
+
+// Cách sử dụng
+async function setupNotificationListener() {
+    try {
+        const { accountId, disconnect } = await loadNotifications1();
+        console.log(`Notification listener connected with accountId: ${accountId}`);
+
+        // Nếu muốn ngắt kết nối sau này
+        // disconnect();
+    } catch (error) {
+        console.error("Failed to setup notification listener:", error);
+    }
+}
+
+// Gọi hàm setup
+setupNotificationListener();
 
 export function deleteNotification2(id) {
     console.log(id);
