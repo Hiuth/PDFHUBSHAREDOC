@@ -82,8 +82,14 @@ function sendComment(documentId, commentText) {
     );
 }
 
-// Hàm lấy danh sách bình luận cho tài liệu
+let socketClient = null; // Biến toàn cục để quản lý kết nối
+
 export async function fetchCommentsForDocument(documentId) {
+    // Ngắt kết nối WebSocket cũ nếu tồn tại
+    if (socketClient && socketClient.connected) {
+        socketClient.disconnect();
+    }
+
     if (!documentId) {
         console.error("Document ID is required");
         return;
@@ -93,16 +99,17 @@ export async function fetchCommentsForDocument(documentId) {
     console.log("Fetching comments for Document ID:", documentId);
 
     const socket = new SockJS("http://localhost:8088/ws");
-    const client = Stomp.over(socket);
-    client.debug = null;
+    socketClient = Stomp.over(socket);
+    socketClient.debug = null;
 
-    client.connect(
+    socketClient.connect(
         {},
-        async function (frame) { // Đảm bảo function là async để sử dụng await
+        function (frame) {
             console.log("WebSocket connected. Fetching comments.");
-            client.send(`/app/comments/${documentId}`, {}, JSON.stringify({ documentId }));
+            socketClient.send(`/app/comments/${documentId}`, {}, JSON.stringify({ documentId }));
 
-            const subscription = client.subscribe('/topic/getComments', async function (data) { // async ở đây để dùng await
+            // Chỉ subscribe một lần
+            const subscription = socketClient.subscribe('/topic/getComments', function (data) {
                 try {
                     const response = JSON.parse(data.body);
                     const comments = response.result;
@@ -110,9 +117,11 @@ export async function fetchCommentsForDocument(documentId) {
                     if (Array.isArray(comments)) {
                         const commentsContainer = document.getElementById('comments-container');
                         if (commentsContainer) {
+                            // Xóa nội dung cũ trước khi thêm
                             commentsContainer.innerHTML = '';
 
-                            for (const comment of comments) {
+                            comments.forEach(async (comment) => {
+                                // Xử lý từng comment
                                 const userName = comment.account ? comment.account.name : 'Anonymous';
                                 const commentText = comment.comText.replace(/\s+/g, " ").trim() || 'No comment text provided';
                                 const createdAt = new Date(comment.createdAt);
@@ -122,9 +131,8 @@ export async function fetchCommentsForDocument(documentId) {
                                 commentElement.id = 'cmtAndTime';
                                 commentElement.setAttribute('data-comment-id', comment.id);
 
-                                // Gọi hàm fetchAvatar2 để lấy tên avatar và đợi kết quả
                                 const avatar = await fetchAvatar2(comment.id);
-                                console.log(`Avatar filename: ${avatar}`); // In ra tên file avatar
+                                console.log(`Avatar filename: ${avatar}`);
 
                                 commentElement.innerHTML = `
                                     <div class="form-group1" id="comment-class">
@@ -160,16 +168,17 @@ export async function fetchCommentsForDocument(documentId) {
                                     </div>
                                 `;
                                 commentsContainer.appendChild(commentElement);
-                            }
-                        } else {
-                            console.error("Element with ID 'comments-container' not found");
+                            });
                         }
-                    } else {
-                        console.error("Expected an array but received:", comments);
                     }
 
+                    // Hủy subscription ngay sau khi nhận dữ liệu
                     subscription.unsubscribe();
-                    client.disconnect();
+
+                    // Ngắt kết nối WebSocket
+                    if (socketClient) {
+                        socketClient.disconnect();
+                    }
                 } catch (error) {
                     console.error("Error processing comments:", error);
                 }
@@ -182,6 +191,27 @@ export async function fetchCommentsForDocument(documentId) {
     );
 }
 
+function fetchAvatar2(CommentID) {
+    return fetch(`http://localhost:8088/comment/avatar/${CommentID}`, {
+        method: 'GET', // Phương thức GET vì chỉ lấy dữ liệu
+        headers: {
+            // Nếu cần thêm header, có thể thêm vào đây
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
+            }
+            return response.json(); // Chuyển phản hồi sang đối tượng JSON
+        })
+        .then(data => {
+            return data.result || "avatar.png"; // Trả về giá trị của result, nếu không có thì trả về "avatar.png"
+        })
+        .catch(error => {
+            console.error("Avatar fetch error:", error.message);
+            return "avatar.png";  // Trả về avatar mặc định nếu có lỗi
+        });
+}
 
 function editComment(commentId, newText) {
     if (!commentId || !newText) {
@@ -436,25 +466,3 @@ function openDeleteCommentPopup(commentId) {
 }
 
 window.openDeleteCommentPopup = openDeleteCommentPopup;
-
-function fetchAvatar2(CommentID) {
-    return fetch(`http://localhost:8088/comment/avatar/${CommentID}`, {
-        method: 'GET', // Phương thức GET vì chỉ lấy dữ liệu
-        headers: {
-            // Nếu cần thêm header, có thể thêm vào đây
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Lỗi HTTP! status: ${response.status}`);
-            }
-            return response.json(); // Chuyển phản hồi sang đối tượng JSON
-        })
-        .then(data => {
-            return data.result || "avatar.png"; // Trả về giá trị của result, nếu không có thì trả về "avatar.png"
-        })
-        .catch(error => {
-            console.error("Avatar fetch error:", error.message);
-            return "avatar.png";  // Trả về avatar mặc định nếu có lỗi
-        });
-}
