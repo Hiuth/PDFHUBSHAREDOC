@@ -79,7 +79,8 @@ export function uploadDocument() {
         alert("Vui lòng chọn tệp tài liệu!");
         return;
     }
-
+    const loadingElement = document.getElementById("loading2");
+    loadingElement.style.display = "flex";
     // Lấy phần mở rộng của file tài liệu
     const docType = documentFile.name.substring(documentFile.name.lastIndexOf('.') + 1);
 
@@ -122,8 +123,9 @@ export function uploadDocument() {
             if (data.code === 9999) {
                 throw new Error(data.message);
             }
+            loadingElement.style.display = "none";
             console.log("Upload thành công:", data);
-            alert("Đăng tải thành công!");
+            //alert("Đăng tải thành công!");
            window.location.reload();
         })
         .catch(error => {
