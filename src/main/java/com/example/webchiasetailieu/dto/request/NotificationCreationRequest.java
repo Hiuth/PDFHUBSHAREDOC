@@ -19,4 +19,9 @@ public class NotificationCreationRequest {
 
     @NotBlank(message = "NOT_NULL")
     String accountId;
+
+    String docName;
+
+    String feedbackMessage;
+    String feedbackDate;
 }

@@ -52,17 +52,13 @@ public class NotificationService {
 
             case POST_VIOLATION:
                 request.setTitle(NotificationType.POST_VIOLATION.getTitle());
-                request.setContent(String.format(NotificationType.POST_VIOLATION.getDescription(), "Tên bài viết"));
+                request.setContent(String.format(NotificationType.POST_VIOLATION.getDescription(),
+                        request.getDocName()));
                 break;
 
             case ACCOUNT_LOCKED:
                 request.setTitle(NotificationType.ACCOUNT_LOCKED.getTitle());
                 request.setContent(NotificationType.ACCOUNT_LOCKED.getDescription());
-                break;
-
-            case ADMIN_FEEDBACK:
-                request.setTitle(NotificationType.ADMIN_FEEDBACK.getTitle());
-                request.setContent(String.format(NotificationType.ADMIN_FEEDBACK.getDescription(), "Nội dung phản hồi"));
                 break;
 
             case COMMENT_VIOLATION:
@@ -88,6 +84,12 @@ public class NotificationService {
             case FEEDBACK:
                 request.setTitle(NotificationType.FEEDBACK.getTitle());
                 request.setContent(NotificationType.FEEDBACK.getDescription());
+                break;
+
+            case ADMIN_FEEDBACK:
+                request.setTitle(NotificationType.ADMIN_FEEDBACK.getTitle());
+                request.setContent(String.format(NotificationType.ADMIN_FEEDBACK.getDescription(),
+                        request.getFeedbackMessage(), request.getFeedbackDate()));
                 break;
 
             default:

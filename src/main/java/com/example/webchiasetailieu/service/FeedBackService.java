@@ -18,7 +18,6 @@ import com.example.webchiasetailieu.exception.ErrorCode;
 import com.example.webchiasetailieu.repository.AccountRepository;
 import com.example.webchiasetailieu.repository.DocumentRepository;
 import com.example.webchiasetailieu.repository.FeedBackRepository;
-import com.example.webchiasetailieu.repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -80,10 +79,19 @@ public class FeedBackService {
     public FeedBackResponse updateStatusFeedbackOrResponseFromAdmin(UpdateFeedbackRequest request) {
         Feedbacks feedbacks = repository.findById(request.getId()).orElseThrow(
                 () -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
-        if(request.getStatus() != null)
+        if(request.getStatus() != null){
             feedbacks.setStatus(request.getStatus());
-        if(request.getResponseFromAdmin()!= null)
+        }
+        if(request.getResponseFromAdmin()!= null){
             feedbacks.setFeedbackFromAdmin(request.getResponseFromAdmin());
+        }
+
+        notificationService.notify(NotificationCreationRequest.builder()
+                .type(NotificationType.ADMIN_FEEDBACK)
+                .accountId(feedbacks.getAccount().getId())
+                .feedbackMessage(feedbacks.getFeedback())
+                .feedbackDate(feedbacks.getDate().toString())
+                .build());
         return convertToResponse(repository.save(feedbacks));
     }
 
@@ -93,8 +101,9 @@ public class FeedBackService {
                                 .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
 
         return notificationService.notify(NotificationCreationRequest.builder()
-                    .type(NotificationType.POST_VIOLATION)
-                    .accountId(documents.getCreatedBy().getId())
+                        .type(NotificationType.POST_VIOLATION)
+                        .accountId(documents.getCreatedBy().getId())
+                        .docName(documents.getName())
                 .build());
     }
 

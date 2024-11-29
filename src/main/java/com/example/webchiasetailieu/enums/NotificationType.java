@@ -39,7 +39,8 @@ public enum NotificationType {
     ),
     ADMIN_FEEDBACK(
             "Phản hồi từ quản trị viên",
-            "Quản trị viên đã phản hồi yêu cầu của bạn: " +
+            "Quản trị viên đã phản hồi yêu cầu của bạn " +
+                    "về bài báo cáo có nội dung là [%s] vào ngày [%s] ." +
                     "Hãy kiểm tra và cập nhật thông tin kịp thời."
     ),
     COMMENT_VIOLATION(
@@ -66,6 +67,17 @@ public enum NotificationType {
             "Báo cáo từ người dùng",
             "Bạn đã nhận được báo cáo từ người dùng. " +
                     "Hãy xử nó lí sớm nhất có thể."
+    ),
+    UPDATE_STATUS(
+            "Phàn hồi từ bài báo cáo của bạn",
+            "Admin %s bài báo cáo có nội dung [%s] vào ngày [%s]. " +
+                    "Cám ơn bạn đã đóng góp cho cộng đồng ngày càng phát triển."
+    ),
+    FEEDBACK_RESPONSE(
+            "Phàn hồi từ bài báo cáo của bạn",
+            "Admin %s bài báo cáo có nội dung [%s] vào ngày [%s]. " +
+                    "Phản hồi từ admin: %s. "+
+                    "Cám ơn bạn đã đóng góp cho cộng đồng ngày càng phát triển."
     );
     String title;
     String description;

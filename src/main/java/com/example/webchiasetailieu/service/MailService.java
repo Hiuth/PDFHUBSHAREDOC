@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 import org.springframework.core.io.FileSystemResource;
@@ -46,7 +45,6 @@ public class MailService{
                                                        <img src="cid:logoImage" alt="PDF Hub Logo" style="max-width: 150px; margin-bottom: 10px; background-color: #ececec; padding: 8px 10px; border-radius: 10px;">
                                                        <h1 style="margin: 0; font-size: 24px;">Thông báo về lượt tải</h1>
                                                    </div>
-                        
                                                    <!-- Body -->
                                                    <div style="padding: 20px; text-align: center;">
                                                        <p style="color: #333; font-size: 16px; margin-bottom: 10px">Chào <strong>%s</strong>,</p>
@@ -54,7 +52,6 @@ public class MailService{
                                                            Tài liệu <strong>%s</strong> của bạn vừa nhận được lượt tải mới, nhờ đó bạn được thưởng thêm xu! <br>Hãy truy cập web để xem ngay!
                                                        </p>
                                                    </div>
-                        
                                                    <!-- Footer -->
                                                    <div style="background-color: #f9f9f9; color: #555; text-align: center; padding: 15px; font-size: 12px; border-top: 1px solid #D82B8A;">
                                                        Nếu bạn cần hỗ trợ, vui lòng liên hệ <a href="mailto:pdfHub5shareDoc@gmail.com" style="color: #D82B8A;">pdfHub5shareDoc@gmail.com</a>.
@@ -77,7 +74,6 @@ public class MailService{
                                         <img src="cid:logoImage" alt="PDF Hub Logo" style="max-width: 150px; margin-bottom: 10px; background-color: #ececec; padding: 8px 10px; border-radius: 10px;">
                                         <h1 style="margin: 0; font-size: 24px;">Xác nhận tài khoản</h1>
                                     </div>
-                        
                                     <!-- Body -->
                                     <div style="padding: 20px; text-align: center;">
                                         <p style="color: #333; font-size: 16px;">Chào khách hàng mới,</p>
@@ -91,7 +87,6 @@ public class MailService{
                                             Mã OTP này có hiệu lực trong <strong>10 phút</strong>. Nếu bạn không yêu cầu, vui lòng bỏ qua email này.
                                         </p>
                                     </div>
-                        
                                     <!-- Footer -->
                                     <div style="background-color: #f9f9f9; color: #555; text-align: center; padding: 15px; font-size: 12px; border-top: 1px solid #D82B8A;">
                                         Nếu bạn cần hỗ trợ, vui lòng liên hệ <a href="mailto:pdfHub5shareDoc@gmail.com" style="color: #D82B8A;">pdfHub5shareDoc@gmail.com</a>.
@@ -185,10 +180,5 @@ public class MailService{
         if (email == null || !isValidEmail(email)) {
             throw new AppException(ErrorCode.EMAIL_INVALID);
         }
-    }
-
-    private Account getEmailFromAuthentication(){
-        return accountRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }
