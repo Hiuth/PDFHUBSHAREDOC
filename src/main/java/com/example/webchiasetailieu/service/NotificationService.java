@@ -85,6 +85,11 @@ public class NotificationService {
                 request.setContent(NotificationType.COMMENT_WARNING.getDescription());
                 break;
 
+            case FEEDBACK:
+                request.setTitle(NotificationType.FEEDBACK.getTitle());
+                request.setContent(NotificationType.FEEDBACK.getDescription());
+                break;
+
             default:
                 throw new IllegalArgumentException("Loại thông báo không hợp lệ: " + request.getType());
         }
