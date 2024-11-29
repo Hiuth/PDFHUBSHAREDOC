@@ -100,9 +100,9 @@ export function fetchPersonalInformation() {
   client.debug = function (str) {};
   client.connect({Authorization: `Bearer ${token}`}, function (frame) {
    // Tắt debug nếu không cần thiết
-    client.send(`/app/getInfo`);
+    client.send(`/app/getInfo/${token}`,{},JSON.stringify({token}));
 
-    client.subscribe("/topic/getInfo", function (data) {
+    client.subscribe(`/topic/getInfo/${token}`, function (data) {
       const response = JSON.parse(data.body);
       const perInfo = response.result;
       const avatar = `../../static/images/User/${perInfo.avatar}`;

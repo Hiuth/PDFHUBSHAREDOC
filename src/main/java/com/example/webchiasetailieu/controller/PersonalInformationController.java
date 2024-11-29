@@ -60,9 +60,9 @@ public class PersonalInformationController {
 
 
     @GetMapping
-    @MessageMapping("/getInfo")
-    @SendTo("/topic/getInfo")
-    ApiResponse<PerInfoResponse> viewMyPersonalInformation() {
+    @MessageMapping("/getInfo/{id}")
+    @SendTo("/topic/getInfo/{id}")
+    ApiResponse<PerInfoResponse> viewMyPersonalInformation(@DestinationVariable String id) {
         return ApiResponse.<PerInfoResponse>builder()
                 .code(1000)
                 .message("Update my personal information")

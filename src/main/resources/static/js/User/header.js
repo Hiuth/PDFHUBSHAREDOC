@@ -217,8 +217,8 @@ export function PersonalInfo1() {
     client.debug = function (str) {};
 
     client.connect({Authorization: `Bearer ${token}`}, function (frame) {
-        client.send("/app/getInfo");
-        client.subscribe("/topic/getInfo", function (data) {
+        client.send(`/app/getInfo/${token}`,{},JSON.stringify(token));
+        client.subscribe(`/topic/getInfo/${token}`, function (data) {
             const response = JSON.parse(data.body);
             const perInfo = response.result;
 
