@@ -37,10 +37,10 @@ export function loadNotifications() {
 
     client.connect({ Authorization: `Bearer ${token}` }, function () {
         // Yêu cầu danh sách thông báo ban đầu
-        client.send("/app/getMyNoti", {}, JSON.stringify({}));
+        client.send(`/app/getMyNoti/${token}`, {}, JSON.stringify({token}));
 
         // Lắng nghe các thông báo mới từ server
-        client.subscribe("/topic/getNotification", function (data) {
+        client.subscribe(`/topic/getNotification/${token}`, function (data) {
             const response = JSON.parse(data.body);
             handleNotifications(response.result); // Xử lý thông báo
         });

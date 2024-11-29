@@ -70,10 +70,10 @@ export function loadNotifications() {
 
     client.connect({ Authorization: `Bearer ${token}` }, () => {
         // Initial request for notifications
-        client.send('/app/getMyNoti', {}, JSON.stringify({}));
+        client.send(`/app/getMyNoti/${token}`, {}, JSON.stringify({token}));
 
         // Subscribe to real-time notifications
-        client.subscribe('/topic/getNotification', (message) => {
+        client.subscribe(`/topic/getNotification/${token}`, (message) => {
             const notifications = JSON.parse(message.body);
 
             // Update notification count immediately
