@@ -30,56 +30,67 @@ function SendData(payload, destination, server) {
 }
 
 // Handle form submission
+// Cập nhật hàm handleFeedbackAccountSubmit
 export async function handleFeedbackAccountSubmit(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
-    // Disable submit button to prevent double submission
     const submitButton = event.target.querySelector('input[type="submit"]');
     submitButton.disabled = true;
 
     try {
-        // Get form data
         const description = document.getElementById('problemDes').value.trim();
 
-        // Validate input
         if (description === "") {
             throw new Error("Please provide a description.");
         }
 
         const feedbackRequest = {
             feedback: description,
-            feedbackType: "ANOTHER_PROBLEM" // Explicitly set feedback type
+            feedbackType: "ANOTHER_PROBLEM"
         };
 
         console.log("Feedback Request:", feedbackRequest);
 
-        // Send data and wait for response
         const message = "/app/createFeedback";
         const server = "/topic/feedbacks";
 
         const response = await SendData(feedbackRequest, message, server);
 
         if (response && response.result) {
-            alert("Your feedback has been submitted successfully!");
-
-            window.location.reload();
+            showPopup("Feedback của bạn đã được gửi thành công!");
         } else {
-            throw new Error("Failed to submit feedback. Please try again.");
+            showPopup("Lỗi khi gửi feedback, vui lòng điền đầy đủ thông tin và thử lại!");
         }
 
     } catch (error) {
-        alert(error.message || "An error occurred while submitting feedback.");
+        showPopup("Lỗi khi gửi feedback, vui lòng điền đầy đủ thông tin và thử lại!");
         console.error("Error:", error);
     } finally {
-        // Re-enable submit button
         submitButton.disabled = false;
     }
 }
 
-// Ensure event listener is added when DOM is loaded
+// Đảm bảo nút "OK" đóng popup
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('problemForm');
     if (form) {
         form.addEventListener('submit', handleFeedbackAccountSubmit);
     }
+
+    const closePopupButton = document.getElementById('closePopupButton');
+    closePopupButton.addEventListener('click', hidePopup);
 });
+
+function showPopup(message) {
+    const popup = document.getElementById('successPopup');
+    const popupMessage = document.getElementById('popupMessage');
+    popupMessage.textContent = message;
+    popup.classList.remove('hidden');
+    popup.classList.add('visible');
+}
+
+function hidePopup() {
+    const popup = document.getElementById('successPopup');
+    popup.classList.remove('visible');
+    popup.classList.add('hidden');
+}

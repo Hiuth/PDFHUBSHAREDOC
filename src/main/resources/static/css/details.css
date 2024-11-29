@@ -31,10 +31,9 @@
     box-sizing: border-box;
 }
 
-.docInfo-part{
-    display: flex;
+.docsInfo-part{
     float: left;
-    max-width: none;
+    flex-grow: 1;
 }
 .comment-part{
     float: right;
@@ -282,10 +281,13 @@
     .comment-part{
         display: none;
     }
-    .docInfo-part{
+    .docsInfo-part{
         width: 100%;
     }
     .docs-part{
+        width: 100%;
+    }
+    .Info-part{
         width: 100%;
     }
 }

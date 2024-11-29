@@ -50,7 +50,7 @@ export async function handleFeedbackSubmit(event) {
 
         // Validate input
         if (description === "") {
-            throw new Error("Please provide a description.");
+            showPopup("Vui lòng điền đầy đủ thông tin và thử lại!");
         }
 
         const feedbackRequest = {
@@ -68,15 +68,15 @@ export async function handleFeedbackSubmit(event) {
         const response = await SendData(feedbackRequest, message, server);
 
         if (response && response.result) {
-            alert("Your feedback has been submitted successfully!");
+            showPopup("Feedback của bạn đã được gửi thành công!");
             closeReportPopup(); // Assuming this function exists in your HTML/JS
-            window.location.reload();
+            //window.location.reload();
         } else {
-            throw new Error("Failed to submit feedback. Please try again.");
+            showPopup("Lỗi khi gửi feedback, vui lòng điền đầy đủ thông tin và thử lại!");
         }
 
     } catch (error) {
-        alert(error.message || "An error occurred while submitting feedback.");
+        showPopup("Lỗi khi gửi feedback, vui lòng điền đầy đủ thông tin và thử lại!");
         console.error("Error:", error);
     } finally {
         // Re-enable submit button
@@ -90,4 +90,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', handleFeedbackSubmit);
     }
+
+    const closePopupButton = document.getElementById('closePopupButton');
+    closePopupButton.addEventListener('click', hidePopup);
 });
+
+function showPopup(message) {
+    const popup = document.getElementById('successPopup');
+    const popupMessage = document.getElementById('popupMessage');
+    popupMessage.textContent = message;
+    popup.classList.remove('hidden');
+    popup.classList.add('visible');
+}
+
+function hidePopup() {
+    const popup = document.getElementById('successPopup');
+    popup.classList.remove('visible');
+    popup.classList.add('hidden');
+}
