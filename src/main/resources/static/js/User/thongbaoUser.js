@@ -67,7 +67,7 @@ export function loadNotifications() {
 
     // Initialize notification display
     initializeNotificationCount();
-
+    client.debug = function (str) {};
     client.connect({ Authorization: `Bearer ${token}` }, () => {
         // Initial request for notifications
         client.send(`/app/getMyNoti/${token}`, {}, JSON.stringify({token}));
@@ -95,6 +95,42 @@ export function loadNotifications() {
     });
 }
 
+export function deleteNotification2(id) {
+    console.log(id);
+    const token = getToken();
+    const socket = new SockJS("http://localhost:8088/ws");
+    const client = Stomp.over(socket);
+    client.debug = function (str) {};
+    client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
+        client.send(`/app/deleteNoti/${id}`, {}, JSON.stringify({ id }));
+        client.subscribe('/topic/deleteNotification', function (data) {
+            const notificationElement = document.querySelector(`.oneNotiBox[data-id="${id}"]`);
+            if (notificationElement) {
+                // Thêm lớp fade-out để kích hoạt animation
+                notificationElement.classList.add("fade-out");
+
+                // Đợi animation hoàn tất trước khi xóa
+                setTimeout(() => {
+                    notificationElement.remove();
+
+                    // Cập nhật số lượng thông báo
+                    const notiCountElement = document.querySelector('.noti-count');
+                    if (notiCountElement) {
+                        let currentCount = parseInt(notiCountElement.textContent, 10) || 0;
+                        if (currentCount > 0) {
+                            currentCount -= 1; // Giảm số lượng thông báo
+                            notiCountElement.textContent = currentCount;
+                            notiCountElement.style.display = currentCount > 0 ? 'block' : 'none';
+                        }
+                    }
+                }, 500); // Thời gian khớp với `transition` trong CSS
+            }
+        });
+    });
+}
+
+window. deleteNotification2= deleteNotification2
+
 // Function to render notifications
 function renderNotifications(notifications) {
     const notiContainer = document.getElementById("notification-list");
@@ -120,7 +156,7 @@ function renderNotifications(notifications) {
           <img src="../../static/images/icons/Clock%20gray.png" alt="">
           <div class="noti-time">${formatDateTime(noti.dateTime)}</div>
         </div>
-        <button id="noti-link">Xóa thông báo</button> 
+        <button id="noti-link" onclick="deleteNotification2('${noti.id}')">Xóa thông báo</button> 
       </div>
     `;
 

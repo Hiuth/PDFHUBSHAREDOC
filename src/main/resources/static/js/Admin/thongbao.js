@@ -120,6 +120,7 @@ function deleteNotification(id) {
     const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
+    client.debug = function (str) {};
     client.connect({ Authorization: `Bearer ${token}` }, function (frame) {
         client.send(`/app/deleteNoti/${id}`,{}, JSON.stringify({id}));
         client.subscribe('/topic/deleteNotification', function (data) {

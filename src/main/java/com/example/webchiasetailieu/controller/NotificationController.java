@@ -58,18 +58,18 @@ public class NotificationController {
         return response;
     }
 
-    @GetMapping("/delete/{id}")
+//    @GetMapping("/delete/{id}")
+//    @MessageMapping("/deleteNoti/{id}")
+//    @SendTo("/topic/deleteNotification")
+//    public ApiResponse<String> deleteNotificationById(@DestinationVariable String id) {
+//        ApiResponse<String> response = new ApiResponse<>();
+//        response.setMessage("Get all notification: ");
+//        response.setResult(service.delete(id));
+//        return response;
+//    }
+
     @MessageMapping("/deleteNoti/{id}")
     @SendTo("/topic/deleteNotification")
-    public ApiResponse<String> deleteNotificationById(@DestinationVariable String id) {
-        ApiResponse<String> response = new ApiResponse<>();
-        response.setMessage("Get all notification: ");
-        response.setResult(service.delete(id));
-        return response;
-    }
-
-    @MessageMapping("/deleteMyNoti/{id}")
-    @SendTo("/topic/deleteMyNotification")
     ApiResponse<Boolean> deleteMyNotification(@DestinationVariable String id) {
         return ApiResponse.<Boolean>builder()
                 .code(1000)

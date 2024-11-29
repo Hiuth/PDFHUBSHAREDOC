@@ -11,8 +11,9 @@ function login(){
     console.log(account);
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
+    client.debug = function (str) {};
     client.connect({}, function (frame) {
-        client.debug = function (str) {};
+
         client.send(`/app/getToken`, {}, JSON.stringify(account));
         client.subscribe('/topic/token', function (data) {
             // if (data.code !== 1000) {

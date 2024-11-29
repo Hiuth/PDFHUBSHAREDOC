@@ -204,3 +204,13 @@ hr{
     font-weight: bold;
     font-family: Inter, sans-serif;
 }
+
+/* Animation để làm mờ dần và trượt lên */
+.oneNotiBox {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.oneNotiBox.fade-out {
+    opacity: 0;
+    transform: translateY(-20px); /* Trượt lên */
+}
