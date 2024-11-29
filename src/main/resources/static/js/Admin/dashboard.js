@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ],
                 datasets: [
                     {
-                        label: "Số người dùng",
+                        label: "Số tài liệu",
                         data: data, // Nhận dữ liệu từ API
                         borderColor: "#8e2de2",
                         tension: 0.4,
