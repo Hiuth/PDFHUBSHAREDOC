@@ -14,6 +14,7 @@ export function downloadDocument() {
         client.send(`/app/downloadFile/${id}`,{},JSON.stringify(id));
         client.subscribe('/topic/downFile', function (message) {
             loadingElement.style.display = "none";
+            window.location.reload();
         })
 
     })

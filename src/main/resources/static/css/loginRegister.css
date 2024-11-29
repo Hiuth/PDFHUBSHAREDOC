@@ -140,3 +140,18 @@ label[for="rememberme"]{
 .error{
     margin-left: 30%;
 }
+
+#gender{
+    width: 200px;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+#fname{
+    flex-grow: 1;
+    min-width: 0;
+}
+
+#info-form .form-group2{
+    flex-wrap: nowrap;
+}

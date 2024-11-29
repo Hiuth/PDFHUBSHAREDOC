@@ -759,9 +759,12 @@ button#OTP-submit.loading{
 }
 
 /* Container cho spinner và văn bản */
-.spinner-container {
+.spinner-container1 {
     text-align: center;
-    color: #fff;
+    background-color: white;
+    color: black;
+    padding: 8px 20px;
+    border-radius: 10px;
 }
 
 /* Tăng kích thước spinner */
@@ -772,8 +775,8 @@ button#OTP-submit.loading{
 }
 
 /* Văn bản hiển thị khi loading */
-.loading2-text {
+.loading-text1 {
     margin-top: 1rem;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1rem;
+    color: black;
 }
