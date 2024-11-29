@@ -4,6 +4,7 @@ import com.example.webchiasetailieu.dto.request.FeedBackRequest;
 import com.example.webchiasetailieu.dto.request.HandleFeedbackRequest;
 import com.example.webchiasetailieu.dto.request.NotificationCreationRequest;
 import com.example.webchiasetailieu.dto.request.UpdateFeedbackRequest;
+import com.example.webchiasetailieu.dto.response.ApiResponse;
 import com.example.webchiasetailieu.dto.response.FeedBackResponse;
 import com.example.webchiasetailieu.dto.response.NotificationResponse;
 import com.example.webchiasetailieu.entity.Account;
@@ -21,6 +22,7 @@ import com.example.webchiasetailieu.repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,7 @@ public class FeedBackService {
     NotificationService notificationService;
     DocumentRepository documentRepository;
     AccountRepository accountRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @PreAuthorize("hasRole('USER')")
     public FeedBackResponse createFeedback(FeedBackRequest request) {
@@ -59,10 +62,16 @@ public class FeedBackService {
 
         Account account1 = accountRepository.findByEmail("pdfhubsharedoc@gmail.com")
                         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        notificationService.notify(NotificationCreationRequest.builder()
+        NotificationResponse notification =notificationService.notify(NotificationCreationRequest.builder()
                 .type(NotificationType.FEEDBACK)
                 .accountId(account1.getId())
                 .build());
+
+        messagingTemplate.convertAndSend("/topic/getNotification",
+                ApiResponse.<NotificationResponse>builder()
+                        .result(notification)
+                        .message("Thông báo mới")
+                        .build());
 
         return convertToResponse(repository.save(feedbacks));
     }
