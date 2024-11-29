@@ -42,12 +42,13 @@ public class NotificationService {
 
             case DOWNLOAD:
                 request.setTitle(NotificationType.DOWNLOAD.getTitle());
-                request.setContent(NotificationType.DOWNLOAD.getDescription());
+                request.setContent(String.format(NotificationType.DOWNLOAD.getDescription(),
+                        request.getDocName(), request.getAccountName()));
                 break;
 
             case COMMENT:
                 request.setTitle(NotificationType.COMMENT.getTitle());
-                request.setContent(NotificationType.COMMENT.getDescription());
+                request.setContent(String.format(NotificationType.COMMENT.getDescription(), request.getDocName()));
                 break;
 
             case POST_VIOLATION:

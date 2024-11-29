@@ -220,6 +220,8 @@ public class DocumentService {
             notificationService.notify(NotificationCreationRequest.builder()
                             .type(NotificationType.DOWNLOAD)
                             .accountId(documents.getCreatedBy().getId())
+                            .accountName(account.getName())
+                            .docName(documents.getName())
                     .build());
 
             return "Successfully downloaded file";

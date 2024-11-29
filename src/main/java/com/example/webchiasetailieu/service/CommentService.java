@@ -46,8 +46,9 @@ public class CommentService {
 
         NotificationResponse notification = notificationService.notify(
                 NotificationCreationRequest.builder()
-                        .type(NotificationType.COMMENT)
-                        .accountId(documents.getCreatedBy().getId())
+                            .type(NotificationType.COMMENT)
+                            .accountId(documents.getCreatedBy().getId())
+                            .docName(documents.getName())
                         .build());
 
         // Gửi thông báo đến client qua WebSocket

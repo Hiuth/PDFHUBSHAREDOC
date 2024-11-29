@@ -19,17 +19,17 @@ public enum NotificationType {
     ),
     DOWNLOAD(
             "Lượt tải xuống",
-            "Tài liệu của bạn đã được tải xuống lần trong ngày hôm nay. " +
+            "Tài liệu [%s] của bạn đã được [%] tải xuống. " +
                     "Cảm ơn bạn đã đóng góp cho cộng đồng!"
     ),
     COMMENT(
             "Bình luận",
-            "Bài viết của bạn đã nhận được một bình luận mới. " +
+            "Bài viết [%s] của bạn đã nhận được một bình luận mới. " +
                     "Hãy xem và phản hồi để giữ cho cuộc thảo luận sôi nổi!"
     ),
     POST_VIOLATION(
             "Vi phạm bài viết",
-            "Bài viết %s của bạn đã vi phạm quy định của trang web. Vui lòng gỡ bỏ bài hoặc " +
+            "Bài viết [%s] của bạn đã vi phạm quy định của trang web. Vui lòng gỡ bỏ bài hoặc " +
                     "chỉnh sửa để tuân thủ chính sách của chúng tôi."
     ),
     ACCOUNT_LOCKED(
@@ -67,17 +67,6 @@ public enum NotificationType {
             "Báo cáo từ người dùng",
             "Bạn đã nhận được báo cáo từ người dùng. " +
                     "Hãy xử nó lí sớm nhất có thể."
-    ),
-    UPDATE_STATUS(
-            "Phàn hồi từ bài báo cáo của bạn",
-            "Admin %s bài báo cáo có nội dung [%s] vào ngày [%s]. " +
-                    "Cám ơn bạn đã đóng góp cho cộng đồng ngày càng phát triển."
-    ),
-    FEEDBACK_RESPONSE(
-            "Phàn hồi từ bài báo cáo của bạn",
-            "Admin %s bài báo cáo có nội dung [%s] vào ngày [%s]. " +
-                    "Phản hồi từ admin: %s. "+
-                    "Cám ơn bạn đã đóng góp cho cộng đồng ngày càng phát triển."
     );
     String title;
     String description;
