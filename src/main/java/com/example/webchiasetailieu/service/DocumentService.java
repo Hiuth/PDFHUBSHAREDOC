@@ -100,7 +100,7 @@ public class DocumentService {
     public DocumentResponse updateDocument(String docId, UpdateDocumentRequest request) throws GeneralSecurityException, IOException {
         Documents document = isDocumentOwnedByAccount(docId);
 
-        if (!request.getFile().isEmpty()) {
+        if (request.getFile() != null && !request.getFile().isEmpty()) {
             document.setUrl(updateFile(request.getFile(), document));
         }
         if (!request.getName().isBlank()) {
@@ -109,7 +109,7 @@ public class DocumentService {
         if (!request.getDescription().isBlank()) {
             document.setDescription(request.getDescription());
         }
-        if (!request.getType().isBlank()) {
+        if (request.getType() != null && !request.getType().isBlank()) {
             document.setType(request.getType());
         }
         if (!request.getAvatar().isBlank()) {

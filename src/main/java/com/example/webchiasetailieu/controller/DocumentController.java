@@ -130,13 +130,14 @@ public class DocumentController {
     @SendTo("/topic/updateDoc")
     ApiResponse<DocumentResponse> updateDocument(
             @PathVariable String id,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "file",required = false) MultipartFile file,
             @RequestParam("docName") String docName,
-            @RequestParam("docType") String docType,
+            @RequestParam(value = "docType",required = false) String docType,
             @RequestParam("description") String description,
             @RequestParam("docCategoryId") String docCategoryId,
             @RequestParam("avatar") String avatar)
             throws GeneralSecurityException, IOException {
+        System.out.println("Doc controller: " + docName);
         return ApiResponse.<DocumentResponse>builder()
                 .code(1000)
                 .message("Update document:")
