@@ -115,8 +115,6 @@ async function setupNotificationListener() {
         const { accountId, disconnect } = await loadNotifications((notification) => {
         });
 
-        // Nếu muốn ngắt kết nối sau này
-        // disconnect();
     } catch (error) {
         console.error("Failed to setup notification listener:", error);
     }
@@ -133,7 +131,7 @@ function handleNotifications(result) {
     } else if (result) {
         notifications = [result];
     }
-
+    console.log(notifications)
     const notificationList = document.getElementById("notificationList");
 
     // Thêm thông báo mới vào danh sách
@@ -143,38 +141,36 @@ function handleNotifications(result) {
         ).find((input) => input.value === String(message.id));
 
         // Chỉ thêm thông báo mới nếu chưa tồn tại
-        if (!existingNotification) {
-            const li = document.createElement("li");
+        const li = document.createElement("li");
 
-            const messageDiv = document.createElement("div");
-            messageDiv.className = "message";
-            messageDiv.textContent = message.content;
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message";
+        messageDiv.textContent = message.content;
 
-            const hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.value = message.id;
-            hiddenInput.className = "notificationId";
-            messageDiv.appendChild(hiddenInput);
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.value = message.id;
+        hiddenInput.className = "notificationId";
+        messageDiv.appendChild(hiddenInput);
 
-            const deleteBtn = document.createElement("button");
-            deleteBtn.className = "notification-delete-btn";
-            deleteBtn.setAttribute("aria-label", "Delete notification");
-            deleteBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                li.style.animation = "fadeOut 0.3s ease";
-                setTimeout(() => {
-                    li.remove();
-                    deleteNotification(hiddenInput.value); // Xóa thông báo
-                    updateNotificationCount(); // Cập nhật chấm đỏ
-                }, 300);
-            });
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "notification-delete-btn";
+        deleteBtn.setAttribute("aria-label", "Delete notification");
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            li.style.animation = "fadeOut 0.3s ease";
+            setTimeout(() => {
+                li.remove();
+                deleteNotification(hiddenInput.value); // Xóa thông báo
+                updateNotificationCount(); // Cập nhật chấm đỏ
+            }, 300);
+        });
 
-            li.appendChild(messageDiv);
-            li.appendChild(deleteBtn);
-            li.style.animation = "fadeIn 0.3s ease";
+        li.appendChild(messageDiv);
+        li.appendChild(deleteBtn);
+        li.style.animation = "fadeIn 0.3s ease";
 
-            notificationList.prepend(li); // Thêm thông báo mới vào đầu danh sách
-        }
+        notificationList.prepend(li); // Thêm thông báo mới vào đầu danh sách
     });
 
     updateNotificationCount(); // Cập nhật chấm đỏ sau mỗi lần xử lý
