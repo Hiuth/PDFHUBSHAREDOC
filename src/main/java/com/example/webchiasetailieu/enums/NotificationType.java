@@ -19,7 +19,7 @@ public enum NotificationType {
     ),
     DOWNLOAD(
             "Lượt tải xuống",
-            "Tài liệu [%s] của bạn đã được [%] tải xuống. " +
+            "Tài liệu [%s] của bạn đã được [%s] tải xuống. " +
                     "Cảm ơn bạn đã đóng góp cho cộng đồng!"
     ),
     COMMENT(

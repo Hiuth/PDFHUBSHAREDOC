@@ -14,7 +14,7 @@ document.querySelectorAll(".edit-button2").forEach((button) => {
 });
 
 // Hàm tải xuống tài liệu
-function downloadDocument(documentId) {
+function downloadDocument2(documentId) {
     const token = getToken();
     const socket = new SockJS("http://localhost:8088/ws");
     const client = Stomp.over(socket);
@@ -161,7 +161,7 @@ export function fetchAllDocuments() {
                         openDocumentDetails(doc.id, doc.name, doc.category.mainCategory, doc.category.subCategory, doc.type, doc.createdBy.name, doc.point);
                     };
                     row.querySelector(".download-button").onclick = function () {
-                        downloadDocument(doc.id);
+                        downloadDocument2(doc.id);
                     };
                     row.querySelector(".delete-button").onclick = function () {
                         showDeleteConfirmation(doc.id);
